@@ -1,0 +1,83 @@
+{
+  "project_info": {
+    "project_number": "1268995843",
+    "firebase_url": "https://unitrade-firestore.firebaseio.com",
+    "project_id": "unitrade-firestore",
+    "storage_bucket": "unitrade-firestore.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1268995843:android:9c6b8125ee2856f5347b36",
+        "android_client_info": {
+          "package_name": "com.bgwissam.products"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1268995843-61hqkc5m6o3o8vtvh7s5uemunt12r086.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCt_85xyi17R7CH21UssFrwJS0uehlmaFQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1268995843-61hqkc5m6o3o8vtvh7s5uemunt12r086.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1268995843-p30htill420tpg203dhetoc2jrnsidh2.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.bgwissam.products"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1268995843:android:e63ea0b5d902d612347b36",
+        "android_client_info": {
+          "package_name": "com.nesma.unitrade_nesma"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1268995843-61hqkc5m6o3o8vtvh7s5uemunt12r086.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCt_85xyi17R7CH21UssFrwJS0uehlmaFQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1268995843-61hqkc5m6o3o8vtvh7s5uemunt12r086.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1268995843-p30htill420tpg203dhetoc2jrnsidh2.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.bgwissam.products"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
