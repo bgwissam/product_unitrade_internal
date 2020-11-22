@@ -2685,7 +2685,7 @@ class _PDFFileViewerState extends State<PDFFileViewer> {
     // RenderObject in its descendent tree when it's not
     // a RenderObjectWidget. The RaisedButton's RenderObject
     // has its position and size after it's built.
-    final RenderBox box = context.findRenderObject();
+    //final RenderBox box = context.findRenderObject();
     if (url.isNotEmpty) {
       print(url);
       var request = await HttpClient().getUrl(Uri.parse(url));

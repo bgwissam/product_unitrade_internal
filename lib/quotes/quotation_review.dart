@@ -280,7 +280,7 @@ class _QuotationReviewState extends State<QuotationReview> {
                           ),
                           Expanded(
                             flex: 1,
-                            child: Text(widget.products[index]['itemPack']),
+                            child: Text(widget.products[index]['itemPack'].toString()),
                           ),
                           Expanded(
                             flex: 1,

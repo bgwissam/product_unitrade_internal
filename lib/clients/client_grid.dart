@@ -4,7 +4,6 @@ import 'package:Products/no_data/no_data.dart';
 import 'package:Products/quotes/quotation_form.dart';
 import 'package:Products/services/database.dart';
 import 'package:Products/shared/dialog.dart';
-import 'package:Products/shared/loading.dart';
 import 'package:Products/shared/strings.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -78,13 +77,7 @@ class _QuotationProviderBuildState extends State<QuotationProviderBuild> {
                   );
                 } else if (snapshot.connectionState ==
                     ConnectionState.waiting) {
-                  return Stack(children: [
-                    Container(
-                      height: 100.0,
-                      width: 100.0,
-                      child: Loading(),
-                    )
-                  ]);
+                  return ShowCustomDialog();
                 } else if (snapshot.connectionState == ConnectionState.none) {
                   return Container(
                     height: 100.0,
@@ -104,19 +97,18 @@ class _QuotationProviderBuildState extends State<QuotationProviderBuild> {
       );
   }
 
-  
-
   Future<Map<String, String>> _getProductData(
       List<PaintMaterial> paintProduct) async {
     itemCodes = new List();
     productNames = new List();
-
     itemCodes.addAll(paintProduct.map((e) => e.itemCode));
     //productNames.addAll(widget.products.map((e) => e.productName));
     productNames = await settingDescription(paintProduct);
     //check the products have their description before proceeding
-    if (productNames.isNotEmpty)
+    if (productNames.isNotEmpty) {
       productsWithDescription = Map.fromIterables(itemCodes, productNames);
+      
+    }
 
     return productsWithDescription;
   }

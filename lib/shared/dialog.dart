@@ -15,6 +15,7 @@ class _ShowCustomDialogState extends State<ShowCustomDialog> {
       alignment: Alignment.center,
       children: [
         Container(
+          color: const Color(0xFF0E3311).withOpacity(0.5),
           height: 100.0,
           width: 150.0,
           child: Loading(),

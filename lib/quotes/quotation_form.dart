@@ -14,14 +14,15 @@ class QuotationForm extends StatefulWidget {
   final List<Clients> clients;
   final List<PaintMaterial> products;
   final Map<String, String> productsWithDescription;
-  QuotationForm({this.userId, this.clients, this.products, this.productsWithDescription});
+  QuotationForm(
+      {this.userId, this.clients, this.products, this.productsWithDescription});
   @override
   _QuotationFormState createState() => _QuotationFormState();
 }
 
 class _QuotationFormState extends State<QuotationForm> {
   var _formKey = GlobalKey<FormState>();
-  
+
   int currentRowNumber = 1;
   String clientName = '';
   String clientEmail;
@@ -41,19 +42,21 @@ class _QuotationFormState extends State<QuotationForm> {
   List<String> itemDescription = [];
   List<double> quantity = [];
   List<double> price = [];
-  List<String> pack = [];
+  List<double> pack = [];
   List<Map<String, dynamic>> selectedProducts = new List();
   List<String> itemCodes = new List();
   List<String> productNames = new List();
-
+  //create a temporary list for add price and pack for selected items
+  double tempPack;
+  double tempPrice;
   //dyanamic widget
   List<Widget> dynamicList = [];
+  
   var paintProducts;
   @override
   void initState() {
     super.initState();
     getUserDetails();
-  
     if (selectedProducts.isNotEmpty) {
       selectedProducts = new List();
     }
@@ -82,12 +85,10 @@ class _QuotationFormState extends State<QuotationForm> {
         name = value.data['firstName'] + ' ' + value.data['lastName'];
         phoneNumber = value.data['phoneNumber'];
         emailAddress = value.data['emailAddress'];
-        
       });
     }
     return;
   }
-
 
   //Build stream for selected client
   _getEmailAddress(String name) {
@@ -114,7 +115,7 @@ class _QuotationFormState extends State<QuotationForm> {
   // Future<Map<String, String>> _getItemDescription() async {
   //   itemCodes = new List();
   //   productNames = new List();
-   
+
   //   itemCodes.addAll(widget.products.map((e) => e.itemCode));
   //   //productNames.addAll(widget.products.map((e) => e.productName));
   //   productNames = await settingDescription();
@@ -477,8 +478,10 @@ class _QuotationFormState extends State<QuotationForm> {
 
   //Build row dynamically
   Widget buildRows(BuildContext context) {
-    TextEditingController _typeAheadController = TextEditingController();
     //Stream the list of products
+    TextEditingController _typeAheadController = TextEditingController();
+    TextEditingController _packController = TextEditingController();
+    TextEditingController _priceController = TextEditingController();
     return Container(
       child: Padding(
         padding: const EdgeInsets.all(12.0),
@@ -517,6 +520,14 @@ class _QuotationFormState extends State<QuotationForm> {
                 autoFlipDirection: true,
                 onSuggestionSelected: (suggestions) {
                   _typeAheadController.text = suggestions;
+                  //get the pack and price for each item
+                  widget.products.forEach((element) {
+                    if (element.itemCode == suggestions){
+                      _priceController.text = element.productPrice.toString();
+                      _packController.text = element.productPack.toString();
+                    }
+                    return true;
+                  });
                 },
                 onSaved: (value) {
                   itemCode.add(value);
@@ -532,7 +543,7 @@ class _QuotationFormState extends State<QuotationForm> {
             flex: 1,
             child: Center(
               child: TextFormField(
-                  initialValue: '',
+                  controller: _packController,
                   style: textStyle1,
                   decoration: InputDecoration(
                     filled: true,
@@ -546,7 +557,7 @@ class _QuotationFormState extends State<QuotationForm> {
                   ),
                   validator: (val) => val.isEmpty ? ITEM_PACK_VALIDATION : null,
                   onSaved: (val) {
-                    pack.add(val);
+                    pack.add(double.parse(val));
                   }),
             ),
           ),
@@ -586,7 +597,7 @@ class _QuotationFormState extends State<QuotationForm> {
             flex: 1,
             child: Center(
               child: TextFormField(
-                  initialValue: '',
+                  controller: _priceController,
                   style: textStyle1,
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
@@ -609,6 +620,15 @@ class _QuotationFormState extends State<QuotationForm> {
         ]),
       ),
     );
+    
+  }
+
+ 
+
+  @override
+  void dispose() {
+    //clear controllers
+    super.dispose();
   }
 
   //Get list of suggestions for the product list
