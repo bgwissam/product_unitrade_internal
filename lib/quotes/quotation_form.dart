@@ -51,7 +51,7 @@ class _QuotationFormState extends State<QuotationForm> {
   double tempPrice;
   //dyanamic widget
   List<Widget> dynamicList = [];
-  
+
   var paintProducts;
   @override
   void initState() {
@@ -394,7 +394,8 @@ class _QuotationFormState extends State<QuotationForm> {
                       height: 50.0,
                       child: Center(
                         child: Text(
-                            totalValue == null ? '0.0' : totalValue.toString()),
+                            totalValue == null ? '0.0' : totalValue.toString(),
+                            ),
                       ),
                       decoration: BoxDecoration(
                         color: Colors.grey[200],
@@ -520,9 +521,14 @@ class _QuotationFormState extends State<QuotationForm> {
                 autoFlipDirection: true,
                 onSuggestionSelected: (suggestions) {
                   _typeAheadController.text = suggestions;
+
+                  print(suggestions);
                   //get the pack and price for each item
                   widget.products.forEach((element) {
-                    if (element.itemCode == suggestions){
+                    var code =
+                        element.itemCode + ' ' + element.productPack.toString();
+                    
+                    if (code == suggestions) {
                       _priceController.text = element.productPrice.toString();
                       _packController.text = element.productPack.toString();
                     }
@@ -530,7 +536,8 @@ class _QuotationFormState extends State<QuotationForm> {
                   });
                 },
                 onSaved: (value) {
-                  itemCode.add(value);
+                  var _itemCode = value.split(' ');
+                  itemCode.add(_itemCode[0]);
                 },
               ),
             ),
@@ -620,10 +627,7 @@ class _QuotationFormState extends State<QuotationForm> {
         ]),
       ),
     );
-    
   }
-
- 
 
   @override
   void dispose() {
@@ -634,7 +638,8 @@ class _QuotationFormState extends State<QuotationForm> {
   //Get list of suggestions for the product list
   List<String> getSuggestions(String query) {
     List<String> matches = new List();
-    matches.addAll(widget.products.map((e) => e.itemCode));
+    matches.addAll(widget.products
+        .map((e) => e.itemCode + ' ' + e.productPack.toString()));
     matches.retainWhere(
         (item) => item.toString().toLowerCase().contains(query.toLowerCase()));
     return matches;
