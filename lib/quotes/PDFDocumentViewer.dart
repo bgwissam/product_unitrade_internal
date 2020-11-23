@@ -59,9 +59,11 @@ class _PDFDocumentViewerState extends State<PDFDocumentViewer> {
   }
 
   _sendQuotation() async {
+    setState(() {
+      _isButtonDisabled = true;
+    });
     EmailManagement sendQuote = new EmailManagement();
     //disable sending email after first click
-    _isButtonDisabled = true;
     var result = await sendQuote.sendEmail(
         toRecipient: widget.clientEmail,
         clientName: widget.clientName,
@@ -72,43 +74,48 @@ class _PDFDocumentViewerState extends State<PDFDocumentViewer> {
         file: widget.file,
         path: widget.path);
 
-      
-      sendQuote.mail.document(result).snapshots().listen((event) {
-          if(event.data['delivery']['state'] != null)
-          print('state ${event.data['delivery']['state']}');
-      });
-      
-      
-      // then((value) {
-      //   emailStatus = value.data['state'];
-      //   print(emailStatus);
-      //   if (emailStatus == 'SUCCESS') {
-      //     _emailSentStatus = true;
-      //   } else {
-      //     _emailSentStatus = false;
-      //   }
-      // });
-    
+    sendQuote.mail.document(result).snapshots().listen(
+      (event) async {
+        //delay the creation of the email 2 seconds
+        Future.delayed(Duration(seconds: 3), () async {
+          var result = await event.data['delivery']['state'] ?? null;
+          print(result);
 
-    // showDialog(
-    //     context: context,
-    //     barrierDismissible: false,
-    //     builder: (BuildContext context) {
-    //       return AlertDialog(
-    //         title: Text(EMAIL_STATUS),
-    //         content: _emailSentStatus ? Text(EMAIL_SENT) : Text(EMAIL_FAIL),
-    //         actions: [
-    //           FlatButton(
-    //             child: Text(OK_BUTTON),
-    //             onPressed: () {
-    //               Navigator.pop(context);
-    //               Navigator.pop(context);
-    //               Navigator.pop(context);
-    //               Navigator.pop(context);
-    //             },
-    //           )
-    //         ],
-    //       );
-    //     });
+          if (result != null) {
+            if (result == 'SUCCESS') {
+              _emailSentStatus = true;
+            } else {
+              _emailSentStatus = false;
+            }
+            Future.delayed(Duration(seconds: 2), () {
+              //show dialog after delay
+              showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text(EMAIL_STATUS),
+                    content:
+                        _emailSentStatus ? Text(EMAIL_SENT) : Text(EMAIL_FAIL),
+                    actions: [
+                      FlatButton(
+                        child: Text(OK_BUTTON),
+                        onPressed: () {
+                          Navigator.of(context).pushNamedAndRemoveUntil(
+                              '/home', (Route<dynamic> route) => false);
+                          // Navigator.pop(context);
+                          // Navigator.pop(context);
+                          // Navigator.pop(context);
+                        },
+                      )
+                    ],
+                  );
+                },
+              );
+            });
+          }
+        });
+      },
+    );
   }
 }
