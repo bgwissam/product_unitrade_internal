@@ -1,3 +1,4 @@
+import 'package:Products/screens/authenticate/register.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:Products/shared/strings.dart';
@@ -6,8 +7,6 @@ import '../../shared/loading.dart';
 import '../../services/auth.dart';
 
 class SignIn extends StatefulWidget {
-
-
   @override
   _SignInState createState() => _SignInState();
 }
@@ -125,26 +124,48 @@ class _SignInState extends State<SignIn> {
                     SizedBox(
                       height: 25.0,
                     ),
-                    RaisedButton(
-                      color: Colors.brown[500],
-                      child: Text(
-                        LOGIN,
-                        style: buttonStyle,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                      //A sign in button to sign in new users
+                      RaisedButton(
+                        color: Colors.brown[500],
+                        child: Text(
+                          LOGIN,
+                          style: buttonStyle,
+                        ),
+                        onPressed: () async {
+                          if (_formKey.currentState.validate()) {
+                            setState(() {
+                              loading = true;
+                            });
+                            dynamic result = await _auth
+                                .signInWithUserNameandPassword(email, password);
+                            if(result == null){
+                              setState(() {
+                              loading = false;
+                              error = result;
+                            });
+                            }
+                           
+                          }
+                        },
                       ),
-                      onPressed: () async {
-                        if (_formKey.currentState.validate()) {
-                          setState(() {
-                            loading = true;
-                          });
-                          dynamic result = await _auth
-                              .signInWithUserNameandPassword(email, password);
-                          print(result);
-                          setState(() {
-                            loading = false;
-                            error = result;
-                          });
-                        }
-                      },
+                      SizedBox(width: 15.0,),
+                      //A registeration button to register new users
+                      RaisedButton(
+                        color: Colors.brown[500],
+                        child: Text(
+                          REGISTER,
+                          style: buttonStyle,
+                        ),
+                        onPressed: () async {
+                          Navigator.push(context, MaterialPageRoute(
+                            builder: (context) => Register()
+                          ));
+                        },
+                      ),
+                    ],
                     ),
                   ],
                 ),
@@ -160,7 +181,6 @@ class ForgotEmailPage extends StatefulWidget {
 }
 
 class _ForgotEmailPageState extends State<ForgotEmailPage> {
-
   final _formKey = GlobalKey<FormState>();
   String email;
   bool _autoValidate = false;

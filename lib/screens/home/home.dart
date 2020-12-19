@@ -19,7 +19,9 @@ import 'package:Products/shared/functions.dart';
 
 class Home extends StatefulWidget {
   final String userId;
-  Home({this.userId});
+  final bool isActive;
+  final String firstName;
+  Home({this.userId, this.isActive, this.firstName});
   @override
   _HomeState createState() => _HomeState();
 }
@@ -33,8 +35,10 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   bool isSearching = false;
   bool isTyping = false;
   UserData user;
-  bool isAdmin;
-  bool isPriceAdmin;
+  // bool isAdmin;
+  // bool isPriceAdmin;
+  // bool isSuperAdmin;
+  List<dynamic> roles;
   String searchWord = '';
   int cartLength = 0;
   //set size for sized box
@@ -98,31 +102,29 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
   //get the first name of the user
   Future _getUserData() async {
-    await DatabaseService()
-        .unitradeCollection
+    DatabaseService databaseService = DatabaseService(uid: widget.userId);
+    await databaseService.unitradeCollection
         .document(widget.userId)
         .get()
         .then((value) {
-      setState(() {
-        firstName = value.data['firstName'];
-        lastName = value.data['lastName'];
-        company = value.data['company'];
-        phoneNumber = value.data['phoneNumber'];
-        countryOfResidence = value.data['countryOfResidence'];
-        cityOfResidence = value.data['cityOfResidence'];
-        emailAddress = value.data['emailAddress'];
-        isPriceAdmin = value.data['isPriceAdmin'];
-        isAdmin = value.data['isAdmin'];
-        if (firstName != null) {
-          firstName = firstName.capitalize();
-        }
-        if (lastName != null) {
-          lastName = lastName.capitalize();
-        }
-        if (company != null) {
-          company = company.capitalize();
-        }
-      });
+      print('These are the use data:  ${value.data}');
+      firstName = value.data['firstName'];
+      lastName = value.data['lastName'];
+      company = value.data['company'];
+      phoneNumber = value.data['phoneNumber'];
+      countryOfResidence = value.data['countryOfResidence'];
+      cityOfResidence = value.data['cityOfResidence'];
+      emailAddress = value.data['emailAddress'];
+      roles = value.data['roles'];
+      if (firstName != null) {
+        firstName = firstName.capitalize();
+      }
+      if (lastName != null) {
+        lastName = lastName.capitalize();
+      }
+      if (company != null) {
+        company = company.capitalize();
+      }
     });
   }
 
@@ -130,19 +132,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   void initState() {
     super.initState();
     _getUserData();
-    print(isAdmin);
     _tabController = new TabController(length: 1, vsync: this);
-  }
-
-  //get the size of the cart
-  Future getCartDetails() async {
-    await currentFile.loadDocument().then((value) {
-      cartList = value;
-    });
-    setState(() {
-      cartLength = cartList.length;
-    });
-    _callBackUpdate(cartLength);
   }
 
   //update the cart size after additional of product and if Back buttom is pressed to go back to home page
@@ -150,19 +140,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     setState(() {
       cartLength = cartSize;
     });
-  }
-
-  //obtains the ID of the current user
-  Future getCurrentUser() async {
-    DatabaseService databaseService = DatabaseService(uid: widget.userId);
-    await databaseService.unitradeCollection
-        .document(widget.userId)
-        .get()
-        .then((value) {
-      isAdmin = value.data['isAdmin'];
-      isPriceAdmin = value.data['isPriceAdmin'];
-    });
-    return isAdmin;
   }
 
   //Dailog box for exsiting app
@@ -207,7 +184,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 IconButton(
                   icon: Icon(Icons.search),
                   onPressed: () async {
-                    getCartDetails();
                     setState(() {
                       this.isSearching = !this.isSearching;
                     });
@@ -300,7 +276,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                     _search();
                     isTyping = true;
                   });
-                  getCartDetails();
                 },
               ),
               !isTyping ? Container() : _buildSearchProductListView(),
@@ -382,8 +357,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                 MaterialPageRoute(
                                     builder: (context) => ProductForm(
                                           paintProducts: paintProducts,
-                                          isAdmin: isAdmin ?? false,
-                                          isPriceAdmin: isPriceAdmin ?? false,
                                         )));
                           } else if (_results[index].data['productType'] ==
                                   TAB_WOOD_TEXT ||
@@ -394,8 +367,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                 MaterialPageRoute(
                                     builder: (context) => ProductForm(
                                           woodProduct: woodSolidProducts,
-                                          isAdmin: isAdmin ?? false,
-                                          isPriceAdmin: isPriceAdmin ?? false,
                                           cartList: cartList,
                                         )));
                           } else if (_results[index].data['productType'] ==
@@ -406,8 +377,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                     builder: (context) => ProductForm(
                                           accessoriesProduct:
                                               accessoriesProducts,
-                                          isAdmin: isAdmin ?? false,
-                                          isPriceAdmin: isPriceAdmin ?? false,
                                           cartList: cartList,
                                         )));
                           } else if (_results[index].data['productType'] ==
@@ -417,8 +386,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                 MaterialPageRoute(
                                     builder: (context) => ProductForm(
                                           lightProduct: lightProducts,
-                                          isAdmin: isAdmin ?? false,
-                                          isPriceAdmin: isPriceAdmin ?? false,
                                           cartList: cartList,
                                         )));
                           }
@@ -568,15 +535,15 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
               height: 120.0,
               child: InkWell(
                 onTap: () {
-                  if (isAdmin != null || isPriceAdmin != null)
+                  if (roles.isNotEmpty)
                     Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => ProductType(
-                                  productType: 'COATING',
-                                  brandName: 'SAYERLACK',
-                                  isAdmin: isAdmin,
-                                )));
+                                productType: 'COATING',
+                                brandName: 'SAYERLACK',
+                                user: user,
+                                roles: roles)));
                 },
                 child: Container(
                   padding: EdgeInsets.all(5.0),
@@ -597,15 +564,15 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
               height: 120.0,
               child: InkWell(
                 onTap: () {
-                  if (isAdmin != null)
+                  if (roles.isNotEmpty)
                     Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => ProductType(
-                                  productType: 'COATING',
-                                  brandName: 'EVI',
-                                  isAdmin: isAdmin,
-                                )));
+                                productType: 'COATING',
+                                brandName: 'EVI',
+                                user: user,
+                                roles: roles)));
                 },
                 child: Container(
                   padding: EdgeInsets.all(5.0),
@@ -627,15 +594,15 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
               height: 120.0,
               child: InkWell(
                 onTap: () {
-                  if (isAdmin != null)
+                  if (roles.isNotEmpty)
                     Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => ProductType(
-                                  productType: 'ADHESIVE',
-                                  brandName: 'UNICOL',
-                                  isAdmin: isAdmin,
-                                )));
+                                productType: 'ADHESIVE',
+                                brandName: 'UNICOL',
+                                user: user,
+                                roles: roles)));
                 },
                 child: Container(
                   padding: EdgeInsets.all(5.0),
@@ -675,7 +642,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                           builder: (context) => BrandList(
                                 divisionType: TAB_WOOD_TEXT,
                                 categoryType: MDF_BUTTON,
-                                isAdmin: isAdmin,
                                 callBackUpdate: _callBackUpdate,
                               )));
                 },
@@ -703,7 +669,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                           builder: (context) => BrandList(
                                 divisionType: TAB_WOOD_TEXT,
                                 categoryType: CHIP_BUTTON,
-                                isAdmin: isAdmin,
                                 callBackUpdate: _callBackUpdate,
                               )));
                 },
@@ -731,7 +696,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                           builder: (context) => BrandList(
                                 divisionType: TAB_WOOD_TEXT,
                                 categoryType: SOLID_BUTTON,
-                                isAdmin: isAdmin,
                                 callBackUpdate: _callBackUpdate,
                               )));
                 },
@@ -759,7 +723,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                           builder: (context) => BrandList(
                                 divisionType: TAB_WOOD_TEXT,
                                 categoryType: FIRE_BUTTON,
-                                isAdmin: isAdmin,
                                 callBackUpdate: _callBackUpdate,
                               )));
                 },
@@ -795,7 +758,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                           builder: (context) => BrandList(
                                 divisionType: TAB_SS_TEXT,
                                 categoryType: COR_BUTTON,
-                                isAdmin: isAdmin,
                                 callBackUpdate: _callBackUpdate,
                               )));
                 },
@@ -826,7 +788,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                           builder: (context) => BrandList(
                                 divisionType: TAB_SS_TEXT,
                                 categoryType: MON_BUTTON,
-                                isAdmin: isAdmin,
                                 callBackUpdate: _callBackUpdate,
                               )));
                 },
@@ -861,7 +822,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                           builder: (context) => BrandList(
                                 divisionType: TAB_ACCESSORIES_TEXT,
                                 categoryType: SALICE_BUTTON,
-                                isAdmin: isAdmin,
                                 callBackUpdate: _callBackUpdate,
                               )));
                 },
@@ -899,7 +859,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                           builder: (context) => BrandList(
                                 divisionType: TAB_LIGHT_TEXT,
                                 categoryType: HAFELE_BUTTON,
-                                isAdmin: isAdmin,
                                 callBackUpdate: _callBackUpdate,
                               )));
                 },

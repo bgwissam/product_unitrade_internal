@@ -10,21 +10,21 @@ import 'package:Products/services/database.dart';
 import 'package:Products/shared/strings.dart';
 
 class ProductsGrid extends StatefulWidget {
-  final bool isAdmin;
-  final bool isPriceAdmin;
+
   final String productType;
   final String brandName;
   final String categoryType;
   final Function callBackUpdate;
-  final User user;
+  final UserData user;
+  final List<dynamic> roles;
   ProductsGrid(
-      {this.isAdmin,
-      this.isPriceAdmin,
+      {
       this.productType,
       this.brandName,
       this.categoryType,
       this.callBackUpdate,
-      this.user});
+      this.user,
+      this.roles});
   @override
   _ProductGridState createState() => _ProductGridState();
 }
@@ -41,6 +41,7 @@ class _ProductGridState extends State<ProductsGrid> {
   String productColorMain = 'clear';
   @override
   void initState() {
+    print('user roles ${widget.roles}');
     super.initState();
   }
 
@@ -56,7 +57,7 @@ class _ProductGridState extends State<ProductsGrid> {
         context,
         MaterialPageRoute(
             builder: (context) => ProductForm(
-                  isAdmin: widget.isAdmin,
+                  roles: widget.roles,
                 )));
   }
 
@@ -86,7 +87,7 @@ class _ProductGridState extends State<ProductsGrid> {
           backgroundColor: Colors.deepPurpleAccent,
           elevation: 0.0,
           actions: <Widget>[
-            widget.isAdmin
+            widget.roles.contains('isAdmin')
                 ? FlatButton.icon(
                     onPressed: () => _addNewProduct(),
                     icon: new IconTheme(
@@ -102,6 +103,7 @@ class _ProductGridState extends State<ProductsGrid> {
         ),
         body: Container(
           child: ProductList(
+            roles: widget.roles,
             productBrand: widget.brandName,
             productType: widget.productType,
             productCategory: widget.categoryType,

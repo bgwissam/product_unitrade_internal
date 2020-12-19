@@ -16,7 +16,10 @@ const String REGISTRATION_FAILED = 'Failed to register your account';
 const String RESET_PASSWORD = 'RESET PASSWORD';
 const String LOGIN = 'Login';
 const String USER_NAME = 'User Name';
-
+const String REGISTER_USER = 'Register New User';
+const String USER_ROLES = 'Roles';
+const String USERS = 'Users';
+const String CURRENT_USERS = 'Current Users';
 //App bar titles
 const String UNITRADE_PRODUCTS = 'Unitrade Products';
 const String BRANDS = 'Brands';
@@ -26,6 +29,7 @@ const String ADD_PRODUCTS = 'Add New Product';
 const String CART_TITLE = 'Shopping Cart';
 const String CART_REVIEW = 'Review Cart';
 const String PRODUCT_TYPE = 'Product Type';
+const String USER_LIST = 'List of Users';
 //Division string
 const String TAB_COATINGS_AND_ADHESIVES = 'Coatings & Adhesives';
 const String TAB_PAINT_TEXT = 'Paint';
@@ -199,6 +203,7 @@ const String ITEM_PACK_VALIDATION = 'packing is required';
 const String SUBMIT = 'Submit';
 const String QUOTE_SENT_SUCCESSFULLY = 'Quotation has been send successfully';
 const String QUOTE_SENT_FAILED = 'Quotation failed to be sent, please check administrator';
+const String QUOTE_PENDING = 'Please wait quotation on it\'s way';
 const String EMAIL_STATUS = 'Email Status';
 const String QUOTATION = 'Quotation';
 const String MESSAGE_CONTENT = 'Content';
@@ -209,3 +214,6 @@ const String SALES_SIGNATURE = 'Signature';
 const String SALES_SIGNATURE_EMPTY = 'Singature cannot be empty';
 const String EMAIL_SENT = 'Email was sent successfully';
 const String EMAIL_FAIL = 'Email failed to reach your recipient';
+const String EMAIL_PREP = 'Email is being prepared';
+const String EMAIL_PENDING = 'Please wait...';
+const String UNKNOWN_ERROR = 'Contact administrator!';

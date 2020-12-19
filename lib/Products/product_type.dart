@@ -1,4 +1,5 @@
 import 'package:Products/Products/products_grid.dart';
+import 'package:Products/models/user.dart';
 import 'package:Products/shared/constants.dart';
 import 'package:Products/shared/strings.dart';
 import 'package:flutter/material.dart';
@@ -6,14 +7,20 @@ import 'package:flutter/material.dart';
 class ProductType extends StatefulWidget {
   final String productType;
   final String brandName;
-  final bool isAdmin;
-  final bool isPriceAdmin;
-  ProductType({this.productType, this.brandName, this.isAdmin, this.isPriceAdmin});
+  final UserData user;
+  final List<dynamic> roles;
+  ProductType({this.productType, this.brandName, this.user, this.roles});
   @override
   _ProductTypeState createState() => _ProductTypeState();
 }
 
 class _ProductTypeState extends State<ProductType> {
+
+  void initState() {
+
+    print('the user details: ${widget.user}');
+    super.initState();
+  }
   double sizedBoxDistance = 25.0;
   @override
   Widget build(BuildContext context) {
@@ -40,8 +47,8 @@ class _ProductTypeState extends State<ProductType> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => ProductsGrid(
-                                    isAdmin: widget.isAdmin,
-                                    isPriceAdmin: widget.isPriceAdmin,
+                                    user: widget.user,
+                                    roles: widget.roles,
                                     brandName: widget.brandName,
                                     productType: TAB_PAINT_TEXT,
                                     categoryType: PU_BUTTON,
@@ -73,7 +80,8 @@ class _ProductTypeState extends State<ProductType> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => ProductsGrid(
-                                    isAdmin: widget.isAdmin,
+                                    user: widget.user,
+                                    roles: widget.roles,
                                     brandName: widget.brandName,
                                     productType: TAB_PAINT_TEXT,
                                     categoryType: NC_BUTTON,
@@ -105,7 +113,8 @@ class _ProductTypeState extends State<ProductType> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => ProductsGrid(
-                                    isAdmin: widget.isAdmin,
+                                    user: widget.user,
+                                    roles: widget.roles,
                                     productType: TAB_PAINT_TEXT,
                                     brandName: widget.brandName,
                                     categoryType: STAIN,
@@ -137,7 +146,8 @@ class _ProductTypeState extends State<ProductType> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => ProductsGrid(
-                                    isAdmin: widget.isAdmin,
+                                    user: widget.user,
+                                    roles: widget.roles,
                                     productType: TAB_PAINT_TEXT,
                                     brandName: widget.brandName,
                                     categoryType: THINNER,
@@ -169,7 +179,8 @@ class _ProductTypeState extends State<ProductType> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => ProductsGrid(
-                                    isAdmin: widget.isAdmin,
+                                    user: widget.user,
+                                    roles: widget.roles,
                                     productType: TAB_PAINT_TEXT,
                                     brandName: widget.brandName,
                                     categoryType: EXT_BUTTON,
@@ -201,7 +212,8 @@ class _ProductTypeState extends State<ProductType> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => ProductsGrid(
-                                    isAdmin: widget.isAdmin,
+                                    user: widget.user,
+                                    roles: widget.roles,
                                     productType: TAB_PAINT_TEXT,
                                     brandName: widget.brandName,
                                     categoryType: AC_BUTTON,
@@ -233,7 +245,8 @@ class _ProductTypeState extends State<ProductType> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => ProductsGrid(
-                                    isAdmin: widget.isAdmin,
+                                    user: widget.user,
+                                    roles: widget.roles,
                                     productType: TAB_PAINT_TEXT,
                                     brandName: widget.brandName,
                                     categoryType: SPECIAL_PRODUCT,
@@ -265,7 +278,8 @@ class _ProductTypeState extends State<ProductType> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => ProductsGrid(
-                                    isAdmin: widget.isAdmin,
+                                    user: widget.user,
+                                    roles: widget.roles,
                                     productType: TAB_PAINT_TEXT,
                                     brandName: widget.brandName,
                                     categoryType: GLUE_BUTTON,

@@ -14,7 +14,7 @@ class ProductTile extends StatefulWidget {
   final WoodProduct woodProduct;
   final Lights lightProduct;
   final Accessories accessoriesProduct;
-  final User user;
+  final UserData user;
   final String productBrand;
   final String productType;
   final String productName;
@@ -28,6 +28,7 @@ class ProductTile extends StatefulWidget {
   final Function callback;
   final Function writeToFile;
   final Function callbackCart;
+  final List<dynamic> roles;
   ProductTile(
       {this.product,
       this.woodProduct,
@@ -46,7 +47,8 @@ class ProductTile extends StatefulWidget {
       this.callback,
       this.writeToFile,
       this.cartList,
-      this.callbackCart});
+      this.callbackCart,
+      this.roles});
   @override
   _ProductTileState createState() => _ProductTileState();
 }
@@ -151,8 +153,7 @@ class _ProductTileState extends State<ProductTile> {
             MaterialPageRoute(
                 builder: (context) => ProductForm(
                       paintProducts: widget.product,
-                      isAdmin: isAdmin ?? false,
-                      isPriceAdmin: isPriceAdmin ?? false,
+                      roles: widget.roles
                     )));
       },
       child: Container(
@@ -242,8 +243,7 @@ class _ProductTileState extends State<ProductTile> {
             MaterialPageRoute(
                 builder: (context) => ProductForm(
                       woodProduct: widget.woodProduct,
-                      isAdmin: isAdmin,
-                      cartList: widget.cartList,
+                      roles: widget.user.roles
                     )));
       },
       child: Container(
@@ -311,8 +311,7 @@ class _ProductTileState extends State<ProductTile> {
             MaterialPageRoute(
                 builder: (context) => ProductForm(
                       woodProduct: widget.woodProduct,
-                      isAdmin: isAdmin,
-                      cartList: widget.cartList,
+                      roles: widget.user.roles
                     )));
       },
       child: Container(
@@ -374,8 +373,7 @@ class _ProductTileState extends State<ProductTile> {
             MaterialPageRoute(
                 builder: (context) => ProductForm(
                       lightProduct: widget.lightProduct,
-                      isAdmin: isAdmin,
-                      cartList: widget.cartList,
+                      roles: widget.user.roles
                     )));
       },
       child: Container(
@@ -437,8 +435,7 @@ class _ProductTileState extends State<ProductTile> {
             MaterialPageRoute(
                 builder: (context) => ProductForm(
                       accessoriesProduct: widget.accessoriesProduct,
-                      isAdmin: isAdmin,
-                      cartList: widget.cartList,
+                      roles: widget.user.roles
                     )));
       },
       child: Container(

@@ -27,31 +27,62 @@ class DatabaseService {
   final CollectionReference clientCollection =
       Firestore.instance.collection('clients');
 
+  //Add a new user to the users database
+  Future<String> addUserData(
+      {String uid,
+      String firstName,
+      String lastName,
+      String company,
+      bool isActive,    
+      String phoneNumber,
+      String emailAddress,
+      String countryOfResidence,
+      String cityOfResidence,
+      List<dynamic> roles}) async {
+      
+      try {
+      return await unitradeCollection.add({
+        'firstName': firstName,
+        'lastName': lastName,
+        'company': company,
+        'isActive': isActive,
+        'phoneNumber': phoneNumber,
+        'emailAddress': emailAddress,
+        'countryOfResidence': countryOfResidence,
+        'cityOfResidence': cityOfResidence,
+        'roles': roles,
+      }).then((value) {
+        return 'your data has been updated successfully $value';
+      });
+    } catch (e) {
+      return 'An error occured: $e';
+    }
+    
+  }
+
   //Update the user data
   Future<String> updateUserData(
       {String uid,
       String firstName,
       String lastName,
       String company,
-      bool isAdmin,
-      bool isPriceAdmin,
-      bool isSuperAdmin,
+      bool isActive,
       String phoneNumber,
       String emailAddress,
       String countryOfResidence,
-      String cityOfResidence}) async {
+      String cityOfResidence,
+      List<dynamic> roles}) async {
     try {
       return await unitradeCollection.document(uid).setData({
         'firstName': firstName,
         'lastName': lastName,
         'company': company,
-        'isAdmin': isAdmin,
-        'isPriceAdmin': isPriceAdmin,
-        'isSuperAdmin': isSuperAdmin,
+        'isActive': isActive,
         'phoneNumber': phoneNumber,
         'emailAddress': emailAddress,
         'countryOfResidence': countryOfResidence,
-        'cityOfResidence': cityOfResidence
+        'cityOfResidence': cityOfResidence,
+        'roles': roles,
       }).then((value) {
         return 'your data has been updated successfully';
       });
@@ -61,8 +92,9 @@ class DatabaseService {
   }
 
   //User data from snapshot
-  UserData _userDataFromSnapshot(DocumentSnapshot snapshot) {
-    return UserData(
+  List<UserData> _userDataFromSnapshot(QuerySnapshot snapshot) {
+    return snapshot.documents.map((snapshot) {
+      return UserData(
         uid: uid,
         firstName: snapshot.data['firstName'] ?? '',
         lastName: snapshot.data['lastName'] ?? '',
@@ -70,15 +102,15 @@ class DatabaseService {
         phonNumber: snapshot.data['phoneNumber'],
         countryOfResidence: snapshot.data['countryOfResidence'],
         cityOfResidence: snapshot.data['cityOfResidnce'],
-        isAdmin: snapshot.data['isAdmin'] ?? false,
-        isPriceAdmin: snapshot.data['isPriceAdmin'] ?? false,
-        isSuperAdmin: snapshot.data['isSuperAdmin'] ?? false);
+        isActive: snapshot.data['isActive'] ?? true,
+        roles: snapshot.data['roles'] ?? null);
+    }).toList();
+    
   }
 
   //get user doc stream
-  Stream<UserData> get userData {
+  Stream<List<UserData>> get userData {
     return unitradeCollection
-        .document(uid)
         .snapshots()
         .map(_userDataFromSnapshot);
   }

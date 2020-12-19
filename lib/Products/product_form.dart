@@ -28,8 +28,10 @@ class ProductForm extends StatefulWidget {
   final Lights lightProduct;
   final Accessories accessoriesProduct;
   final Brands brands;
-  final bool isAdmin;
-  final bool isPriceAdmin;
+  final List<dynamic> roles;
+
+  // final bool isAdmin;
+  // final bool isPriceAdmin;
   final List<String> cartList;
 
   ProductForm({
@@ -38,8 +40,9 @@ class ProductForm extends StatefulWidget {
     this.woodProduct,
     this.lightProduct,
     this.accessoriesProduct,
-    this.isAdmin,
-    this.isPriceAdmin,
+    this.roles,
+    // this.isAdmin,
+    // this.isPriceAdmin,
     this.cartList,
   });
   @override
@@ -272,14 +275,14 @@ class _ProductFormState extends State<ProductForm> {
 
   //Widget to check user authorization
   Widget _userAuthorizationLevel() {
-    if (widget.isAdmin) {
+    if (widget.roles.contains('isAdmin')) {
       return SingleChildScrollView(
         child: new Form(
           key: _formKey,
           child: _buildProductFormAdmin(),
         ),
       );
-    } else if (widget.isPriceAdmin) {
+    } else if (widget.roles.contains('isPriceAdmin')) {
       return SingleChildScrollView(
         child: new Form(
           key: _formKey,
@@ -890,7 +893,7 @@ class _ProductFormState extends State<ProductForm> {
 //builds the paint widget product details
   Widget _buildPaintWidget() {
     //return product paint form for admin users
-    return widget.isAdmin
+    return widget.roles.contains('isAdmin')
         ? Column(
             children: <Widget>[
               //Name field
@@ -1179,7 +1182,7 @@ class _ProductFormState extends State<ProductForm> {
 
 //builds the wood wiget product details
   Widget _buildWoodWidget() {
-    if (!widget.isAdmin) {
+    if (!widget.roles.contains('isAdmin')) {
       for (var item in widget.cartList)
         if (!item.contains(widget.woodProduct.uid)) {
           itemAdded.value = false;
@@ -1188,7 +1191,7 @@ class _ProductFormState extends State<ProductForm> {
           break;
         }
     }
-    return widget.isAdmin
+    return widget.roles.contains('isAdmin')
         ? Column(
             children: <Widget>[
               Container(
@@ -1507,7 +1510,7 @@ class _ProductFormState extends State<ProductForm> {
 
 //builds the solid surface widget product details
   Widget _buildSolidWidget() {
-    if (!widget.isAdmin) {
+    if (!widget.roles.contains('isAdmin')) {
       for (var item in widget.cartList)
         if (!item.contains(widget.woodProduct.uid)) {
           itemAdded.value = false;
@@ -1516,7 +1519,7 @@ class _ProductFormState extends State<ProductForm> {
           break;
         }
     }
-    return widget.isAdmin
+    return widget.roles.contains('isAdmin')
         ? Column(
             children: <Widget>[
               Container(
@@ -1839,7 +1842,7 @@ class _ProductFormState extends State<ProductForm> {
 
 //builds the lights widget product details
   Widget _buildLightWidget() {
-    if (!widget.isAdmin) {
+    if (widget.roles.contains('isAdmin')) {
       for (var item in widget.cartList)
         if (!item.contains(widget.lightProduct.uid)) {
           itemAdded.value = false;
@@ -1848,7 +1851,7 @@ class _ProductFormState extends State<ProductForm> {
           break;
         }
     }
-    return widget.isAdmin
+    return widget.roles.contains('isAdmin')
         ? Column(
             children: <Widget>[
               Container(
@@ -2184,7 +2187,7 @@ class _ProductFormState extends State<ProductForm> {
 
 //builds the accessories widget product details
   Widget _buildAccessoriesWidget() {
-    if (!widget.isAdmin) {
+    if (!widget.roles.contains('isAdmin')) {
       for (var item in widget.cartList)
         if (!item.contains(widget.accessoriesProduct.uid)) {
           itemAdded.value = false;
@@ -2193,7 +2196,7 @@ class _ProductFormState extends State<ProductForm> {
           break;
         }
     }
-    return widget.isAdmin
+    return widget.roles.contains('isAdmin')
         ? Column(
             children: <Widget>[
               Container(

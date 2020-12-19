@@ -6,12 +6,14 @@ import 'package:Products/models/user.dart';
 import 'package:Products/shared/strings.dart';
 
 class ProductList extends StatefulWidget {
+  final List<dynamic> roles;
   final String productBrand;
   final String productType;
   final String productCategory;
   final Function productColorCallback;
   ProductList(
-      {this.productBrand,
+      {this.roles,
+      this.productBrand,
       this.productType,
       this.productCategory,
       this.productColorCallback});
@@ -51,7 +53,7 @@ class _ProductListState extends State<ProductList> {
         products = Provider.of<List<Accessories>>(context) ?? [];
         break;
     }
-    final user = Provider.of<User>(context) ?? [];
+    final user = Provider.of<UserData>(context) ?? [];
     if (products.isNotEmpty) {
       return Column(
         children: [
@@ -72,6 +74,7 @@ class _ProductListState extends State<ProductList> {
                   switch (widget.productType) {
                     case TAB_PAINT_TEXT:
                       return ProductTile(
+                        roles: widget.roles,
                         product: products[index],
                         productBrand: widget.productBrand,
                         productType: widget.productType,

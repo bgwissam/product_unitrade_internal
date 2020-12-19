@@ -1,6 +1,8 @@
 import 'package:Products/clients/client_form.dart';
 import 'package:Products/clients/client_grid.dart';
 import 'package:Products/orders/orders.dart';
+import 'package:Products/screens/authenticate/UserGrid.dart';
+import 'package:Products/screens/authenticate/register.dart';
 import 'package:flutter/material.dart';
 import 'package:Products/account/account_page.dart';
 import 'package:Products/services/auth.dart';
@@ -16,6 +18,7 @@ class ProfileDrawer extends StatefulWidget {
   final String countryOfResidence;
   final String cityOfResidence;
   final String phoneNumber;
+  final bool isAdmin;
   ProfileDrawer(
       {this.userId,
       this.firstName,
@@ -24,7 +27,8 @@ class ProfileDrawer extends StatefulWidget {
       this.countryOfResidence,
       this.cityOfResidence,
       this.phoneNumber,
-      this.emailAddress});
+      this.emailAddress,
+      this.isAdmin});
   @override
   _ProfileDrawerState createState() => _ProfileDrawerState();
 }
@@ -34,6 +38,7 @@ class _ProfileDrawerState extends State<ProfileDrawer> {
   void initState() {
     super.initState();
   }
+
   AuthService _auth = AuthService();
   @override
   Widget build(BuildContext context) {
@@ -127,6 +132,31 @@ class _ProfileDrawerState extends State<ProfileDrawer> {
                             )));
               },
             ),
+            ExpansionTile(
+              leading: Icon(Icons.lock),
+              title: Text(USERS),
+              children: [
+                //Register new users, option only allowed for admin account
+                ListTile(
+                  leading: Icon(Icons.app_registration),
+                  title: Text(REGISTER),
+                  onTap: () async {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => Register()));
+                  },
+                ),
+                //View current users
+                ListTile(
+                  leading: Icon(Icons.app_settings_alt_sharp),
+                  title: Text(CURRENT_USERS),
+                  onTap: () async {
+                    Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => UserGrid()));
+                  }
+                ),
+              ],
+            ),
+
             ListTile(
               leading: Icon(Icons.person),
               title: Text(SIGN_OUT),

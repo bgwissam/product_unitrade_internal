@@ -15,7 +15,7 @@ class BrandTile extends StatefulWidget {
   final Brands brand;
   final Map<String, String> categories;
   final BrandsForm brandsForm;
-  final User user;
+  final UserData user;
   final Function callBackUpdate;
   BrandTile(
       {this.brand,
@@ -49,7 +49,7 @@ class _BrandTileState extends State<BrandTile> {
         .document(userId)
         .get()
         .then((value) {
-      isAdmin = value.data['isAdmin'];
+      isAdmin = value.data['roles'];
     });
 
     return isAdmin;
@@ -68,7 +68,6 @@ class _BrandTileState extends State<BrandTile> {
             context,
             MaterialPageRoute(
                 builder: (context) => ProductsGrid(
-                      isAdmin: isAdmin,
                       productType: widget.divisionType,
                       brandName: widget.brand.brand,
                       categoryType: widget.categoryType,

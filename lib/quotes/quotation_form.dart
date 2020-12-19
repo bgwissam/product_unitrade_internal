@@ -52,6 +52,9 @@ class _QuotationFormState extends State<QuotationForm> {
   //dyanamic widget
   List<Widget> dynamicList = [];
 
+  TextEditingController _clientNameField = TextEditingController();
+  TextEditingController _testController = TextEditingController();
+
   var paintProducts;
   @override
   void initState() {
@@ -100,39 +103,19 @@ class _QuotationFormState extends State<QuotationForm> {
 
   emailContainerBuild() {
     var clientEmailAddress = Provider.of<List<Clients>>(context) ?? [];
+
     if (clientEmailAddress != null) {
       for (var data in clientEmailAddress) {
+        print(clientName);
         if (data.clientName == clientName) {
           clientEmail = data.email;
           clientPhone = data.clientPhoneNumber;
           clientId = data.uid;
+          print(clientEmail);
         }
       }
     }
   }
-
-  // //Get the item's description
-  // Future<Map<String, String>> _getItemDescription() async {
-  //   itemCodes = new List();
-  //   productNames = new List();
-
-  //   itemCodes.addAll(widget.products.map((e) => e.itemCode));
-  //   //productNames.addAll(widget.products.map((e) => e.productName));
-  //   productNames = await settingDescription();
-  //   //check the products have their description before proceeding
-  //   if(productNames.isNotEmpty)
-  //     productsWithDescription = Map.fromIterables(itemCodes, productNames);
-  //   print(productsWithDescription);
-  //   return productsWithDescription;
-  // }
-  // //will await the product names to be set into the list
-  // Future<List<String>> settingDescription() async {
-
-  //   List<String> productNamesDescription = new List();
-  //   productNamesDescription.addAll(widget.products.map((e) => e.productName));
-
-  //   return productNamesDescription;
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -198,6 +181,7 @@ class _QuotationFormState extends State<QuotationForm> {
         ],
       ),
       body: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
         child: new Form(
           key: _formKey,
           child: _quotationDetails(context),
@@ -207,7 +191,8 @@ class _QuotationFormState extends State<QuotationForm> {
   }
 
   Widget _quotationDetails(BuildContext context) {
-    TextEditingController _clientNameField = TextEditingController();
+
+
     //dynamic list to add more rows
     Widget dynamicRow = new Container(
       child: new ListView.builder(
@@ -230,47 +215,54 @@ class _QuotationFormState extends State<QuotationForm> {
               ),
               Expanded(
                 flex: 3,
-                child: TypeAheadFormField(
-                  textFieldConfiguration: TextFieldConfiguration(
-                    controller: _clientNameField,
-                    autofocus: false,
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: Colors.grey[100],
-                      enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                          borderSide: BorderSide(color: Colors.grey)),
-                      focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                          borderSide: BorderSide(color: Colors.blue)),
+                child: Center(
+                  child: TypeAheadFormField(
+                    textFieldConfiguration: TextFieldConfiguration(
+                      controller: _clientNameField,
+                      autofocus: false,
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.grey[100],
+                        enabledBorder: OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(15.0)),
+                            borderSide: BorderSide(color: Colors.grey)),
+                        focusedBorder: OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(15.0)),
+                            borderSide: BorderSide(color: Colors.blue)),
+                      ),
                     ),
-                  ),
-                  direction: AxisDirection.down,
-                  suggestionsCallback: (pattern) async {
-                    return getClientSuggestions(pattern);
-                  },
-                  transitionBuilder: (context, suggestionsBox, controller) {
-                    return suggestionsBox;
-                  },
-                  itemBuilder: (context, suggestion) {
-                    return ListTile(
-                      title: Text(suggestion),
-                    );
-                  },
-                  autoFlipDirection: true,
-                  onSuggestionSelected: (suggestions) {
-                    _clientNameField.text = suggestions;
-                    clientName = suggestions;
-                    _getEmailAddress(clientName);
-                  },
-                  validator: (val) {
-                    return val.isEmpty ? CLIENT_NAME_VALIDATION : null;
-                  },
-                  onSaved: (value) {
-                    setState(() {
+                    keepSuggestionsOnLoading: true,
+                    errorBuilder: (context, err) {
+                      return Container(
+                        child: Text(err),
+                      );
+                    },
+                    suggestionsCallback: (pattern) async {
+                      return getClientSuggestions(pattern);
+                    },
+                    transitionBuilder: (context, suggestionsBox, controller) {
+                      return suggestionsBox;
+                    },
+                    itemBuilder: (context, suggestion) {
+                      return ListTile(
+                        title: Text(suggestion),
+                      );
+                    },
+                    autoFlipDirection: true,
+                    onSuggestionSelected: (suggestions) {
+                      _getEmailAddress(suggestions);
+                      _clientNameField.text = suggestions;
+                      clientName = suggestions;
+                    },
+                    validator: (val) {
+                      return val.isEmpty ? CLIENT_NAME_VALIDATION : null;
+                    },
+                    onSaved: (value) {
                       clientName = value;
-                    });
-                  },
+                    },
+                  ),
                 ),
               )
             ],
@@ -278,7 +270,6 @@ class _QuotationFormState extends State<QuotationForm> {
           SizedBox(
             height: 5.0,
           ),
-
           //Payment terms row
           Row(
             children: [
@@ -306,9 +297,7 @@ class _QuotationFormState extends State<QuotationForm> {
                     validator: (val) =>
                         val.isEmpty ? PAYMENT_TERMS_VALIDATION : null,
                     onSaved: (val) {
-                      setState(() {
-                        paymentTerms = val;
-                      });
+                      paymentTerms = val;
                     }),
               )
             ],
@@ -317,62 +306,7 @@ class _QuotationFormState extends State<QuotationForm> {
             height: 15.0,
           ),
           Container(
-            child: Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Expanded(
-                    flex: 2,
-                    child: Center(
-                      child: Text(
-                        ITEM_CODE,
-                        style: textStyle3,
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 10.0,
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: Center(
-                      child: Text(
-                        ITEM_PACK,
-                        style: textStyle3,
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 10.0,
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: Center(
-                      child: Text(
-                        ITEM_QUANTITY,
-                        style: textStyle3,
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 10.0,
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: Center(
-                      child: Text(
-                        ITEM_PRICE,
-                        style: textStyle3,
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ),
-          Container(
-            height: 300.0,
+            height: MediaQuery.of(context).size.height - 310,
             child: dynamicRow,
           ),
           Row(
@@ -394,8 +328,8 @@ class _QuotationFormState extends State<QuotationForm> {
                       height: 50.0,
                       child: Center(
                         child: Text(
-                            totalValue == null ? '0.0' : totalValue.toString(),
-                            ),
+                          totalValue == null ? '0.0' : totalValue.toString(),
+                        ),
                       ),
                       decoration: BoxDecoration(
                         color: Colors.grey[200],
@@ -447,6 +381,7 @@ class _QuotationFormState extends State<QuotationForm> {
     );
   }
 
+  //add a row to the product list
   void _addTableRow() {
     if (itemCode.length != 0) {
       itemCode = [];
@@ -455,13 +390,14 @@ class _QuotationFormState extends State<QuotationForm> {
       price = [];
       totalValue = 0;
     }
-
+    //product list shouldn't be more than 20 items
     if (dynamicList.length < 20) {
       index++;
       dynamicList.add(buildRows(context));
     }
   }
 
+  //remove a row from the product list, such that at least 1 row should remain
   void _removeTableRow() {
     if (itemCode.length != 0) {
       itemCode = [];
@@ -480,148 +416,182 @@ class _QuotationFormState extends State<QuotationForm> {
   //Build row dynamically
   Widget buildRows(BuildContext context) {
     //Stream the list of products
+    //TextEditing controllers for itemCode, pack, and price, to show both pack and price when selection is made
     TextEditingController _typeAheadController = TextEditingController();
     TextEditingController _packController = TextEditingController();
     TextEditingController _priceController = TextEditingController();
     return Container(
       child: Padding(
         padding: const EdgeInsets.all(12.0),
-        child: new Row(children: [
-          //Code
-          Expanded(
-            flex: 2,
-            child: Center(
-              child: TypeAheadFormField(
-                textFieldConfiguration: TextFieldConfiguration(
-                  controller: _typeAheadController,
-                  autofocus: false,
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: Colors.grey[100],
-                    enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                        borderSide: BorderSide(color: Colors.grey)),
-                    focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                        borderSide: BorderSide(color: Colors.blue)),
+        child: new Column(children: [
+          //Item code and pack row
+          Container(
+            width: MediaQuery.of(context).size.width - 20,
+            child: Row(
+              children: [
+                //Code
+                Expanded(
+                  flex: 2,
+                  child: Center(
+                    child: TypeAheadFormField(
+                      textFieldConfiguration: TextFieldConfiguration(
+                        controller: _typeAheadController,
+                        autofocus: false,
+                        decoration: InputDecoration(
+                          labelText: ITEM_CODE,
+                          filled: true,
+                          fillColor: Colors.grey[100],
+                          enabledBorder: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(15.0)),
+                              borderSide: BorderSide(color: Colors.grey)),
+                          focusedBorder: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(15.0)),
+                              borderSide: BorderSide(color: Colors.blue)),
+                        ),
+                      ),
+                      direction: AxisDirection.up,
+                      suggestionsCallback: (pattern) async {
+                        return getSuggestions(pattern);
+                      },
+                      transitionBuilder: (context, suggestionsBox, controller) {
+                        return suggestionsBox;
+                      },
+                      itemBuilder: (context, suggestion) {
+                        return ListTile(
+                          title: Text(suggestion),
+                        );
+                      },
+                      autoFlipDirection: true,
+                      onSuggestionSelected: (suggestions) {
+                        _typeAheadController.text = suggestions;
+                        //get the pack and price for each item
+                        widget.products.forEach((element) {
+                          var code = element.itemCode +
+                              ' ' +
+                              element.productPack.toString();
+
+                          if (code == suggestions) {
+                            _priceController.text =
+                                element.productPrice.toString();
+                            _packController.text =
+                                element.productPack.toString();
+                          }
+                          return true;
+                        });
+                      },
+                      onSaved: (value) {
+                        var _itemCode = value.split(' ');
+                        itemCode.add(_itemCode[0]);
+                      },
+                    ),
                   ),
                 ),
-                direction: AxisDirection.up,
-                suggestionsCallback: (pattern) async {
-                  return getSuggestions(pattern);
-                },
-                transitionBuilder: (context, suggestionsBox, controller) {
-                  return suggestionsBox;
-                },
-                itemBuilder: (context, suggestion) {
-                  return ListTile(
-                    title: Text(suggestion),
-                  );
-                },
-                autoFlipDirection: true,
-                onSuggestionSelected: (suggestions) {
-                  _typeAheadController.text = suggestions;
-
-                  print(suggestions);
-                  //get the pack and price for each item
-                  widget.products.forEach((element) {
-                    var code =
-                        element.itemCode + ' ' + element.productPack.toString();
-                    
-                    if (code == suggestions) {
-                      _priceController.text = element.productPrice.toString();
-                      _packController.text = element.productPack.toString();
-                    }
-                    return true;
-                  });
-                },
-                onSaved: (value) {
-                  var _itemCode = value.split(' ');
-                  itemCode.add(_itemCode[0]);
-                },
-              ),
+                SizedBox(
+                  width: 5.0,
+                ),
+                //Packing
+                Expanded(
+                  flex: 1,
+                  child: Center(
+                    child: TextFormField(
+                        controller: _packController,
+                        style: textStyle1,
+                        decoration: InputDecoration(
+                          labelText: ITEM_PACK,
+                          filled: true,
+                          fillColor: Colors.grey[100],
+                          enabledBorder: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(15.0)),
+                              borderSide: BorderSide(color: Colors.grey)),
+                          focusedBorder: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(15.0)),
+                              borderSide: BorderSide(color: Colors.blue)),
+                        ),
+                        validator: (val) =>
+                            val.isEmpty ? ITEM_PACK_VALIDATION : null,
+                        onSaved: (val) {
+                          pack.add(double.parse(val));
+                        }),
+                  ),
+                ),
+                SizedBox(
+                  width: 5.0,
+                ),
+              ],
             ),
           ),
           SizedBox(
-            width: 5.0,
+            height: 15.0,
           ),
-          //Packing
-          Expanded(
-            flex: 1,
-            child: Center(
-              child: TextFormField(
-                  controller: _packController,
-                  style: textStyle1,
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: Colors.grey[100],
-                    enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                        borderSide: BorderSide(color: Colors.grey)),
-                    focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                        borderSide: BorderSide(color: Colors.blue)),
+          //Quantity and price row
+          Container(
+            width: MediaQuery.of(context).size.width - 10,
+            child: Row(
+              children: [
+                //Quantity
+                Expanded(
+                  flex: 1,
+                  child: Center(
+                    child: TextFormField(
+                        initialValue: '',
+                        style: textStyle1,
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          filled: true,
+                          labelText: ITEM_QUANTITY,
+                          fillColor: Colors.grey[100],
+                          enabledBorder: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(15.0)),
+                              borderSide: BorderSide(color: Colors.grey)),
+                          focusedBorder: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(15.0)),
+                              borderSide: BorderSide(color: Colors.blue)),
+                        ),
+                        validator: (val) =>
+                            val.isEmpty ? ITEM_QUANTITY_VALIDATION : null,
+                        onSaved: (val) {
+                          quantity.add(double.parse(val));
+                        }),
                   ),
-                  validator: (val) => val.isEmpty ? ITEM_PACK_VALIDATION : null,
-                  onSaved: (val) {
-                    pack.add(double.parse(val));
-                  }),
-            ),
-          ),
-          SizedBox(
-            width: 5.0,
-          ),
-          //Quantity
-          Expanded(
-            flex: 1,
-            child: Center(
-              child: TextFormField(
-                  initialValue: '',
-                  style: textStyle1,
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: Colors.grey[100],
-                    enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                        borderSide: BorderSide(color: Colors.grey)),
-                    focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                        borderSide: BorderSide(color: Colors.blue)),
+                ),
+                SizedBox(
+                  width: 5.0,
+                ),
+                //Price
+                Expanded(
+                  flex: 1,
+                  child: Center(
+                    child: TextFormField(
+                        controller: _priceController,
+                        style: textStyle1,
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          filled: true,
+                          labelText: ITEM_PRICE,
+                          fillColor: Colors.grey[100],
+                          enabledBorder: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(15.0)),
+                              borderSide: BorderSide(color: Colors.grey)),
+                          focusedBorder: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(15.0)),
+                              borderSide: BorderSide(color: Colors.blue)),
+                        ),
+                        validator: (val) =>
+                            val.isEmpty ? ITEM_PRICE_VALIDATION : null,
+                        onSaved: (val) {
+                          price.add(double.parse(val));
+                        }),
                   ),
-                  validator: (val) =>
-                      val.isEmpty ? ITEM_QUANTITY_VALIDATION : null,
-                  onSaved: (val) {
-                    quantity.add(double.parse(val));
-                  }),
-            ),
-          ),
-          SizedBox(
-            width: 5.0,
-          ),
-          //Price
-          Expanded(
-            flex: 1,
-            child: Center(
-              child: TextFormField(
-                  controller: _priceController,
-                  style: textStyle1,
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: Colors.grey[100],
-                    enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                        borderSide: BorderSide(color: Colors.grey)),
-                    focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                        borderSide: BorderSide(color: Colors.blue)),
-                  ),
-                  validator: (val) =>
-                      val.isEmpty ? ITEM_PRICE_VALIDATION : null,
-                  onSaved: (val) {
-                    price.add(double.parse(val));
-                  }),
+                ),
+              ],
             ),
           ),
         ]),

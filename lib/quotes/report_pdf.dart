@@ -1,5 +1,4 @@
 import 'dart:typed_data';
-
 import 'package:Products/quotes/PDFDocumentViewer.dart';
 import 'package:Products/services/email_management.dart';
 import 'dart:io';
@@ -39,7 +38,6 @@ Future<void> reportView({
   final PdfFont contentFont = new PdfStandardFont(PdfFontFamily.helvetica, 15,
       style: PdfFontStyle.bold);
   //Draw logo
-  print(imageLogo);
   drawLogo(pdf, page, pageSize, imageLogo);
   //Draw rectangle
   page.graphics.drawRectangle(
@@ -113,6 +111,16 @@ Future<void> reportView({
   }
 }
 
+//Draw Logo of Unitrade
+void drawLogo(PdfDocument doc, PdfPage page, Size pageSize, ByteData imageLogo) {
+  //read image data
+  final Uint8List imageData = imageLogo.buffer.asUint8List();
+  //load image using PdfBitmap
+  final PdfBitmap image = PdfBitmap(imageData);
+  //Draw image to pdf
+  page.graphics.drawImage(image, Rect.fromLTWH(10, 10, pageSize.width - 140, 80));
+}
+
 //Draw Quotation Header
 PdfLayoutResult drawHeader(
     PdfPage page,
@@ -125,11 +133,21 @@ PdfLayoutResult drawHeader(
     String quoteId) {
   final PdfFont contentFont = PdfStandardFont(PdfFontFamily.helvetica, 15);
 
- 
+
+
+  //Draws the rectangle that we will place in the net value
   page.graphics.drawRectangle(
       bounds: Rect.fromLTWH(400, 0, pageSize.width - 400, 90),
       brush: PdfSolidBrush(PdfColor(192, 192, 192, 5)));
 
+  //Draw string Net Value of the pdf file
+  page.graphics.drawString('Net Value', contentFont,
+      brush: PdfBrushes.black,
+      bounds: Rect.fromLTWH(400, 0, pageSize.width - 400, 33),
+      format: PdfStringFormat(
+          alignment: PdfTextAlignment.center,
+          lineAlignment: PdfVerticalAlignment.bottom));
+  //set the value value of the quotation in the currency required
   page.graphics.drawString('SAR ' + totalValue.toString(), contentFont,
       bounds: Rect.fromLTWH(400, 0, pageSize.width - 400, 100),
       brush: PdfBrushes.black,
@@ -137,13 +155,7 @@ PdfLayoutResult drawHeader(
           alignment: PdfTextAlignment.center,
           lineAlignment: PdfVerticalAlignment.middle));
 
-  //Draw string
-  page.graphics.drawString('Net Value', contentFont,
-      brush: PdfBrushes.black,
-      bounds: Rect.fromLTWH(400, 0, pageSize.width - 400, 33),
-      format: PdfStringFormat(
-          alignment: PdfTextAlignment.center,
-          lineAlignment: PdfVerticalAlignment.bottom));
+
   //Create data foramt and convert it to text.
   final DateFormat format = DateFormat.yMMMMd('en_US');
   final String quoteNumber =
@@ -169,7 +181,7 @@ PdfLayoutResult drawHeader(
               pageSize.height - 120));
 }
 
-//Draws the grid
+//Draws the body of the pdf file with the data of the products
 void drawGrid(PdfPage page, PdfGrid grid, PdfLayoutResult result,
     PdfFont contentFont, double total, String paymentTerms) {
   Rect totalPriceCellBounds;
@@ -221,9 +233,9 @@ void drawGrid(PdfPage page, PdfGrid grid, PdfLayoutResult result,
   String delivery =
       'Delivery: Material will be delievered to your warehouse if order exceeds 10,000 Riyal';
   Size contentSize = contentFont.measureString(payment);
-  //Draw quotation terms
+  //Draw quotation terms box
   page.graphics.drawRectangle(
-      bounds: Rect.fromLTWH(5, 450, pageSize.width - 10, 110),
+      bounds: Rect.fromLTWH(5, 450, pageSize.width - 10, 120),
       brush: PdfSolidBrush(PdfColor(223, 242, 240)));
 
   PdfTextElement(
@@ -234,15 +246,7 @@ void drawGrid(PdfPage page, PdfGrid grid, PdfLayoutResult result,
               25, 460, pageSize.width - 50, pageSize.height - 120));
 }
 
-//Draw Logo
-void drawLogo(PdfDocument doc, PdfPage page, Size pageSize, ByteData imageLogo) {
-  //read image data
-  final Uint8List imageData = imageLogo.buffer.asUint8List();
-  //load image using PdfBitmap
-  final PdfBitmap image = PdfBitmap(imageData);
-  //Draw image to pdf
-  page.graphics.drawImage(image, Rect.fromLTWH(10, 10, pageSize.width - 140, 80));
-}
+
 
 
 

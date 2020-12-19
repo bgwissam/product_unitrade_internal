@@ -74,8 +74,7 @@ class _AccountPageState extends State<AccountPage> {
                           cityOfResidence:
                               newCityOfResidence ?? widget.cityOfResidence,
                           company: newCompany ?? widget.company,
-                          isAdmin: false,
-                          isSuperAdmin: false)
+                          isActive: true)
                       .then((value) {
                     result = value;
                     print(result);

@@ -1,14 +1,10 @@
 class User {
-
   final String uid;
 
   User({this.uid});
-
-
 }
 
 class UserData {
-
   final String uid;
   final String firstName;
   final String lastName;
@@ -17,12 +13,18 @@ class UserData {
   final String emailAddress;
   final String countryOfResidence;
   final String cityOfResidence;
-  final bool isAdmin;
-  final bool isPriceAdmin;
-  final bool isSuperAdmin;
+  final List<String> roles;
+  final bool isActive;
 
-  UserData({this.uid, this.firstName, this.lastName, this.company, this.phonNumber, this.emailAddress, this.countryOfResidence, this.cityOfResidence, this.isAdmin, this.isPriceAdmin, this.isSuperAdmin});
-
-  
+  UserData(
+      {this.uid,
+      this.firstName,
+      this.lastName,
+      this.company,
+      this.phonNumber,
+      this.emailAddress,
+      this.countryOfResidence,
+      this.cityOfResidence,
+      this.roles,
+      this.isActive});
 }
-

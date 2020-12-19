@@ -4,16 +4,17 @@ import '../models/user.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  
   DatabaseService db = DatabaseService();
   var newUser;
 
   //create a user object based on Firebase user
-  User _userFromFirebaseUser(FirebaseUser user) {
-    return user != null ? User(uid: user.uid) : null;
+  UserData _userFromFirebaseUser(FirebaseUser user) {
+    return user != null ? UserData(uid: user.uid) : null;
   }
 
   //auth change user screen
-  Stream<User> get user {
+  Stream<UserData> get user {
     return _auth.onAuthStateChanged.map(_userFromFirebaseUser);
   }
 
@@ -39,52 +40,52 @@ class AuthService {
       String firstName,
       String lastName,
       String company,
-      bool isAdmin,
-      bool isPriceAdmin,
-      bool isSuperAdmin,
+      bool isActive,
       String phoneNumber,
       String countryOfResidence,
-      String cityOfResidence}) async {
+      String cityOfResidence,
+      List<String> roles}) async {
     try {
       AuthResult result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
+       
       FirebaseUser user = result.user;
 
-       print('The user id is ${user.uid}');
-      await db.updateUserData(
-          uid: user.uid,
-          firstName: firstName,
-          lastName: lastName,
-          company: company,
-          isAdmin: false,
-          isPriceAdmin: isPriceAdmin,
-          isSuperAdmin: false,
-          phoneNumber: phoneNumber,
-          emailAddress: email,
-          countryOfResidence: countryOfResidence,
-          cityOfResidence: cityOfResidence).then((value) {
-            print(value);
-          });
-      Future.delayed(Duration(seconds: 3));
+      if (result != null) {
+        await db.updateUserData(
+                uid: user.uid,
+                firstName: firstName,
+                lastName: lastName,
+                company: company,
+                phoneNumber: phoneNumber,
+                isActive: false,
+                emailAddress: email,
+                countryOfResidence: countryOfResidence,
+                cityOfResidence: cityOfResidence ?? '',
+                roles: roles)
+            .then((value) {
+          print(value);
+        });
+        Future.delayed(Duration(seconds: 3));
+        // try {
+        //   await user.sendEmailVerification();
+        //   return user.uid;
+        // } catch (e) {
+        //   print('an error occured while sending verification email:');
+        //   print(e.message);
+        // }
 
-      try {
-        await user.sendEmailVerification();
-        return user.uid;
-      } catch (e) {
-        print('an error occured while sending verification email:');
-        print(e.message);
-      }
-
-      if (user.isEmailVerified) {
-        //create a new document for user with uid
-        await DatabaseService(uid: user.uid).updateUserData(
-            firstName: firstName,
-            lastName: lastName,
-            company: company,
-            isAdmin: isAdmin,
-            isPriceAdmin: isPriceAdmin,
-            isSuperAdmin: isSuperAdmin);
-        return _userFromFirebaseUser(user);
+      
+          // //create a new document for user with uid
+          // await DatabaseService(uid: user.uid).updateUserData(
+          //     firstName: firstName,
+          //     lastName: lastName,
+          //     company: company,
+          //     isAdmin: isAdmin,
+          //     isPriceAdmin: isPriceAdmin,
+          //     isSuperAdmin: isSuperAdmin);
+          // return _userFromFirebaseUser(user);
+        await signOut();
       }
     } catch (e) {
       print('Could not register error: ' + e.toString());

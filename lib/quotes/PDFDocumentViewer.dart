@@ -82,10 +82,22 @@ class _PDFDocumentViewerState extends State<PDFDocumentViewer> {
           print(result);
 
           if (result != null) {
-            if (result == 'SUCCESS') {
-              _emailSentStatus = true;
-            } else {
-              _emailSentStatus = false;
+            switch(result) {
+              case 'SUCCESS':
+                emailStatus = EMAIL_SENT;
+                break;
+              case 'PENDING':
+                emailStatus = EMAIL_PENDING;
+                break;
+              case 'PREPARING':
+                emailStatus = EMAIL_PREP;
+                break;
+              case 'FAILED':
+                emailStatus = EMAIL_FAIL;
+                break;
+              default:
+                emailStatus = EMAIL_PENDING;
+
             }
             Future.delayed(Duration(seconds: 2), () {
               //show dialog after delay
@@ -95,8 +107,7 @@ class _PDFDocumentViewerState extends State<PDFDocumentViewer> {
                 builder: (BuildContext context) {
                   return AlertDialog(
                     title: Text(EMAIL_STATUS),
-                    content:
-                        _emailSentStatus ? Text(EMAIL_SENT) : Text(EMAIL_FAIL),
+                    content:Text(emailStatus),
                     actions: [
                       FlatButton(
                         child: Text(OK_BUTTON),
