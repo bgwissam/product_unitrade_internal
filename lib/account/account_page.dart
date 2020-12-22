@@ -63,7 +63,7 @@ class _AccountPageState extends State<AccountPage> {
                   var result;
                   DatabaseService db = DatabaseService();
                   await db
-                      .updateUserData(
+                      .setUserData(
                           uid: widget.userId,
                           firstName: newFirstName ?? widget.firstName,
                           lastName: newLastName ?? widget.lastName,

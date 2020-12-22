@@ -6,8 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 /// UserGrid will be the streaming parent for UserList Class
-
-
 class UserGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

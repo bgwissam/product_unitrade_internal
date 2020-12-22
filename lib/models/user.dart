@@ -13,7 +13,7 @@ class UserData {
   final String emailAddress;
   final String countryOfResidence;
   final String cityOfResidence;
-  final List<String> roles;
+  final List<dynamic> roles;
   final bool isActive;
 
   UserData(

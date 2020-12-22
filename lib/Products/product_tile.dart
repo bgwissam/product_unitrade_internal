@@ -70,14 +70,15 @@ class _ProductTileState extends State<ProductTile> {
   Future getCurrentUser() async {
     userId = widget.user.uid;
     DatabaseService databaseService = DatabaseService(uid: widget.user.uid);
-    await databaseService.unitradeCollection
+    var result = await databaseService.unitradeCollection
         .document(userId)
         .get()
         .then((value) {
-      isAdmin = value.data['isAdmin'];
-      isPriceAdmin = value.data['isPriceAdmin'];
-    });
-    return isAdmin;
+          
+          return value.data['roles'];
+        });
+
+        return result;
   }
 
   Future<Widget> _getImage(BuildContext context, String imageUrl) async {
@@ -152,9 +153,7 @@ class _ProductTileState extends State<ProductTile> {
             context,
             MaterialPageRoute(
                 builder: (context) => ProductForm(
-                      paintProducts: widget.product,
-                      roles: widget.roles
-                    )));
+                    paintProducts: widget.product, roles: widget.roles)));
       },
       child: Container(
         child: new Column(
@@ -242,9 +241,8 @@ class _ProductTileState extends State<ProductTile> {
             context,
             MaterialPageRoute(
                 builder: (context) => ProductForm(
-                      woodProduct: widget.woodProduct,
-                      roles: widget.user.roles
-                    )));
+                    woodProduct: widget.woodProduct,
+                    roles: widget.user.roles)));
       },
       child: Container(
         child: new Column(
@@ -310,9 +308,8 @@ class _ProductTileState extends State<ProductTile> {
             context,
             MaterialPageRoute(
                 builder: (context) => ProductForm(
-                      woodProduct: widget.woodProduct,
-                      roles: widget.user.roles
-                    )));
+                    woodProduct: widget.woodProduct,
+                    roles: widget.user.roles)));
       },
       child: Container(
         child: new Column(
@@ -372,9 +369,8 @@ class _ProductTileState extends State<ProductTile> {
             context,
             MaterialPageRoute(
                 builder: (context) => ProductForm(
-                      lightProduct: widget.lightProduct,
-                      roles: widget.user.roles
-                    )));
+                    lightProduct: widget.lightProduct,
+                    roles: widget.user.roles)));
       },
       child: Container(
         child: new Column(
@@ -434,9 +430,8 @@ class _ProductTileState extends State<ProductTile> {
             context,
             MaterialPageRoute(
                 builder: (context) => ProductForm(
-                      accessoriesProduct: widget.accessoriesProduct,
-                      roles: widget.user.roles
-                    )));
+                    accessoriesProduct: widget.accessoriesProduct,
+                    roles: widget.user.roles)));
       },
       child: Container(
         child: new Column(

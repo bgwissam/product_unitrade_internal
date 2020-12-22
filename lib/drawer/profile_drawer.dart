@@ -136,15 +136,7 @@ class _ProfileDrawerState extends State<ProfileDrawer> {
               leading: Icon(Icons.lock),
               title: Text(USERS),
               children: [
-                //Register new users, option only allowed for admin account
-                ListTile(
-                  leading: Icon(Icons.app_registration),
-                  title: Text(REGISTER),
-                  onTap: () async {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Register()));
-                  },
-                ),
+               
                 //View current users
                 ListTile(
                   leading: Icon(Icons.app_settings_alt_sharp),
