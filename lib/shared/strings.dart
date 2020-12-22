@@ -2,6 +2,7 @@
 const String SIGN_IN_TITLE = 'Sign in to Unitrade';
 const String REGISTER_YOUR_ACCOUNT_TITLE = 'Register your account';
 const String FORGOT_EMAIL_TITLE = 'Forgot Password';
+const String VERIFY_ACCOUNT = 'Send Account Verification';
 const String EMAIL_ADDRESS_FIELD = 'Email address used for account';
 const String EMAIL_ADDRESS_VALIDATOR = 'Email can\'t be empty';
 const String NON_VALID_EMAIL = 'Non valid email, please enter a valid email';
