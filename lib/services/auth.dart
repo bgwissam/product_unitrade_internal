@@ -4,13 +4,24 @@ import '../models/user.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  
+
   DatabaseService db = DatabaseService();
   var newUser;
 
   //create a user object based on Firebase user
   UserData _userFromFirebaseUser(FirebaseUser user) {
     return user != null ? UserData(uid: user.uid) : null;
+  }
+  //Verify user account
+  userFromFirebaseVerification(String emailAddress) async {
+    FirebaseUser user = await _auth.currentUser();
+    try {
+      user.sendEmailVerification();
+      return user.uid;
+    } catch (e) {
+      print('${this.runtimeType} sending verification failed: $e');
+    }
+
   }
 
   //auth change user screen
@@ -24,10 +35,13 @@ class AuthService {
       AuthResult result = await _auth.signInWithEmailAndPassword(
           email: email.trim(), password: password);
       FirebaseUser user = result.user;
-      if (user.isEmailVerified)
-        return _userFromFirebaseUser(user);
-      else
-        return null;
+      if (user.isEmailVerified) {
+        print('${this.runtimeType} current user is verified ${user.uid}');
+        return 'User is verified';
+      } else {
+        print('${this.runtimeType} current user is not verified ${user.uid}');
+        return 'User not verified';
+      }
     } catch (e) {
       return e.message.toString();
     }
@@ -46,13 +60,15 @@ class AuthService {
       String cityOfResidence,
       List<String> roles}) async {
     try {
-      AuthResult result = await _auth.createUserWithEmailAndPassword(
+      var result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
-       
+
       FirebaseUser user = result.user;
 
-      if (result != null) {
-        await db.updateUserData(
+      print('${this.runtimeType} current user: ${user.uid}');
+      if (user != null) {
+        await db
+            .setUserData(
                 uid: user.uid,
                 firstName: firstName,
                 lastName: lastName,
@@ -67,35 +83,25 @@ class AuthService {
           print(value);
         });
         Future.delayed(Duration(seconds: 3));
-        // try {
-        //   await user.sendEmailVerification();
-        //   return user.uid;
-        // } catch (e) {
-        //   print('an error occured while sending verification email:');
-        //   print(e.message);
-        // }
-
-      
-          // //create a new document for user with uid
-          // await DatabaseService(uid: user.uid).updateUserData(
-          //     firstName: firstName,
-          //     lastName: lastName,
-          //     company: company,
-          //     isAdmin: isAdmin,
-          //     isPriceAdmin: isPriceAdmin,
-          //     isSuperAdmin: isSuperAdmin);
-          // return _userFromFirebaseUser(user);
-        await signOut();
+        user = await _auth.currentUser();
+        try {
+          print('${this.runtimeType} sending verification email for $user');
+          await user.sendEmailVerification();
+          return user.uid;
+        } catch (e) {
+          print('an error occured while sending verification email: $e');
+        }
       }
     } catch (e) {
       print('Could not register error: ' + e.toString());
-      return null;
+      return e.toString();
     }
   }
 
   //sign out
   Future signOut() async {
     try {
+      print('${this.runtimeType} has signed out user: ${user.first}');
       return await _auth.signOut();
     } catch (e) {
       print(e.toString());
@@ -104,6 +110,10 @@ class AuthService {
   }
 
   Future resetPassword(String email) async {
-    await _auth.sendPasswordResetEmail(email: email);
+    try {
+      return await _auth.sendPasswordResetEmail(email: email);
+    } catch (e) {
+      return '${this.runtimeType} Reset email error: $e';
+    }
   }
 }

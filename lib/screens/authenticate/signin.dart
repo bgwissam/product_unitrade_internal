@@ -5,8 +5,12 @@ import 'package:Products/shared/strings.dart';
 import '../../shared/constants.dart';
 import '../../shared/loading.dart';
 import '../../services/auth.dart';
+import 'package:Products/screens/wrapper.dart';
+
 
 class SignIn extends StatefulWidget {
+  final String message;
+  SignIn({this.message});
   @override
   _SignInState createState() => _SignInState();
 }
@@ -14,11 +18,28 @@ class SignIn extends StatefulWidget {
 class _SignInState extends State<SignIn> {
   final AuthService _auth = AuthService();
   final _formKey = GlobalKey<FormState>();
-  bool loading = false;
+  bool loading;
+  bool showEmailVerification;
   //text field state
   String email = '';
   String password = '';
-  String error = '';
+  String error;
+
+  void initState() {
+    super.initState();
+    
+    widget.message != null ? error = widget.message : error = null;
+    showEmailVerification = false;
+    loading = false;
+    //check if signing in has an error or info message along
+    widget.message != null ? error = widget.message : error = '';
+  }
+
+  //Will allow the user to send another verification email if the account is not verified
+  _verifyAccount(String emailAddress) {
+    print(emailAddress);
+    _auth.userFromFirebaseVerification(emailAddress);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -96,7 +117,7 @@ class _SignInState extends State<SignIn> {
                     SizedBox(
                       height: 5.0,
                     ),
-                    error != null
+                    error.isNotEmpty
                         ? Container(
                             child: Text(
                               error,
@@ -109,6 +130,18 @@ class _SignInState extends State<SignIn> {
                         : SizedBox(
                             height: 1.0,
                           ),
+                    SizedBox(
+                      height: 15.0,
+                    ),
+                    showEmailVerification
+                        ? GestureDetector(
+                            child: Container(
+                              child: Text(VERIFY_ACCOUNT, style: textStyle7),
+                            ),
+                            onTap: () => email.isNotEmpty
+                                ? _verifyAccount(email)
+                                : error = 'Email is Empty')
+                        : Container(),
                     SizedBox(
                       height: 15.0,
                     ),
@@ -127,45 +160,61 @@ class _SignInState extends State<SignIn> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                      //A sign in button to sign in new users
-                      RaisedButton(
-                        color: Colors.brown[500],
-                        child: Text(
-                          LOGIN,
-                          style: buttonStyle,
-                        ),
-                        onPressed: () async {
-                          if (_formKey.currentState.validate()) {
-                            setState(() {
-                              loading = true;
-                            });
-                            dynamic result = await _auth
-                                .signInWithUserNameandPassword(email, password);
-                            if(result == null){
+                        //A sign in button to sign in new users
+                        RaisedButton(
+                          color: Colors.brown[500],
+                          child: Text(
+                            LOGIN,
+                            style: buttonStyle,
+                          ),
+                          onPressed: () async {
+                            if (_formKey.currentState.validate()) {
                               setState(() {
-                              loading = false;
-                              error = result;
-                            });
+                                loading = true;
+                              });
+                              dynamic result =
+                                  await _auth.signInWithUserNameandPassword(
+                                      email, password);
+                              print(
+                                  '${this.runtimeType} signing in result: $result');
+                              if (result != null) {
+                                if (result == 'User not verified') {
+                                  setState(() {
+                                    showEmailVerification = true;
+                                    error = result;
+                                  });
+                                } else if(result == 'User is verified') {
+                                  setState(() {
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => Wrapper(),));
+                                  });
+                                }
+                              } else {
+                                error = 'Unknown error, contact developer';
+                              }
+                              setState(() {
+                                loading = false;
+                              });
                             }
-                           
-                          }
-                        },
-                      ),
-                      SizedBox(width: 15.0,),
-                      //A registeration button to register new users
-                      RaisedButton(
-                        color: Colors.brown[500],
-                        child: Text(
-                          REGISTER,
-                          style: buttonStyle,
+                          },
                         ),
-                        onPressed: () async {
-                          Navigator.push(context, MaterialPageRoute(
-                            builder: (context) => Register()
-                          ));
-                        },
-                      ),
-                    ],
+                        SizedBox(
+                          width: 15.0,
+                        ),
+                        //A registeration button to register new users
+                        RaisedButton(
+                          color: Colors.brown[500],
+                          child: Text(
+                            REGISTER,
+                            style: buttonStyle,
+                          ),
+                          onPressed: () async {
+                            await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Register()));
+                          },
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -180,6 +229,7 @@ class ForgotEmailPage extends StatefulWidget {
   _ForgotEmailPageState createState() => _ForgotEmailPageState();
 }
 
+//Will direct the user to a page that allows them to reset their account password
 class _ForgotEmailPageState extends State<ForgotEmailPage> {
   final _formKey = GlobalKey<FormState>();
   String email;

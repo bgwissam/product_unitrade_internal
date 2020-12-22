@@ -61,7 +61,7 @@ class DatabaseService {
   }
 
   //Update the user data
-  Future<String> updateUserData(
+  Future<String> setUserData(
       {String uid,
       String firstName,
       String lastName,
