@@ -38,6 +38,7 @@ class PaintMaterial {
   String productPackUnit;
   double productPack;
   double productPrice;
+  double productCost;
   String color;
   String description;
   List<dynamic> productTags;
@@ -55,6 +56,7 @@ class PaintMaterial {
       this.productPackUnit,
       this.productPack,
       this.productPrice,
+      this.productCost,
       this.color,
       this.description,
       this.productTags,
@@ -65,20 +67,26 @@ class PaintMaterial {
 
 class WoodProduct {
   String uid;
+  String itemCode;
   String productName;
   String productType;
   String productCategory;
   String productBrand;
-  String length;
-  String width;
-  String thickness;
+  double length;
+  double width;
+  double thickness;
+  double productPack;
   String color;
   String description;
+  double productPrice;
+  double productCost;
   List<dynamic> productTags;
   List<dynamic> imageListUrls;
+  String pdfUrl;
 
   WoodProduct(
       {this.uid,
+      this.itemCode,
       this.productName,
       this.productType,
       this.productCategory,
@@ -86,10 +94,14 @@ class WoodProduct {
       this.length,
       this.width,
       this.thickness,
+      this.productPack,
       this.color,
       this.description,
+      this.productPrice,
+      this.productCost,
       this.productTags,
-      this.imageListUrls});
+      this.imageListUrls,
+      this.pdfUrl});
 }
 
 class Lights {
@@ -123,32 +135,39 @@ class Lights {
 
 class Accessories {
   String uid;
+  String itemCode;
   String productName;
   String productType;
   String productCategory;
   String productBrand;
-  String length;
-  String angle;
+  double length;
+  double angle;
   String closingType;
   String color;
   String description;
+  double productPrice;
+  double productCost;
   List<dynamic> productTags;
   List<dynamic> imageListUrls;
+  String pdfUrl;
 
-  Accessories({
-    this.uid,
-    this.productName,
-    this.productType,
-    this.productCategory,
-    this.productBrand,
-    this.length,
-    this.angle,
-    this.closingType,
-    this.color,
-    this.description,
-    this.productTags,
-    this.imageListUrls
-  });
+  Accessories(
+      {this.uid,
+      this.itemCode,
+      this.productName,
+      this.productType,
+      this.productCategory,
+      this.productBrand,
+      this.length,
+      this.angle,
+      this.closingType,
+      this.color,
+      this.description,
+      this.productPrice,
+      this.productCost,
+      this.productTags,
+      this.imageListUrls,
+      this.pdfUrl});
 }
 
 class Orders {
@@ -157,7 +176,8 @@ class Orders {
   List<dynamic> orderProducts;
   String status;
   Timestamp date;
-  Orders({this.orderId, this.userId, this.orderProducts, this.date, this.status});
+  Orders(
+      {this.orderId, this.userId, this.orderProducts, this.date, this.status});
 }
 
 class QuoteItems {
@@ -166,12 +186,6 @@ class QuoteItems {
   double quantity;
   double price;
   double tax;
-  QuoteItems({
-    this.itemCode,
-    this.itemPack,
-    this.quantity,
-    this.price,
-    this.tax
-  });
-
+  QuoteItems(
+      {this.itemCode, this.itemPack, this.quantity, this.price, this.tax});
 }

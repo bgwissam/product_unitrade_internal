@@ -33,14 +33,13 @@ class DatabaseService {
       String firstName,
       String lastName,
       String company,
-      bool isActive,    
+      bool isActive,
       String phoneNumber,
       String emailAddress,
       String countryOfResidence,
       String cityOfResidence,
       List<dynamic> roles}) async {
-      
-      try {
+    try {
       return await unitradeCollection.add({
         'firstName': firstName,
         'lastName': lastName,
@@ -57,7 +56,6 @@ class DatabaseService {
     } catch (e) {
       return 'An error occured: $e';
     }
-    
   }
 
   //Update the user data
@@ -95,24 +93,21 @@ class DatabaseService {
   List<UserData> _userDataFromSnapshot(QuerySnapshot snapshot) {
     return snapshot.documents.map((snapshot) {
       return UserData(
-        uid: uid,
-        firstName: snapshot.data['firstName'] ?? '',
-        lastName: snapshot.data['lastName'] ?? '',
-        company: snapshot.data['company'] ?? '',
-        phonNumber: snapshot.data['phoneNumber'],
-        countryOfResidence: snapshot.data['countryOfResidence'],
-        cityOfResidence: snapshot.data['cityOfResidnce'],
-        isActive: snapshot.data['isActive'] ?? true,
-        roles: snapshot.data['roles'] ?? null);
+          uid: uid,
+          firstName: snapshot.data['firstName'] ?? '',
+          lastName: snapshot.data['lastName'] ?? '',
+          company: snapshot.data['company'] ?? '',
+          phonNumber: snapshot.data['phoneNumber'],
+          countryOfResidence: snapshot.data['countryOfResidence'],
+          cityOfResidence: snapshot.data['cityOfResidnce'],
+          isActive: snapshot.data['isActive'] ?? true,
+          roles: snapshot.data['roles'] ?? null);
     }).toList();
-    
   }
 
   //get user doc stream
   Stream<List<UserData>> get userData {
-    return unitradeCollection
-        .snapshots()
-        .map(_userDataFromSnapshot);
+    return unitradeCollection.snapshots().map(_userDataFromSnapshot);
   }
 
   //This section is to manage brand data
@@ -295,7 +290,6 @@ class DatabaseService {
     }).toList();
   }
 
-
   //Stream client data by client id
   Stream<List<Clients>> clientDataById({String uid}) {
     return clientCollection
@@ -344,6 +338,7 @@ class DatabaseService {
       String productPackUnit,
       double productPack,
       double productPrice,
+      double productCost,
       String productCategory,
       String color,
       String description,
@@ -360,6 +355,7 @@ class DatabaseService {
         'productPackUnit': productPackUnit,
         'productPackValue': productPack,
         'productPrice': productPrice,
+        'productCost': productCost,
         'productCategory': productCategory,
         'color': color,
         'description': description,
@@ -383,6 +379,7 @@ class DatabaseService {
       String productPackUnit,
       double productPack,
       double productPrice,
+      double productCost,
       String productCategory,
       String color,
       String description,
@@ -399,6 +396,7 @@ class DatabaseService {
         'productPackUnit': productPackUnit,
         'productPackValue': productPack,
         'productPrice': productPrice,
+        'productCost': productCost,
         'productCategory': productCategory,
         'color': color,
         'description': description,
@@ -440,6 +438,7 @@ class DatabaseService {
   //Get a list of paint product
   List<PaintMaterial> _productDataFromSnapShot(QuerySnapshot snapshot) {
     return snapshot.documents.map((doc) {
+      print('Pack Type: ${doc.data['productPackValue'].runtimeType} ${doc.data['productName']}');
       return PaintMaterial(
           uid: doc.documentID,
           itemCode: doc.data['itemCode'],
@@ -449,6 +448,7 @@ class DatabaseService {
           productPackUnit: doc.data['productPackUnit'],
           productPack: doc.data['productPackValue'],
           productPrice: doc.data['productPrice'],
+          productCost: doc.data['productCost'],
           productCategory: doc.data['productCategory'],
           color: doc.data['color'],
           description: doc.data['description'],
@@ -507,39 +507,7 @@ class DatabaseService {
   //Section for wood products
   //Adding a new wood product
   Future addWoodProduct(
-      {String productName,
-      String productBrand,
-      String productType,
-      var length,
-      var width,
-      var thickness,
-      String productCategory,
-      String color,
-      String description,
-      List<dynamic> productTags,
-      List<dynamic> imageListUrls}) async {
-    try {
-      woodCollection.add({
-        'productName': productName,
-        'productBrand': productBrand,
-        'productType': productType,
-        'length': length,
-        'width': width,
-        'thickness': thickness,
-        'productCategory': productCategory,
-        'color': color,
-        'description': description,
-        'tags': productTags,
-        'imageListUrls': imageListUrls
-      });
-    } catch (e) {
-      print('Product could not be added $e');
-    }
-  }
-
-  //Update a current wood product
-  Future updateWoodProduct(
-      {String uid,
+      {String itemCode,
       String productName,
       String productBrand,
       String productType,
@@ -549,10 +517,14 @@ class DatabaseService {
       String productCategory,
       String color,
       String description,
+      double productPrice,
+      double productCost,
       List<dynamic> productTags,
-      List<dynamic> imageListUrls}) async {
+      List<dynamic> imageListUrls,
+      String pdfUrl}) async {
     try {
-      woodCollection.document(uid).setData({
+      woodCollection.add({
+        'itemCode': itemCode,
         'productName': productName,
         'productBrand': productBrand,
         'productType': productType,
@@ -562,8 +534,52 @@ class DatabaseService {
         'productCategory': productCategory,
         'color': color,
         'description': description,
+        'productPrice': productPrice,
+        'productCost': productCost,
         'tags': productTags,
-        'imageListUrls': imageListUrls
+        'imageListUrls': imageListUrls,
+        'pdfUrl': pdfUrl
+      });
+    } catch (e) {
+      print('Product could not be added $e');
+    }
+  }
+
+  //Update a current wood product
+  Future updateWoodProduct(
+      {String uid,
+      String itemCode,
+      String productName,
+      String productBrand,
+      String productType,
+      var length,
+      var width,
+      var thickness,
+      String productCategory,
+      String color,
+      String description,
+      double productPrice,
+      double productCost,
+      List<dynamic> productTags,
+      List<dynamic> imageListUrls,
+      String pdfUrl}) async {
+    try {
+      woodCollection.document(uid).setData({
+        'itemCode': itemCode,
+        'productName': productName,
+        'productBrand': productBrand,
+        'productType': productType,
+        'length': length,
+        'width': width,
+        'thickness': thickness,
+        'productCategory': productCategory,
+        'color': color,
+        'description': description,
+        'productPrice': productPrice,
+        'productCost': productCost,
+        'tags': productTags,
+        'imageListUrls': imageListUrls,
+        'pdfUrl': pdfUrl
       });
     } catch (e) {
       print('Product could not be updated $e');
@@ -592,6 +608,7 @@ class DatabaseService {
     return snapshot.documents.map((doc) {
       return WoodProduct(
           uid: doc.documentID,
+          itemCode: doc.data['itemCode'],
           productName: doc.data['productName'],
           productBrand: doc.data['productBrand'],
           productType: doc.data['productType'],
@@ -601,8 +618,11 @@ class DatabaseService {
           productCategory: doc.data['productCategory'],
           color: doc.data['color'],
           description: doc.data['description'],
+          productPrice: doc.data['productPrice'],
+          productCost: doc.data['productCost'],
           productTags: doc.data['tags'],
-          imageListUrls: doc.data['imageListUrls']);
+          imageListUrls: doc.data['imageListUrls'],
+          pdfUrl: doc.data['pdfUrl']);
     }).toList();
   }
 
@@ -657,30 +677,40 @@ class DatabaseService {
   //Section for solid surface products
   //adding a new solid surface product
   Future addSolidSurfaceProduct(
-      {String productName,
+      {String itemCode,
+      String productName,
       String productBrand,
       String productType,
-      var length,
-      var width,
-      var thickness,
+      double length,
+      double width,
+      double thickness,
+      double productPack,
       String productCategory,
       String color,
       String description,
+      double productPrice,
+      double productCost,
       List<dynamic> productTags,
-      List<dynamic> imageListUrls}) async {
+      List<dynamic> imageListUrls,
+      String pdfUrl}) async {
     try {
       solidCollection.add({
+        'itemCode': itemCode,
         'productName': productName,
         'productBrand': productBrand,
         'productType': productType,
         'length': length,
         'width': width,
         'thickness': thickness,
+        'productPack': productPack,
         'productCategory': productCategory,
         'color': color,
         'description': description,
+        'productPrice': productPrice,
+        'productCost': productCost,
         'tags': productTags,
-        'imageListUrls': imageListUrls
+        'imageListUrls': imageListUrls,
+        'pdfUrl': pdfUrl,
       });
     } catch (e) {
       print('Product could not be added $e');
@@ -690,30 +720,40 @@ class DatabaseService {
   //Update a current wood product
   Future updateSolidSurfaceProduct(
       {String uid,
+      String itemCode,
       String productName,
       String productBrand,
       String productType,
-      String length,
-      String width,
-      String thickness,
+      double length,
+      double width,
+      double thickness,
+      double productPack,
       String productCategory,
       String color,
       String description,
+      double productPrice,
+      double productCost,
       List<dynamic> productTags,
-      List<dynamic> imageListUrls}) async {
+      List<dynamic> imageListUrls,
+      String pdfUrl}) async {
     try {
       solidCollection.document(uid).setData({
+        'itemCode': itemCode,
         'productName': productName,
         'productBrand': productBrand,
         'productType': productType,
         'length': length,
         'width': width,
         'thickness': thickness,
+        'productPack': productPack,
         'productCategory': productCategory,
+        'productPrice': productPrice,
+        'productCost': productCost,
         'color': color,
         'description': description,
         'tags': productTags,
-        'imageListUrls': imageListUrls
+        'imageListUrls': imageListUrls,
+        'pdfUrl': pdfUrl,
       });
     } catch (e) {
       print('Product could not be updated $e');
@@ -744,17 +784,22 @@ class DatabaseService {
     return snapshot.documents.map((doc) {
       return WoodProduct(
           uid: doc.documentID,
+          itemCode: doc.data['itemCode'],
           productName: doc.data['productName'],
           productBrand: doc.data['productBrand'],
           productType: doc.data['productType'],
           length: doc.data['length'],
           width: doc.data['width'],
           thickness: doc.data['thickness'],
+          productPack: doc.data['productPack'],
           productCategory: doc.data['productCategory'],
           color: doc.data['color'],
           description: doc.data['description'],
+          productPrice: doc.data['productPrice'],
+          productCost: doc.data['productCost'],
           productTags: doc.data['tags'],
-          imageListUrls: doc.data['imageListUrls']);
+          imageListUrls: doc.data['imageListUrls'],
+          pdfUrl: doc.data['pdfUrl']);
     }).toList();
   }
 
@@ -907,19 +952,23 @@ class DatabaseService {
   //Section for Accessories
   //Adding Accessories products
   Future addAccessoriesProduct(
-      {String productName,
+      {String itemCode,
+      String productName,
       String productBrand,
       String productType,
-      String length,
-      String angle,
+      double length,
+      double angle,
       String closingType,
       String productCategory,
       String color,
       String description,
+      double productPrice,
+      double productCost,
       List<dynamic> productTags,
       List<dynamic> imageListUrls}) async {
     try {
       accessoriesCollection.add({
+        'itemCode': itemCode,
         'productName': productName,
         'productBrand': productBrand,
         'productType': productType,
@@ -929,6 +978,8 @@ class DatabaseService {
         'productCategory': productCategory,
         'color': color,
         'description': description,
+        'productPrice': productPrice,
+        'productCost': productCost,
         'tags': productTags,
         'imageListUrls': imageListUrls
       });
@@ -940,20 +991,23 @@ class DatabaseService {
   //Update a current accessory product
   Future updateAccessoriesProduct(
       {String uid,
+      String itemCode,
       String productName,
       String productBrand,
       String productType,
-      String length,
-      String angle,
+      double length,
+      double angle,
       String closingType,
       String productCategory,
       String color,
       String description,
+      double productPrice,
+      double productCost,
       List<dynamic> productTags,
       List<dynamic> imageListUrls}) async {
     try {
       accessoriesCollection.document(uid).setData({
-        'uid': uid,
+        'itemCode': itemCode,
         'productName': productName,
         'productBrand': productBrand,
         'productType': productType,
@@ -963,6 +1017,8 @@ class DatabaseService {
         'productCategory': productCategory,
         'color': color,
         'description': description,
+        'productPrice': productPrice,
+        'productCost': productCost,
         'tags': productTags,
         'imageListUrls': imageListUrls
       });
@@ -994,6 +1050,7 @@ class DatabaseService {
     return snapshot.documents.map((doc) {
       return Accessories(
           uid: doc.documentID,
+          itemCode: doc.data['itemCode'],
           productName: doc.data['productName'],
           productBrand: doc.data['productBrand'],
           productType: doc.data['productType'],
@@ -1003,6 +1060,8 @@ class DatabaseService {
           productCategory: doc.data['productCategory'],
           color: doc.data['color'],
           description: doc.data['description'],
+          productPrice: doc.data['productPrice'],
+          productCost: doc.data['productCost'],
           productTags: doc.data['tags'],
           imageListUrls: doc.data['imageListUrls']);
     }).toList();

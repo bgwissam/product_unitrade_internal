@@ -58,22 +58,23 @@ class _ProductFormState extends State<ProductForm> {
   String productBrand;
   double productPack;
   double productPrice;
+  double productCost;
   String productPackUnit;
   String productDescription;
   List<String> productTags;
   String paintImageUrl;
-  var width;
-  var length;
-  var thickness;
+  double width;
+  double length;
+  double thickness;
   String dimensions;
   String watt;
   String voltage;
-  String angle;
+  double angle;
   String closingType;
   String productColor;
   String productImageUrl;
   List<dynamic> imageUrls;
-  List<String> _brandList = new List<String>();
+  List<String> _brandList = [];
   String error = 'No Error detected';
   bool loading = false;
   ValueNotifier<bool> itemAdded = ValueNotifier<bool>(false);
@@ -81,7 +82,7 @@ class _ProductFormState extends State<ProductForm> {
   //check if current image is edited
   bool editCurrentImage = false;
   StringBuffer tags;
-  List<dynamic> tagsList = new List();
+  List<dynamic> tagsList = [];
   //Image file
   File image;
   //PDF File variables
@@ -1231,7 +1232,7 @@ class _ProductFormState extends State<ProductForm> {
                             val.isEmpty ? 'Length are required' : null,
                         onChanged: (val) {
                           setState(() {
-                            length = val;
+                            length = double.parse(val);
                           });
                         },
                       ),
@@ -1248,7 +1249,7 @@ class _ProductFormState extends State<ProductForm> {
                             val.isEmpty ? 'Width are required' : null,
                         onChanged: (val) {
                           setState(() {
-                            width = val;
+                            width = double.parse(val);
                           });
                         },
                       ),
@@ -1264,7 +1265,7 @@ class _ProductFormState extends State<ProductForm> {
                             val.isEmpty ? 'Thickness are required' : null,
                         onChanged: (val) {
                           setState(() {
-                            thickness = val;
+                            thickness = double.parse(val);
                           });
                         },
                       ),
@@ -1559,7 +1560,7 @@ class _ProductFormState extends State<ProductForm> {
                             val.isEmpty ? 'Length are required' : null,
                         onChanged: (val) {
                           setState(() {
-                            length = val;
+                            length = double.parse(val);
                           });
                         },
                       ),
@@ -1576,7 +1577,7 @@ class _ProductFormState extends State<ProductForm> {
                             val.isEmpty ? 'Width are required' : null,
                         onChanged: (val) {
                           setState(() {
-                            width = val;
+                            width = double.parse(val);
                           });
                         },
                       ),
@@ -1592,7 +1593,7 @@ class _ProductFormState extends State<ProductForm> {
                             val.isEmpty ? 'Thickness are required' : null,
                         onChanged: (val) {
                           setState(() {
-                            thickness = val;
+                            thickness = double.parse(val);
                           });
                         },
                       ),
@@ -2229,7 +2230,7 @@ class _ProductFormState extends State<ProductForm> {
                       textInputDecoration.copyWith(labelText: PRODUCT_LENGHT),
                   onChanged: (val) {
                     setState(() {
-                      length = val;
+                      length = double.parse(val);
                     });
                   },
                 ),
@@ -2252,7 +2253,7 @@ class _ProductFormState extends State<ProductForm> {
                             labelText: PRODUCT_ANGLE),
                         onChanged: (val) {
                           setState(() {
-                            angle = val;
+                            angle = double.parse(val);
                           });
                         },
                       ),
@@ -2384,7 +2385,7 @@ class _ProductFormState extends State<ProductForm> {
                         Expanded(
                           flex: 3,
                           child: Text(
-                            length,
+                            length.toString(),
                             style: labelTextStyle,
                           ),
                         ),
@@ -2401,7 +2402,7 @@ class _ProductFormState extends State<ProductForm> {
                         Expanded(
                           flex: 3,
                           child: Text(
-                            angle,
+                            angle.toString(),
                             style: labelTextStyle,
                           ),
                         ),
@@ -2695,7 +2696,8 @@ class _PDFFileViewerState extends State<PDFFileViewer> {
       var response = await request.close();
       Uint8List bytes = await consolidateHttpClientResponseBytes(response);
       // final ByteData bytes = await rootBundle.load(dir.path);
-      await Share.file('TDS', 'TDS.pdf', bytes, 'file/pdf', text: 'Optional Text');
+      await Share.file('TDS', 'TDS.pdf', bytes, 'file/pdf',
+          text: 'Optional Text');
     }
   }
 }

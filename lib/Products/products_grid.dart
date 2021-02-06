@@ -119,7 +119,8 @@ class _ProductGridState extends State<ProductsGrid> {
     switch (widget.categoryType) {
       case PU_BUTTON:
         {
-          return StreamProvider<List<PaintMaterial>>.value(
+          
+         return StreamProvider<List<PaintMaterial>>.value(
               value: DatabaseService().paintProducts(
                   brandName: widget.brandName,
                   productType: widget.productType,

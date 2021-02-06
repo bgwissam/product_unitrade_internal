@@ -35,9 +35,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   bool isSearching = false;
   bool isTyping = false;
   UserData user;
-  // bool isAdmin;
-  // bool isPriceAdmin;
-  // bool isSuperAdmin;
   List<dynamic> roles;
   String searchWord = '';
   int cartLength = 0;
@@ -132,7 +129,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   void initState() {
     super.initState();
     _getUserData();
-    _tabController = new TabController(length: 1, vsync: this);
+    _tabController = new TabController(length: 5, vsync: this);
   }
 
   //update the cart size after additional of product and if Back buttom is pressed to go back to home page
@@ -212,14 +209,14 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                   new Tab(
                     text: TAB_COATINGS_AND_ADHESIVES,
                   ),
-                  // new Tab(
-                  //   text: TAB_WOOD_TEXT,
-                  // ),
-                  // new Tab(text: TAB_SS_TEXT),
-                  // new Tab(
-                  //   text: TAB_LIGHT_TEXT,
-                  // ),
-                  // new Tab(text: TAB_ACCESSORIES_TEXT)
+                  new Tab(
+                    text: TAB_WOOD_TEXT,
+                  ),
+                  new Tab(text: TAB_SS_TEXT),
+                  new Tab(
+                    text: TAB_LIGHT_TEXT,
+                  ),
+                  new Tab(text: TAB_ACCESSORIES_TEXT)
                 ],
                 controller: _tabController,
                 indicatorSize: TabBarIndicatorSize.tab,
@@ -238,10 +235,10 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
               ? TabBarView(
                   children: [
                     _buildPaintWidget(),
-                    // _buildWoodWiget(),
-                    // _buildSolidSurfaceWiget(),
-                    // _buildLightingWiget(),
-                    // _buildAccessoriesWiget(),
+                    _buildWoodWiget(),
+                    _buildSolidSurfaceWiget(),
+                    _buildLightingWiget(),
+                    _buildAccessoriesWiget(),
                   ],
                   controller: _tabController,
                 )
@@ -586,7 +583,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 ),
               ),
             ),
-
             SizedBox(
               height: distanceBetweenInkWells,
             ),

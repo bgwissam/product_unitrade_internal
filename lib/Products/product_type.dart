@@ -17,8 +17,6 @@ class ProductType extends StatefulWidget {
 class _ProductTypeState extends State<ProductType> {
 
   void initState() {
-
-    print('the user details: ${widget.user}');
     super.initState();
   }
   double sizedBoxDistance = 25.0;
@@ -40,7 +38,7 @@ class _ProductTypeState extends State<ProductType> {
         child: Column(
           children: [
             //PU Paint 
-            widget.productType == 'COATING'
+            widget.productType == COATINGS
                 ? Container(
                     child: InkWell(
                       onTap: () => Navigator.push(
@@ -73,7 +71,7 @@ class _ProductTypeState extends State<ProductType> {
               height: sizedBoxDistance,
             ),
             //NC Paint
-            widget.productType == 'COATING'
+            widget.productType == COATINGS
                 ? Container(
                     child: InkWell(
                       onTap: () => Navigator.push(
@@ -106,7 +104,7 @@ class _ProductTypeState extends State<ProductType> {
               height: sizedBoxDistance,
             ),
             //Stain
-            widget.productType == 'COATING'
+            widget.productType == COATINGS
                 ? Container(
                     child: InkWell(
                       onTap: () => Navigator.push(

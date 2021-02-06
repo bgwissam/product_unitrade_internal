@@ -39,6 +39,7 @@ const String TAB_SS_TEXT = 'Surface';
 const String TAB_LIGHT_TEXT = 'Lights';
 const String TAB_ACCESSORIES_TEXT = 'Accessories';
 //Constant string for paint and coatings
+const String COATINGS = 'COATING';
 const String PU_BUTTON = 'Polyurethane';
 const String NC_BUTTON = 'Nitrocellulose';
 const String AC_BUTTON = 'Acrylic';

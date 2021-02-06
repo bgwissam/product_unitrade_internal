@@ -58,8 +58,8 @@ class _ProductTileState extends State<ProductTile> {
   bool isPriceAdmin = false;
   String userId;
   String imageUrl;
-  List<String> paintList = new List();
-  List<String> woodList = new List();
+  List<String> paintList = [];
+  List<String> woodList = [];
   String placeHolderImage = 'assets/images/placeholder.png';
   @override
   void initState() {
