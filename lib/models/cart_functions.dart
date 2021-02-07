@@ -8,7 +8,7 @@ class LoadFile {
 
   //Get the values of the cart list save on the internal storage
   Future loadDocument() async {
-    cartList = new List();
+    cartList = [];
     document = await getApplicationDocumentsDirectory();
     file = new File('${document.path}/cartList.txt');
     try {
@@ -72,7 +72,7 @@ class LoadFile {
 
   //Will write to file
   Future writeToDocument(List<String> newCart) async {
-    cartList = new List();
+    cartList = [];
     try {
       document = await getApplicationDocumentsDirectory();
       file = new File('${document.path}/cartList.txt');

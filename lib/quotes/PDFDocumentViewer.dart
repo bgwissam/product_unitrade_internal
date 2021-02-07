@@ -31,7 +31,7 @@ class PDFDocumentViewer extends StatefulWidget {
 
 class _PDFDocumentViewerState extends State<PDFDocumentViewer> {
   bool _isButtonDisabled = false;
-  bool _emailSentStatus = false;
+  
   String emailStatus;
   @override
   Widget build(BuildContext context) {

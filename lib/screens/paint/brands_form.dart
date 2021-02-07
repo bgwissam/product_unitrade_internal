@@ -59,7 +59,7 @@ class _BrandsFormState extends State<BrandsForm> {
       currentImageUrl = widget.brand.image;
       category = widget.brand.category;
     } else {
-      category = new List();
+      category = [];
     }
     _buildDivisionList = buildDivisionMenu(_divisionList);
   }
@@ -86,7 +86,7 @@ class _BrandsFormState extends State<BrandsForm> {
 
   //Convert the string buffer to List<String>
   List<dynamic> _convertCategoryToList() {
-    category = new List();
+    category = [];
     if(categories != null){
       var spliCategories = categories.toString().split(',');
       spliCategories.forEach((element) {
@@ -266,7 +266,7 @@ class _BrandsFormState extends State<BrandsForm> {
 
   //drop down list menu for division
   List<DropdownMenuItem<Division>> buildDivisionMenu(List divisionList) {
-    List<DropdownMenuItem<Division>> items = List();
+    List<DropdownMenuItem<Division>> items = [];
     for (Division division in divisionList) {
       items.add(DropdownMenuItem(
           value: division,
@@ -281,7 +281,7 @@ class _BrandsFormState extends State<BrandsForm> {
 
   //dropdownlist menu for caregory
   List<DropdownMenuItem<Category>> buildCategoryMenu(List categoryList) {
-    List<DropdownMenuItem<Category>> items = List();
+    List<DropdownMenuItem<Category>> items = [];
     for (Category category in categoryList) {
       if (divisionType == category.divisionName) {
         items.add(DropdownMenuItem(

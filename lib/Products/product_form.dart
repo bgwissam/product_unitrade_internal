@@ -97,7 +97,7 @@ class _ProductFormState extends State<ProductForm> {
   // bool _multiPick = false;
   //Firebase store variables
   Firestore fb = Firestore.instance;
-  List<dynamic> imageListUrls = new List();
+  List<dynamic> imageListUrls = [];
   LoadFile currentFile = new LoadFile();
   //holds the type of the product
   List<String> type;
@@ -176,7 +176,7 @@ class _ProductFormState extends State<ProductForm> {
       thickness = widget.woodProduct.thickness;
       productColor = widget.woodProduct.color;
       widget.woodProduct.imageListUrls == null
-          ? imageListUrls = new List()
+          ? imageListUrls = []
           : imageListUrls =
               new List<dynamic>.from(widget.woodProduct.imageListUrls);
     } else if (widget.lightProduct != null) {
@@ -189,7 +189,7 @@ class _ProductFormState extends State<ProductForm> {
       voltage = widget.lightProduct.voltage;
       productColor = widget.lightProduct.color;
       widget.lightProduct.imageListUrls == null
-          ? imageListUrls = new List()
+          ? imageListUrls = []
           : imageListUrls =
               new List<dynamic>.from(widget.lightProduct.imageListUrls);
     } else if (widget.accessoriesProduct != null) {
@@ -202,14 +202,14 @@ class _ProductFormState extends State<ProductForm> {
       closingType = widget.accessoriesProduct.closingType;
       productColor = widget.accessoriesProduct.color;
       widget.accessoriesProduct.imageListUrls == null
-          ? imageListUrls = new List()
+          ? imageListUrls = []
           : imageListUrls =
               new List<dynamic>.from(widget.accessoriesProduct.imageListUrls);
     }
     category = CategoryList.categoryList();
     paintImages = PaintImagesList.paintImagesList();
     type = Type.typeList();
-    images = new List(5 - imageListUrls.length);
+    images = []..length = 5 - imageListUrls.length;
     super.initState();
   }
 
@@ -222,7 +222,7 @@ class _ProductFormState extends State<ProductForm> {
 
   //drop down list menu for division
   List<DropdownMenuItem<Division>> buildDivisionMenu(List divisionList) {
-    List<DropdownMenuItem<Division>> items = List();
+    List<DropdownMenuItem<Division>> items = [];
     for (Division division in divisionList) {
       items.add(DropdownMenuItem(
           value: division,
@@ -251,7 +251,7 @@ class _ProductFormState extends State<ProductForm> {
 
   //Convert tags to a dynamic list
   List<dynamic> _convertTagsToList({List<dynamic> tagsList}) {
-    tagsList = new List();
+    tagsList = [];
     if (tags != null) {
       var splitTags = tags.toString().split(',');
       splitTags.forEach((element) {
@@ -856,17 +856,17 @@ class _ProductFormState extends State<ProductForm> {
   }
 
   //Future to get image from firebase storage
-  Future<List<Widget>> _getImage(
-      BuildContext context, List<dynamic> images) async {
-    List<Image> m;
-    for (var image in images)
-      await FireStorageService.loadFromStorage(context, image)
-          .then((downloadurl) {
-        m.add(downloadurl);
-      });
+  // Future<List<Widget>> _getImage(
+  //     BuildContext context, List<dynamic> images) async {
+  //   List<Image> m;
+  //   for (var image in images)
+  //     await FireStorageService.loadFromStorage(context, image)
+  //         .then((downloadurl) {
+  //       m.add(downloadurl);
+  //     });
 
-    return m;
-  }
+  //   return m;
+  // }
 
   //Widget to select the type of product category
   Widget selectType() {

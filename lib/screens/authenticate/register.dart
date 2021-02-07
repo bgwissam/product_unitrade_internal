@@ -28,7 +28,6 @@ class _RegisterState extends State<Register> {
   String password = '';
   String error = '';
   String errorText = '';
-  bool _autoValidate = false;
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +47,6 @@ class _RegisterState extends State<Register> {
               padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
               child: Form(
                 key: _formKey,
-                autovalidate: _autoValidate,
                 child: Column(
                   children: <Widget>[
                     SizedBox(height: 15.0),
@@ -374,7 +372,6 @@ class _RegisterState extends State<Register> {
                           style: buttonStyle,
                         ),
                         onPressed: () async {
-                          _autoValidate = true;
                           if (_formKey.currentState.validate()) {
                             setState(() {
                               loading = true;

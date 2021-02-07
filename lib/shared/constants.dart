@@ -75,3 +75,9 @@ var inkWellButton = TextStyle(
     fontSize: 28.0,
     fontWeight: FontWeight.w400,
     backgroundColor: Colors.grey[100]);
+
+const inkWellText = TextStyle(
+    fontSize: 28.0,
+    fontWeight: FontWeight.bold,
+    color: Colors.amber,
+    backgroundColor: Colors.transparent);

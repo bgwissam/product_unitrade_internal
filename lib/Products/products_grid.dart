@@ -30,9 +30,9 @@ class ProductsGrid extends StatefulWidget {
 }
 
 class _ProductGridState extends State<ProductsGrid> {
-  List<String> cartList = new List();
-  List<String> paintProduct = new List();
-  List<String> woodProduct = new List();
+  List<String> cartList = [];
+  List<String> paintProduct = [];
+  List<String> woodProduct = [];
   LoadFile currentFile = new LoadFile();
   Directory document;
   File file;

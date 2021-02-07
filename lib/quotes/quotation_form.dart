@@ -43,9 +43,9 @@ class _QuotationFormState extends State<QuotationForm> {
   List<double> quantity = [];
   List<double> price = [];
   List<double> pack = [];
-  List<Map<String, dynamic>> selectedProducts = new List();
-  List<String> itemCodes = new List();
-  List<String> productNames = new List();
+  List<Map<String, dynamic>> selectedProducts = [];
+  List<String> itemCodes = [];
+  List<String> productNames = [];
   //create a temporary list for add price and pack for selected items
   double tempPack;
   double tempPrice;
@@ -53,7 +53,6 @@ class _QuotationFormState extends State<QuotationForm> {
   List<Widget> dynamicList = [];
 
   TextEditingController _clientNameField = TextEditingController();
-  TextEditingController _testController = TextEditingController();
 
   var paintProducts;
   @override
@@ -61,7 +60,7 @@ class _QuotationFormState extends State<QuotationForm> {
     super.initState();
     getUserDetails();
     if (selectedProducts.isNotEmpty) {
-      selectedProducts = new List();
+      selectedProducts = [];
     }
   }
 
@@ -607,7 +606,7 @@ class _QuotationFormState extends State<QuotationForm> {
 
   //Get list of suggestions for the product list
   List<String> getSuggestions(String query) {
-    List<String> matches = new List();
+    List<String> matches = [];
     matches.addAll(widget.products
         .map((e) => e.itemCode + ' ' + e.productPack.toString()));
     matches.retainWhere(
@@ -617,7 +616,7 @@ class _QuotationFormState extends State<QuotationForm> {
 
   //Get list of suggestions for the clients
   List<String> getClientSuggestions(String query) {
-    List<String> matches = new List();
+    List<String> matches = [];
     matches.addAll(widget.clients.map((e) => e.clientName));
     matches.retainWhere((client) =>
         client.toString().toLowerCase().contains(query.toLowerCase()));

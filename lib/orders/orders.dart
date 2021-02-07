@@ -15,7 +15,7 @@ class OrdersList extends StatefulWidget {
 }
 
 class _OrdersListState extends State<OrdersList> {
-  List<Orders> ordersList = new List();
+  List<Orders> ordersList = [];
   @override
   Widget build(BuildContext context) {
     return StreamProvider<List<Orders>>.value(

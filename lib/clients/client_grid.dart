@@ -55,8 +55,8 @@ class QuotationProviderBuild extends StatefulWidget {
 
 class _QuotationProviderBuildState extends State<QuotationProviderBuild> {
   Map<String, String> productsWithDescription = new Map();
-  List<String> itemCodes = new List();
-  List<String> productNames = new List();
+  List<String> itemCodes = [];
+  List<String> productNames = [];
   @override
   Widget build(BuildContext context) {
     var clientProvider = Provider.of<List<Clients>>(context) ?? [];
@@ -88,7 +88,10 @@ class _QuotationProviderBuildState extends State<QuotationProviderBuild> {
               } else {
                 return ShowCustomDialog();
               }
-            }),
+              return ShowCustomDialog();
+            },
+            
+            ),
       );
     else
       return NoDataExists(
@@ -99,8 +102,8 @@ class _QuotationProviderBuildState extends State<QuotationProviderBuild> {
 
   Future<Map<String, String>> _getProductData(
       List<PaintMaterial> paintProduct) async {
-    itemCodes = new List();
-    productNames = new List();
+    itemCodes = [];
+    productNames = [];
     itemCodes.addAll(paintProduct.map((e) => e.itemCode));
     //productNames.addAll(widget.products.map((e) => e.productName));
     productNames = await settingDescription(paintProduct);
@@ -116,7 +119,7 @@ class _QuotationProviderBuildState extends State<QuotationProviderBuild> {
   //will await the product names to be set into the list
   Future<List<String>> settingDescription(
       List<PaintMaterial> paintProduct) async {
-    List<String> productNamesDescription = new List();
+    List<String> productNamesDescription = [];
     productNamesDescription.addAll(paintProduct.map((e) => e.productName));
 
     return productNamesDescription;

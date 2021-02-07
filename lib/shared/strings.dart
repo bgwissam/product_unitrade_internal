@@ -38,8 +38,12 @@ const String TAB_WOOD_TEXT = 'Wood';
 const String TAB_SS_TEXT = 'Surface';
 const String TAB_LIGHT_TEXT = 'Lights';
 const String TAB_ACCESSORIES_TEXT = 'Accessories';
-//Constant string for paint and coatings
+
+//Product Type
 const String COATINGS = 'COATING';
+const String ADHESIVE = 'ADHESIVE';
+//Constant string for paint and coatings
+
 const String PU_BUTTON = 'Polyurethane';
 const String NC_BUTTON = 'Nitrocellulose';
 const String AC_BUTTON = 'Acrylic';
@@ -53,6 +57,7 @@ const String MDF_BUTTON = 'MDF';
 const String SOLID_BUTTON = 'Solid';
 const String CHIP_BUTTON = 'Chip Board';
 const String FIRE_BUTTON = 'Fire Resistant';
+const String HPL_BUTTON = 'HPL';
 //Const String for Solid Surface materia
 const String COR_BUTTON = 'Acrylic Solid';
 const String MON_BUTTON = 'Acrylic Composit';

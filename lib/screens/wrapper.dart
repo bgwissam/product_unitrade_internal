@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'authenticate/authenticate.dart';
 import './home/home.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../services/auth.dart';
 import './authenticate/signin.dart';
 
 
@@ -15,7 +14,7 @@ class Wrapper extends StatefulWidget {
 
 class _WrapperState extends State<Wrapper> {
   bool _userIsVerified = false;
-  AuthService _auth = new AuthService();
+  // AuthService _auth = new AuthService();
   String message;
   void initState() {
     _checkUserVerified();

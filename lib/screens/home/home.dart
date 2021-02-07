@@ -8,12 +8,10 @@ import 'package:Products/Products/product_form.dart';
 import 'package:Products/drawer/profile_drawer.dart';
 import 'package:Products/models/cart_functions.dart';
 import 'package:Products/models/user.dart';
-import 'package:Products/screens/paint/brands.dart';
 import 'package:Products/services/database.dart';
 import 'package:Products/shared/constants.dart';
 import 'package:Products/shared/loading.dart';
 import 'package:Products/shared/strings.dart';
-import 'package:image_ink_well/image_ink_well.dart';
 import 'package:Products/models/products.dart';
 import 'package:Products/shared/functions.dart';
 
@@ -42,10 +40,10 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   var distanceBetweenInkWells = 25.0;
   var distanceBetweenInkWellLabel = 5.0;
   //search bar varialbles
-  List<AlgoliaObjectSnapshot> _results = new List();
+  List<AlgoliaObjectSnapshot> _results = [];
   LoadFile currentFile = new LoadFile();
   //set a variable for the cart list
-  List<String> cartList = new List();
+  List<String> cartList = [];
   Directory document;
   File file;
   String placeHolderImage = 'assets/images/placeholder.png';
@@ -132,14 +130,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     _tabController = new TabController(length: 5, vsync: this);
   }
 
-  //update the cart size after additional of product and if Back buttom is pressed to go back to home page
-  _callBackUpdate(int cartSize) async {
-    setState(() {
-      cartLength = cartSize;
-    });
-  }
 
- 
   //Dailog box for exsiting app
   Future onBackPressed() async {
     return showDialog(
@@ -237,7 +228,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                     _buildPaintWidget(),
                     _buildWoodWiget(),
                     _buildSolidSurfaceWiget(),
-                    _buildLightingWiget(),
                     _buildAccessoriesWiget(),
                   ],
                   controller: _tabController,
@@ -538,7 +528,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                         context,
                         MaterialPageRoute(
                             builder: (context) => ProductType(
-                                productType: 'COATING',
+                                productType: COATINGS,
                                 brandName: 'SAYERLACK',
                                 user: user,
                                 roles: roles)));
@@ -567,7 +557,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                         context,
                         MaterialPageRoute(
                             builder: (context) => ProductType(
-                                productType: 'COATING',
+                                productType: COATINGS,
                                 brandName: 'EVI',
                                 user: user,
                                 roles: roles)));
@@ -596,7 +586,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                         context,
                         MaterialPageRoute(
                             builder: (context) => ProductType(
-                                productType: 'ADHESIVE',
+                                productType: ADHESIVE,
                                 brandName: 'UNICOL',
                                 user: user,
                                 roles: roles)));
@@ -612,7 +602,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 ),
               ),
             ),
-
             SizedBox(
               height: distanceBetweenInkWells,
             ),
@@ -627,111 +616,122 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     return SingleChildScrollView(
       padding: EdgeInsets.symmetric(vertical: 40.0, horizontal: 10.0),
       child: Column(
-        children: <Widget>[
-          Column(
-            children: [
-              //MDF Wood
-              ImageInkWell(
-                onPressed: () {
+        children: [
+          //FINSA
+          Container(
+            height: 120.0,
+            child: InkWell(
+              onTap: () {
+                if (roles.isNotEmpty)
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => BrandList(
-                                divisionType: TAB_WOOD_TEXT,
-                                categoryType: MDF_BUTTON,
-                                callBackUpdate: _callBackUpdate,
-                              )));
-                },
+                          builder: (context) => ProductType(
+                              productType: TAB_WOOD_TEXT,
+                              brandName: 'FINSA',
+                              user: user,
+                              roles: roles)));
+              },
+              child: Container(
+                padding: EdgeInsets.all(5.0),
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey[500]),
+                    borderRadius: BorderRadius.circular(25.0)),
                 width: MediaQuery.of(context).size.width,
                 height: 150.0,
-                image: AssetImage('assets/Ink_well/mdf.png'),
+                child: Image.asset('assets/images/brands/finsa.jpg'),
               ),
-              SizedBox(
-                height: distanceBetweenInkWellLabel,
-              ),
-              Text(MDF_BUTTON, style: textStyle1),
-            ],
+            ),
           ),
           SizedBox(
             height: distanceBetweenInkWells,
           ),
-          Column(
-            children: [
-              //Chip board
-              ImageInkWell(
-                onPressed: () {
+          //SONAE 
+          Container(
+            height: 120.0,
+            child: InkWell(
+              onTap: () {
+                if (roles.isNotEmpty)
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => BrandList(
-                                divisionType: TAB_WOOD_TEXT,
-                                categoryType: CHIP_BUTTON,
-                                callBackUpdate: _callBackUpdate,
-                              )));
-                },
+                          builder: (context) => ProductType(
+                              productType: TAB_WOOD_TEXT,
+                              brandName: 'SONEA ARAUCO',
+                              user: user,
+                              roles: roles)));
+              },
+              child: Container(
+                padding: EdgeInsets.all(5.0),
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey[500]),
+                    borderRadius: BorderRadius.circular(25.0)),
                 width: MediaQuery.of(context).size.width,
                 height: 150.0,
-                image: AssetImage('assets/Ink_well/chipboard.png'),
+                child: Image.asset('assets/images/brands/sonae.jpg'),
               ),
-              SizedBox(
-                height: distanceBetweenInkWellLabel,
-              ),
-              Text(CHIP_BUTTON, style: textStyle1),
-            ],
+            ),
           ),
           SizedBox(
-            height: distanceBetweenInkWells,
+            height: distanceBetweenInkWellLabel,
           ),
-          Column(
-            children: [
-              //Hard Wood
-              ImageInkWell(
-                onPressed: () {
+          //FORMICA 
+          Container(
+            height: 120.0,
+            child: InkWell(
+              onTap: () {
+                if (roles.isNotEmpty)
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => BrandList(
-                                divisionType: TAB_WOOD_TEXT,
-                                categoryType: SOLID_BUTTON,
-                                callBackUpdate: _callBackUpdate,
-                              )));
-                },
+                          builder: (context) => ProductType(
+                              productType: TAB_WOOD_TEXT,
+                              brandName: 'FORMICA',
+                              user: user,
+                              roles: roles)));
+              },
+              child: Container(
+                padding: EdgeInsets.all(5.0),
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey[500]),
+                    borderRadius: BorderRadius.circular(25.0)),
                 width: MediaQuery.of(context).size.width,
                 height: 150.0,
-                image: AssetImage('assets/Ink_well/hardwood.png'),
+                child: Image.asset('assets/images/brands/formica.jpg'),
               ),
-              SizedBox(
-                height: distanceBetweenInkWellLabel,
-              ),
-              Text(SOLID_BUTTON, style: textStyle1),
-            ],
+            ),
           ),
           SizedBox(
-            height: distanceBetweenInkWells,
+            height: distanceBetweenInkWellLabel,
           ),
-          Column(
-            children: [
-              //Fire resistant
-              ImageInkWell(
-                onPressed: () {
+          //HALSPAN 
+          Container(
+            height: 120.0,
+            child: InkWell(
+              onTap: () {
+                if (roles.isNotEmpty)
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => BrandList(
-                                divisionType: TAB_WOOD_TEXT,
-                                categoryType: FIRE_BUTTON,
-                                callBackUpdate: _callBackUpdate,
-                              )));
-                },
+                          builder: (context) => ProductType(
+                              productType: TAB_WOOD_TEXT,
+                              brandName: 'HALSPAN',
+                              user: user,
+                              roles: roles)));
+              },
+              child: Container(
+                padding: EdgeInsets.all(5.0),
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey[500]),
+                    borderRadius: BorderRadius.circular(25.0)),
                 width: MediaQuery.of(context).size.width,
                 height: 150.0,
-                image: AssetImage('assets/Ink_well/fire_resistant.png'),
+                child: Image.asset('assets/images/brands/halspan.jpg'),
               ),
-              SizedBox(
-                height: distanceBetweenInkWellLabel,
-              ),
-              Text(FIRE_BUTTON, style: textStyle1),
-            ],
+            ),
+          ),
+          SizedBox(
+            height: distanceBetweenInkWellLabel,
           ),
         ],
       ),
@@ -743,61 +743,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     return SingleChildScrollView(
       padding: EdgeInsets.symmetric(vertical: 40.0, horizontal: 10.0),
       child: Column(
-        children: <Widget>[
-          Column(
-            children: [
-              //Acylic Solid Surface
-              ImageInkWell(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => BrandList(
-                                divisionType: TAB_SS_TEXT,
-                                categoryType: COR_BUTTON,
-                                callBackUpdate: _callBackUpdate,
-                              )));
-                },
-                width: MediaQuery.of(context).size.width,
-                height: 150.0,
-                image: AssetImage('assets/Ink_well/acrylic_solid.png'),
-              ),
-              SizedBox(
-                height: distanceBetweenInkWellLabel,
-              ),
-              Text(
-                COR_BUTTON,
-                style: textStyle1,
-              ),
-            ],
-          ),
-          SizedBox(
-            height: distanceBetweenInkWells,
-          ),
-          Column(
-            children: [
-              //Modified Acyrlic Solid Surface
-              ImageInkWell(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => BrandList(
-                                divisionType: TAB_SS_TEXT,
-                                categoryType: MON_BUTTON,
-                                callBackUpdate: _callBackUpdate,
-                              )));
-                },
-                width: MediaQuery.of(context).size.width,
-                height: 150.0,
-                image: AssetImage('assets/Ink_well/modified_acylic.png'),
-              ),
-              SizedBox(
-                height: distanceBetweenInkWellLabel,
-              ),
-              Text(MON_BUTTON, style: textStyle1),
-            ],
-          )
+        children:[
         ],
       ),
     );
@@ -808,72 +754,11 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     return SingleChildScrollView(
       padding: EdgeInsets.symmetric(vertical: 40.0, horizontal: 10.0),
       child: Column(
-        children: <Widget>[
-          Column(
-            children: [
-              ImageInkWell(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => BrandList(
-                                divisionType: TAB_ACCESSORIES_TEXT,
-                                categoryType: SALICE_BUTTON,
-                                callBackUpdate: _callBackUpdate,
-                              )));
-                },
-                width: MediaQuery.of(context).size.width,
-                height: 150.0,
-                image: AssetImage('assets/Ink_well/accessories.png'),
-              ),
-              SizedBox(
-                height: distanceBetweenInkWellLabel,
-              ),
-              Text(
-                SALICE_BUTTON,
-                style: textStyle1,
-              ),
-            ],
-          ),
+        children: [
         ],
       ),
     );
   }
 
-  //Lighting
-  Widget _buildLightingWiget() {
-    return SingleChildScrollView(
-      padding: EdgeInsets.symmetric(vertical: 40.0, horizontal: 10.0),
-      child: Column(
-        children: <Widget>[
-          Column(
-            children: [
-              ImageInkWell(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => BrandList(
-                                divisionType: TAB_LIGHT_TEXT,
-                                categoryType: HAFELE_BUTTON,
-                                callBackUpdate: _callBackUpdate,
-                              )));
-                },
-                width: MediaQuery.of(context).size.width,
-                height: 150.0,
-                image: AssetImage('assets/Ink_well/lighting.png'),
-              ),
-              SizedBox(
-                height: distanceBetweenInkWellLabel,
-              ),
-              Text(
-                HAFELE_BUTTON,
-                style: textStyle1,
-              )
-            ],
-          ),
-        ],
-      ),
-    );
-  }
+  
 }

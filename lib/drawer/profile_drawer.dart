@@ -2,7 +2,6 @@ import 'package:Products/clients/client_form.dart';
 import 'package:Products/clients/client_grid.dart';
 import 'package:Products/orders/orders.dart';
 import 'package:Products/screens/authenticate/UserGrid.dart';
-import 'package:Products/screens/authenticate/register.dart';
 import 'package:flutter/material.dart';
 import 'package:Products/account/account_page.dart';
 import 'package:Products/services/auth.dart';
