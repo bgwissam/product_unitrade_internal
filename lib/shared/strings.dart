@@ -42,6 +42,9 @@ const String TAB_ACCESSORIES_TEXT = 'Accessories';
 //Product Type
 const String COATINGS = 'COATING';
 const String ADHESIVE = 'ADHESIVE';
+const String WOOD = 'WOOD';
+const String SOLID_SURFACE = 'Surface';
+const String ACCESSORIES = 'ACCESSORIES';
 //Constant string for paint and coatings
 
 const String PU_BUTTON = 'Polyurethane';
@@ -61,8 +64,13 @@ const String HPL_BUTTON = 'HPL';
 //Const String for Solid Surface materia
 const String COR_BUTTON = 'Acrylic Solid';
 const String MON_BUTTON = 'Acrylic Composit';
+const String SS_ADHESIVE_BUTTON = 'Adh. Solid Surface';
+
 //Constant strings for Accessories
 const String SALICE_BUTTON = 'Fit Out';
+const String HINGES = 'Hinges';
+const String RUNNERS = 'Runners';
+const String FLAP = 'Flap Mechanism';
 const String HAFELE_BUTTON = 'Lights';
 //Function names 
 const String ADD_PAINT_PRODUCT = 'addProductData';
@@ -117,6 +125,27 @@ const String PRODUCT_COLOUR_VALIDATION = 'Product colour is required';
 const String TDS = 'Technical Data Sheet';
 const String CLEAR_BUTTON = 'Clear';
 const String PIGMENTED_BUTTON = 'Pigmented';
+const String PRODUCT_CODE = 'Item Code';
+const String PRODUCT_CODE_VALIDATION = 'Item code is required';
+const String PRODUCT_LENGHT_VALIDATION = 'Lenght is required';
+const String PRODUCT_WIDTH = 'Width';
+const String PRODUCT_WIDTH_VALIDATION = 'Width is required';
+const String PRODUCT_THICKNESS = 'Thickness';
+const String PRODUCT_THICKNESS_VALIDATION = 'Thickness is required';
+
+//Product Form validation
+const String PRODUCT_LENGTH_VAL_ZERO = 'Product length should be greater than zero';
+const String PRODUCT_LENGTH_VAL_EMPTY = 'Product length should not be empty';
+const String PRODUCT_WIDTH_VAL_ZERO = 'Product width should be greater than zero';
+const String PRODUCT_WIDTH_VAL_EMPTY = 'Product width should not be empty';
+const String PRODUCT_THICKNESS_VAL_ZERO = 'Product thickness should be greater than zero';
+const String PRODUCT_THICKNESS_VAL_EMPTY = 'Product thickness should not be empty';
+const String PRODUCT_PRICE_VAL_ZERO = 'Product price should be greater than zero';
+const String PRODUCT_PRICE_VAL_EMPTY = 'Product price should not be empty';
+const String PRODUCT_PACKAGE_VAL_EMPTY = 'Packing cannot be empty';
+const String PRODUCT_PACKAGE_VALIDATION = 'packing is required';
+
+
 //Dialog Box
 const String ALERT_DELETE_BRAND = 'Delete brand';
 const String ALERT_DELETE_BRAND_CONTENT = 'Are you sure you want to delete?';

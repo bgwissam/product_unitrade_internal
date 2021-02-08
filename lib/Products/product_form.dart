@@ -13,7 +13,6 @@ import 'package:Products/models/products.dart';
 import 'dart:io';
 import 'package:path/path.dart' as Path;
 import 'package:Products/services/database.dart';
-import 'package:Products/services/fire_storage.dart';
 import 'package:Products/shared/constants.dart';
 import 'package:Products/shared/dropdownLists.dart';
 import 'package:Products/shared/loading.dart';
@@ -21,6 +20,7 @@ import 'package:Products/shared/strings.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:esys_flutter_share/esys_flutter_share.dart';
+import 'package:Products/Products/product_validators.dart';
 
 class ProductForm extends StatefulWidget {
   final PaintMaterial paintProducts;
@@ -51,6 +51,7 @@ class ProductForm extends StatefulWidget {
 
 class _ProductFormState extends State<ProductForm> {
   final _formKey = GlobalKey<FormState>();
+  ProductValidators productValidators = new ProductValidators();
   String itemCode;
   String productName;
   String productType;
@@ -94,7 +95,6 @@ class _ProductFormState extends State<ProductForm> {
   List<File> images;
   String _imageUrl;
   String _pdfUrl;
-  // bool _multiPick = false;
   //Firebase store variables
   Firestore fb = Firestore.instance;
   List<dynamic> imageListUrls = [];
@@ -111,6 +111,9 @@ class _ProductFormState extends State<ProductForm> {
   num dropdownListWidth = 250.0;
   String placeHolderImage = 'assets/images/placeholder.png';
   Future getLoadedImages;
+  String zeroValue = '0';
+  //Filtering doubles
+  RegExp regExp = new RegExp(r'^[a-zA-Z]');
   //will upload new images to the database
   Future getImages(int index) async {
     var tempImage = await ImagePicker.pickImage(
@@ -171,10 +174,13 @@ class _ProductFormState extends State<ProductForm> {
       productBrand = widget.woodProduct.productBrand;
       productType = widget.woodProduct.productType;
       productCategory = widget.woodProduct.productCategory;
+      itemCode = widget.woodProduct.itemCode;
       length = widget.woodProduct.length;
       width = widget.woodProduct.width;
       thickness = widget.woodProduct.thickness;
       productColor = widget.woodProduct.color;
+      productPrice = widget.woodProduct.productPrice;
+      _pdfUrl = widget.woodProduct.pdfUrl ?? null;
       widget.woodProduct.imageListUrls == null
           ? imageListUrls = []
           : imageListUrls =
@@ -206,7 +212,7 @@ class _ProductFormState extends State<ProductForm> {
           : imageListUrls =
               new List<dynamic>.from(widget.accessoriesProduct.imageListUrls);
     }
-    category = CategoryList.categoryList();
+    category = CategoryList.categoryList(productType);
     paintImages = PaintImagesList.paintImagesList();
     type = Type.typeList();
     images = []..length = 5 - imageListUrls.length;
@@ -410,82 +416,81 @@ class _ProductFormState extends State<ProductForm> {
               }).toList(),
             ),
           ),
-
           //Image picker for product images
-          // Container(
-          //   padding: EdgeInsets.all(8.0),
-          //   height: 200,
-          //   child: ListView.builder(
-          //     scrollDirection: Axis.horizontal,
-          //     itemCount: 5,
-          //     itemBuilder: (context, index) {
-          //       return index < imageListUrls.length
-          //           ? Container(
-          //               margin: const EdgeInsets.all(4.0),
-          //               width: 150,
-          //               height: 200,
-          //               decoration: BoxDecoration(border: Border.all()),
-          //               child: InkWell(
-          //                 child: !editCurrentImage
-          //                     ? FadeInImage(
-          //                         fit: BoxFit.contain,
-          //                         image: CacheImage(imageListUrls[index]),
-          //                         placeholder: AssetImage(placeHolderImage),
-          //                         height: 150.0,
-          //                         width: 150.0,
-          //                       )
-          //                     : Image.file(
-          //                         imageListUrls[index],
-          //                         fit: BoxFit.contain,
-          //                         width: 200.0,
-          //                         height: 200.0,
-          //                       ),
-          //                 onTap: () async {
-          //                   updateCurrentImages(index);
-          //                 },
-          //               ),
-          //             )
-          //           //image picker for new product images
-          //           : Container(
-          //               margin: const EdgeInsets.all(4.0),
-          //               width: 150,
-          //               height: 200,
-          //               decoration: BoxDecoration(border: Border.all()),
-          //               child: InkWell(
-          //                 child: images[index - imageListUrls.length] == null
-          //                     ? new Icon(Icons.add,
-          //                         size: 72, color: Colors.grey)
-          //                     : showSelectedImage(index - imageListUrls.length),
-          //                 onTap: () async {
-          //                   getImages(index - imageListUrls.length);
-          //                 },
-          //               ),
-          //             );
-          //     },
-          //   ),
-          // ),
-          // SizedBox(
-          //   height: 10.0,
-          // ),
-          // //Show current PDF File Data sheet
-          // _pdfUrl != null
-          //     ? FlatButton(
-          //         padding: EdgeInsets.all(15.0),
-          //         color: Colors.red[200],
-          //         height: 40.0,
-          //         shape: RoundedRectangleBorder(
-          //             borderRadius: BorderRadius.circular(15),
-          //             side: BorderSide(color: Colors.black)),
-          //         child: Text(TDS),
-          //         onPressed: () => Navigator.push(
-          //             context,
-          //             MaterialPageRoute(
-          //               builder: (context) => PDFFileViewer(
-          //                 pdfUrl: _pdfUrl,
-          //                 productName: productName,
-          //               ),
-          //             )))
-          //     : SizedBox(),
+          Container(
+            padding: EdgeInsets.all(8.0),
+            height: 200,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: 5,
+              itemBuilder: (context, index) {
+                return index < imageListUrls.length
+                    ? Container(
+                        margin: const EdgeInsets.all(4.0),
+                        width: 150,
+                        height: 200,
+                        decoration: BoxDecoration(border: Border.all()),
+                        child: InkWell(
+                          child: !editCurrentImage
+                              ? FadeInImage(
+                                  fit: BoxFit.contain,
+                                  image: CacheImage(imageListUrls[index]),
+                                  placeholder: AssetImage(placeHolderImage),
+                                  height: 150.0,
+                                  width: 150.0,
+                                )
+                              : Image.file(
+                                  imageListUrls[index],
+                                  fit: BoxFit.contain,
+                                  width: 200.0,
+                                  height: 200.0,
+                                ),
+                          onTap: () async {
+                            updateCurrentImages(index);
+                          },
+                        ),
+                      )
+                    //image picker for new product images
+                    : Container(
+                        margin: const EdgeInsets.all(4.0),
+                        width: 150,
+                        height: 200,
+                        decoration: BoxDecoration(border: Border.all()),
+                        child: InkWell(
+                          child: images[index - imageListUrls.length] == null
+                              ? new Icon(Icons.add,
+                                  size: 72, color: Colors.grey)
+                              : showSelectedImage(index - imageListUrls.length),
+                          onTap: () async {
+                            getImages(index - imageListUrls.length);
+                          },
+                        ),
+                      );
+              },
+            ),
+          ),
+          SizedBox(
+            height: 10.0,
+          ),
+          //Show current PDF File Data sheet
+          _pdfUrl != null
+              ? FlatButton(
+                  padding: EdgeInsets.all(15.0),
+                  color: Colors.red[200],
+                  height: 40.0,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                      side: BorderSide(color: Colors.black)),
+                  child: Text(TDS),
+                  onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PDFFileViewer(
+                          pdfUrl: _pdfUrl,
+                          productName: productName,
+                        ),
+                      )))
+              : SizedBox(),
           //Upload file PDF (Data sheet)
           Container(
             margin: EdgeInsets.all(15.0),
@@ -1183,145 +1188,161 @@ class _ProductFormState extends State<ProductForm> {
 
 //builds the wood wiget product details
   Widget _buildWoodWidget() {
-    if (!widget.roles.contains('isAdmin')) {
-      for (var item in widget.cartList)
-        if (!item.contains(widget.woodProduct.uid)) {
-          itemAdded.value = false;
-        } else {
-          itemAdded.value = true;
-          break;
-        }
-    }
     return widget.roles.contains('isAdmin')
-        ? Column(
-            children: <Widget>[
-              Container(
-                width: containerWidth,
-                child: TextFormField(
-                  initialValue: productName != null ? productName : '',
-                  textCapitalization: TextCapitalization.characters,
-                  style: textStyle1,
-                  decoration:
-                      textInputDecoration.copyWith(labelText: 'Product Name'),
-                  validator: (val) =>
-                      val.isEmpty ? 'Product name is required' : null,
-                  onChanged: (val) {
-                    setState(() {
-                      productName = val;
-                    });
-                  },
-                ),
+        ? Column(children: <Widget>[
+            Container(
+              width: containerWidth,
+              child: TextFormField(
+                initialValue: productName != null ? productName : '',
+                textCapitalization: TextCapitalization.characters,
+                style: textStyle1,
+                decoration:
+                    textInputDecoration.copyWith(labelText: PRODUCT_NAME),
+                validator: (val) =>
+                    val.isEmpty ? PRODUCT_NAME_VALIDATION : null,
+                onChanged: (val) {
+                  setState(() {
+                    productName = val;
+                  });
+                },
               ),
-              SizedBox(
-                height: 15.0,
+            ),
+            SizedBox(
+              height: 15.0,
+            ),
+            //Item Code field
+            Container(
+              width: containerWidth,
+              child: TextFormField(
+                initialValue: itemCode != null ? itemCode : '',
+                textCapitalization: TextCapitalization.characters,
+                style: textStyle1,
+                decoration:
+                    textInputDecoration.copyWith(labelText: PRODUCT_CODE),
+                validator: (val) =>
+                    val.isEmpty ? PRODUCT_CODE_VALIDATION : null,
+                onChanged: (val) {
+                  setState(() {
+                    itemCode = val;
+                  });
+                },
               ),
-              Container(
-                width: containerWidth,
-                alignment: Alignment.center,
-                child: Row(
-                  children: <Widget>[
-                    Expanded(
-                      flex: 1,
-                      child: TextFormField(
-                        initialValue: length != 0.0 ? length : '',
-                        textCapitalization: TextCapitalization.characters,
-                        style: textStyle1,
-                        decoration:
-                            textInputDecoration.copyWith(labelText: 'Length'),
-                        validator: (val) =>
-                            val.isEmpty ? 'Length are required' : null,
-                        onChanged: (val) {
-                          setState(() {
-                            length = double.parse(val);
-                          });
-                        },
-                      ),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: TextFormField(
-                        initialValue: width != 0.0 ? width : '',
-                        textCapitalization: TextCapitalization.characters,
-                        style: textStyle1,
-                        decoration:
-                            textInputDecoration.copyWith(labelText: 'Width'),
-                        validator: (val) =>
-                            val.isEmpty ? 'Width are required' : null,
-                        onChanged: (val) {
-                          setState(() {
-                            width = double.parse(val);
-                          });
-                        },
-                      ),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: TextFormField(
-                        initialValue: thickness != 0.0 ? thickness : '',
-                        textCapitalization: TextCapitalization.characters,
-                        decoration: textInputDecoration.copyWith(
-                            labelText: 'Thickness'),
-                        validator: (val) =>
-                            val.isEmpty ? 'Thickness are required' : null,
-                        onChanged: (val) {
-                          setState(() {
-                            thickness = double.parse(val);
-                          });
-                        },
-                      ),
-                    ),
-                  ],
-                ),
+            ),
+            SizedBox(
+              height: 15.0,
+            ),
+            //Product Length
+            Container(
+              width: containerWidth,
+              child: TextFormField(
+                initialValue: length != null ? length.toString() : zeroValue,
+                keyboardType: TextInputType.numberWithOptions(decimal: true),
+                inputFormatters: [FilteringTextInputFormatter.deny(regExp)],
+                style: textStyle1,
+                decoration:
+                    textInputDecoration.copyWith(labelText: PRODUCT_LENGHT),
+                validator: (val) =>
+                    productValidators.productLengthValidator(val),
+                onChanged: (val) {
+                  setState(() {
+                    length = double.parse(val);
+                  });
+                },
               ),
-              SizedBox(
-                height: 15.0,
+            ),
+             SizedBox(
+              height: 15.0,
+            ),
+            //Product Width
+            Container(
+              width: containerWidth,
+              child: TextFormField(
+                initialValue: width != null ? width.toString() : zeroValue,
+                keyboardType: TextInputType.numberWithOptions(decimal: true),
+                inputFormatters: [FilteringTextInputFormatter.deny(regExp)],
+                style: textStyle1,
+                decoration:
+                    textInputDecoration.copyWith(labelText: PRODUCT_WIDTH),
+                validator: (val) =>
+                    productValidators.productWidthValidator(val),
+                onChanged: (val) {
+                  setState(() {
+                    width = double.parse(val);
+                  });
+                },
               ),
-              Container(
-                width: containerWidth,
-                child: TextFormField(
-                  initialValue: productColor != null ? productColor : '',
-                  textCapitalization: TextCapitalization.characters,
-                  decoration:
-                      textInputDecoration.copyWith(labelText: 'Product colour'),
-                  validator: (val) =>
-                      val.isEmpty ? 'Product colour is required' : null,
-                  onChanged: (val) {
-                    setState(() {
-                      productColor = val;
-                    });
-                  },
-                ),
+            ),
+             SizedBox(
+              height: 15.0,
+            ),
+            //Product Thickness
+            Container(
+              width: containerWidth,
+              child: TextFormField(
+                initialValue:
+                    thickness != null ? thickness.toString() : zeroValue,
+                keyboardType: TextInputType.numberWithOptions(decimal: true),
+                inputFormatters: [FilteringTextInputFormatter.deny(regExp)],
+                style: textStyle1,
+                decoration:
+                    textInputDecoration.copyWith(labelText: PRODUCT_THICKNESS),
+                validator: (val) =>
+                    productValidators.productThicknessValidator(val),
+                onChanged: (val) {
+                  setState(() {
+                    thickness = double.parse(val);
+                  });
+                },
               ),
-              SizedBox(
-                height: 15.0,
+            ),
+            SizedBox(
+              height: 15.0,
+            ),
+            Container(
+              width: containerWidth,
+              child: TextFormField(
+                initialValue: productColor != null ? productColor : '',
+                textCapitalization: TextCapitalization.characters,
+                decoration:
+                    textInputDecoration.copyWith(labelText: 'Product colour'),
+                validator: (val) =>
+                    val.isEmpty ? 'Product colour is required' : null,
+                onChanged: (val) {
+                  setState(() {
+                    productColor = val;
+                  });
+                },
               ),
-              //Drop down button for brands list
-              Container(
-                width: containerWidth,
-                alignment: Alignment.bottomLeft,
-                child: new DropdownButton<String>(
-                  isExpanded: true,
-                  isDense: true,
-                  value: productBrand,
-                  hint: Text('Select the product brand'),
-                  onChanged: (String val) {
-                    setState(() {
-                      productBrand = val;
-                    });
-                  },
-                  selectedItemBuilder: (BuildContext context) {
-                    return _brandList.map<Widget>((String item) {
-                      return Text(item, style: textStyle1);
-                    }).toList();
-                  },
-                  items: _brandList.map((String item) {
-                    return DropdownMenuItem<String>(
-                        child: Text(item), value: item);
-                  }).toList(),
-                ),
+            ),
+            SizedBox(
+              height: 15.0,
+            ),
+            //Drop down button for brands list
+            Container(
+              width: containerWidth,
+              alignment: Alignment.bottomLeft,
+              child: new DropdownButton<String>(
+                isExpanded: true,
+                isDense: true,
+                value: productBrand,
+                hint: Text('Select the product brand'),
+                onChanged: (String val) {
+                  setState(() {
+                    productBrand = val;
+                  });
+                },
+                selectedItemBuilder: (BuildContext context) {
+                  return _brandList.map<Widget>((String item) {
+                    return Text(item, style: textStyle1);
+                  }).toList();
+                },
+                items: _brandList.map((String item) {
+                  return DropdownMenuItem<String>(
+                      child: Text(item), value: item);
+                }).toList(),
               ),
-            ],
-          )
+            ),
+          ])
         : Column(
             children: <Widget>[
               widget.woodProduct.imageListUrls != null
@@ -1458,53 +1479,6 @@ class _ProductFormState extends State<ProductForm> {
               SizedBox(
                 height: 20.0,
               ),
-              Row(
-                children: <Widget>[
-                  Expanded(
-                    flex: 2,
-                    child: RaisedButton(
-                      elevation: 2.0,
-                      color: !itemAdded.value
-                          ? Colors.green[200]
-                          : Colors.red[200],
-                      splashColor: Colors.amberAccent,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.0)),
-                      child: !itemAdded.value
-                          ? Text(ADD_TO_CART)
-                          : Text(REMOVE_FROM_CART),
-                      onPressed: () async {
-                        setState(() {
-                          itemAdded.value = !itemAdded.value;
-                        });
-                        if (itemAdded.value) {
-                          //add the item to the cart list if it doesn't already exist.
-                          widget.cartList.add('wood ${widget.woodProduct.uid}');
-                          await currentFile.writeToDocument(widget.cartList);
-                          await currentFile.loadDocument();
-                        } else {
-                          //check if the cart list contains the product
-                          //remove the product from the index position, since the item won't match
-                          //if the product has quantity added.
-                          int index = 0;
-                          for (var item = 0;
-                              item < widget.cartList.length;
-                              item++) {
-                            if (widget.cartList[item]
-                                .contains(widget.woodProduct.uid)) {
-                              index = item;
-                              break;
-                            }
-                          }
-                          widget.cartList.removeAt(index);
-                          await currentFile.writeToDocument(widget.cartList);
-                          await currentFile.loadDocument();
-                        }
-                      },
-                    ),
-                  )
-                ],
-              )
             ],
           );
   }

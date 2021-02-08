@@ -29,6 +29,7 @@ class _ProductListState extends State<ProductList> {
   @override
   void initState() {
     super.initState();
+    
   }
 
   @override
@@ -83,6 +84,7 @@ class _ProductListState extends State<ProductList> {
                       break;
                     case TAB_WOOD_TEXT:
                       return ProductTile(
+                        roles: widget.roles,
                         woodProduct: products[index],
                         productBrand: widget.productBrand,
                         productType: widget.productType,
@@ -91,6 +93,7 @@ class _ProductListState extends State<ProductList> {
                       break;
                     case TAB_SS_TEXT:
                       return ProductTile(
+                        roles: widget.roles,
                         woodProduct: products[index],
                         productBrand: widget.productBrand,
                         productType: widget.productType,
@@ -107,6 +110,7 @@ class _ProductListState extends State<ProductList> {
                       break;
                     case TAB_ACCESSORIES_TEXT:
                       return ProductTile(
+                        roles: widget.roles,
                         accessoriesProduct: products[index],
                         productBrand: widget.productBrand,
                         productType: widget.productType,

@@ -10,7 +10,6 @@ import 'package:Products/services/database.dart';
 import 'package:Products/shared/strings.dart';
 
 class ProductsGrid extends StatefulWidget {
-
   final String productType;
   final String brandName;
   final String categoryType;
@@ -18,8 +17,7 @@ class ProductsGrid extends StatefulWidget {
   final UserData user;
   final List<dynamic> roles;
   ProductsGrid(
-      {
-      this.productType,
+      {this.productType,
       this.brandName,
       this.categoryType,
       this.callBackUpdate,
@@ -119,8 +117,7 @@ class _ProductGridState extends State<ProductsGrid> {
     switch (widget.categoryType) {
       case PU_BUTTON:
         {
-          
-         return StreamProvider<List<PaintMaterial>>.value(
+          return StreamProvider<List<PaintMaterial>>.value(
               value: DatabaseService().paintProducts(
                   brandName: widget.brandName,
                   productType: widget.productType,
@@ -205,10 +202,75 @@ class _ProductGridState extends State<ProductsGrid> {
             child: productBuild(),
           );
         }
+        break;
+      case MDF_BUTTON:
+        {
+          return StreamProvider<List<WoodProduct>>.value(
+            value: DatabaseService().woodProducts(
+                brandName: widget.brandName,
+                productType: widget.productType,
+                productCategory: widget.categoryType),
+            child: productBuild(),
+          );
+        }
+        break;
+      case CHIP_BUTTON:
+        {
+          return StreamProvider<List<WoodProduct>>.value(
+              value: DatabaseService().woodProducts(
+                  brandName: widget.brandName,
+                  productType: widget.productType,
+                  productCategory: widget.categoryType),
+              child: productBuild());
+        }
+        break;
+      case HPL_BUTTON:
+        {
+          return StreamProvider<List<WoodProduct>>.value(
+              value: DatabaseService().woodProducts(
+                  brandName: widget.brandName,
+                  productType: widget.productType,
+                  productCategory: widget.categoryType),
+              child: productBuild());
+        }
+        break;
+        case FIRE_BUTTON:
+        {
+          return StreamProvider<List<WoodProduct>>.value(
+              value: DatabaseService().woodProducts(
+                  brandName: widget.brandName,
+                  productType: widget.productType,
+                  productCategory: widget.categoryType),
+              child: productBuild());
+        }
+        break;
+        case COR_BUTTON:
+        {
+          return StreamProvider<List<WoodProduct>>.value(
+              value: DatabaseService().solidSurfaceProducts(
+                  brandName: widget.brandName,
+                  productType: widget.productType,
+                  productCategory: widget.categoryType),
+              child: productBuild());
+        }
+        break;
+        case MON_BUTTON:
+        {
+          return StreamProvider<List<WoodProduct>>.value(
+              value: DatabaseService().solidSurfaceProducts(
+                  brandName: widget.brandName,
+                  productType: widget.productType,
+                  productCategory: widget.categoryType),
+              child: productBuild());
+        }
+        break;
+
       default:
         {
           return Container(
-            child: Center(child: Text('An unexpected Error occured in productGrid occurred')),
+            child: Center(
+                child: Text(
+                    'An unexpected Error occured in productGrid occurred')),
           );
         }
     }

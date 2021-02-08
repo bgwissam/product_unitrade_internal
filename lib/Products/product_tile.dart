@@ -74,11 +74,10 @@ class _ProductTileState extends State<ProductTile> {
         .document(userId)
         .get()
         .then((value) {
-          
-          return value.data['roles'];
-        });
-
-        return result;
+      return value.data['roles'];
+    });
+    print('The result is: $result');
+    return result;
   }
 
   Future<Widget> _getImage(BuildContext context, String imageUrl) async {
@@ -235,14 +234,14 @@ class _ProductTileState extends State<ProductTile> {
 
   //return container wood
   Widget _buildWoodList() {
+    print(widget.roles);
     return InkWell(
       onTap: () {
         Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (context) => ProductForm(
-                    woodProduct: widget.woodProduct,
-                    roles: widget.user.roles)));
+                    woodProduct: widget.woodProduct, roles: widget.roles)));
       },
       child: Container(
         child: new Column(
@@ -254,7 +253,9 @@ class _ProductTileState extends State<ProductTile> {
                       child: FadeInImage(
                         fit: BoxFit.contain,
                         image: CacheImage(
-                            widget.woodProduct.imageListUrls[0] ?? ''),
+                            widget.woodProduct.imageListUrls.isEmpty
+                                ? 'assets/images/no_image.png'
+                                : widget.woodProduct.imageListUrls[0]),
                         placeholder: AssetImage(placeHolderImage),
                         height: 150,
                         width: 150,
@@ -321,7 +322,9 @@ class _ProductTileState extends State<ProductTile> {
                       child: FadeInImage(
                         fit: BoxFit.contain,
                         image: CacheImage(
-                            widget.woodProduct.imageListUrls[0] ?? ''),
+                            widget.woodProduct.imageListUrls.isNotEmpty
+                                ? widget.woodProduct.imageListUrls[0]
+                                : 'assets/image/no_logo.png'),
                         placeholder: AssetImage(placeHolderImage),
                         height: 150,
                         width: 150,

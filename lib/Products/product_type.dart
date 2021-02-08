@@ -39,8 +39,11 @@ class _ProductTypeState extends State<ProductType> {
       case ADHESIVE:
         return _buildAdhesiveUnit();
         break;
-      case TAB_WOOD_TEXT:
-        return _buildFinsaUnit();
+      case WOOD:
+        return _buildWoodUnit();
+        break;
+      case SOLID_SURFACE:
+        return _buildSolidSurface();
         break;
     }
   }
@@ -327,12 +330,13 @@ class _ProductTypeState extends State<ProductType> {
   }
 
   //Build Wood business Unit
-  Widget _buildFinsaUnit() {
+  Widget _buildWoodUnit() {
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
           children: [
+            //MDF Button
             Container(
               child: InkWell(
                 onTap: () => Navigator.push(
@@ -457,6 +461,84 @@ class _ProductTypeState extends State<ProductType> {
                 ),
               ),
             )
+          ],
+        ),
+      ),
+    );
+  }
+
+  //Build Solid Surface business Unit
+  Widget _buildSolidSurface() {
+    return SingleChildScrollView(
+      child: Padding(
+        padding: EdgeInsets.all(20.0),
+        child: Column(
+          children: [
+            //Acrylic based Products
+             Container(
+              child: InkWell(
+                onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ProductsGrid(
+                              user: widget.user,
+                              roles: widget.roles,
+                              brandName: widget.brandName,
+                              productType: TAB_SS_TEXT,
+                              categoryType: COR_BUTTON,
+                            ))),
+                child: Container(
+                  padding: EdgeInsets.all(5.0),
+                  decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      border: Border.all(color: Colors.grey[500]),
+                      borderRadius: BorderRadius.circular(25.0)),
+                  width: MediaQuery.of(context).size.width,
+                  height: 120.0,
+                  child: Center(
+                      child: Text(
+                    COR_BUTTON,
+                    style: textStyle8,
+                  )),
+                ),
+              ),
+            ),
+            SizedBox(
+              height: sizedBoxDistance,
+            ),
+            //Modified Acrylic
+             Container(
+              child: InkWell(
+                onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ProductsGrid(
+                              user: widget.user,
+                              roles: widget.roles,
+                              brandName: widget.brandName,
+                              productType: TAB_SS_TEXT,
+                              categoryType: MON_BUTTON,
+                            ))),
+                child: Container(
+                  padding: EdgeInsets.all(5.0),
+                  decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      border: Border.all(color: Colors.grey[500]),
+                      borderRadius: BorderRadius.circular(25.0)),
+                  width: MediaQuery.of(context).size.width,
+                  height: 120.0,
+                  child: Center(
+                      child: Text(
+                    MON_BUTTON,
+                    style: textStyle8,
+                  )),
+                ),
+              ),
+            ),
+            SizedBox(
+              height: sizedBoxDistance,
+            ),
+
           ],
         ),
       ),

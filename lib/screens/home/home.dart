@@ -127,7 +127,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   void initState() {
     super.initState();
     _getUserData();
-    _tabController = new TabController(length: 5, vsync: this);
+    _tabController = new TabController(length: 4, vsync: this);
   }
 
 
@@ -204,9 +204,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                     text: TAB_WOOD_TEXT,
                   ),
                   new Tab(text: TAB_SS_TEXT),
-                  new Tab(
-                    text: TAB_LIGHT_TEXT,
-                  ),
+                 
                   new Tab(text: TAB_ACCESSORIES_TEXT)
                 ],
                 controller: _tabController,
@@ -627,7 +625,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                       context,
                       MaterialPageRoute(
                           builder: (context) => ProductType(
-                              productType: TAB_WOOD_TEXT,
+                              productType: WOOD,
                               brandName: 'FINSA',
                               user: user,
                               roles: roles)));
@@ -656,7 +654,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                       context,
                       MaterialPageRoute(
                           builder: (context) => ProductType(
-                              productType: TAB_WOOD_TEXT,
+                              productType: WOOD,
                               brandName: 'SONEA ARAUCO',
                               user: user,
                               roles: roles)));
@@ -685,7 +683,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                       context,
                       MaterialPageRoute(
                           builder: (context) => ProductType(
-                              productType: TAB_WOOD_TEXT,
+                              productType: WOOD,
                               brandName: 'FORMICA',
                               user: user,
                               roles: roles)));
@@ -714,7 +712,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                       context,
                       MaterialPageRoute(
                           builder: (context) => ProductType(
-                              productType: TAB_WOOD_TEXT,
+                              productType: WOOD,
                               brandName: 'HALSPAN',
                               user: user,
                               roles: roles)));
@@ -744,6 +742,64 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       padding: EdgeInsets.symmetric(vertical: 40.0, horizontal: 10.0),
       child: Column(
         children:[
+          //Corian Brand
+          Container(
+            height: 120.0,
+            child: InkWell(
+              onTap: () {
+                if (roles.isNotEmpty)
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ProductType(
+                              productType: SOLID_SURFACE,
+                              brandName: 'CORIAN',
+                              user: user,
+                              roles: roles)));
+              },
+              child: Container(
+                padding: EdgeInsets.all(5.0),
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey[500]),
+                    borderRadius: BorderRadius.circular(25.0)),
+                width: MediaQuery.of(context).size.width,
+                height: 150.0,
+                child: Image.asset('assets/images/brands/corian.jpg'),
+              ),
+            ),
+          ),
+          SizedBox(
+            height: distanceBetweenInkWells,
+          ),
+          //SONAE 
+          Container(
+            height: 120.0,
+            child: InkWell(
+              onTap: () {
+                if (roles.isNotEmpty)
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ProductType(
+                              productType: SOLID_SURFACE,
+                              brandName: 'MONTELLI',
+                              user: user,
+                              roles: roles)));
+              },
+              child: Container(
+                padding: EdgeInsets.all(5.0),
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey[500]),
+                    borderRadius: BorderRadius.circular(25.0)),
+                width: MediaQuery.of(context).size.width,
+                height: 150.0,
+                child: Image.asset('assets/images/brands/montelli.jpg'),
+              ),
+            ),
+          ),
+          SizedBox(
+            height: distanceBetweenInkWellLabel,
+          ),
         ],
       ),
     );
