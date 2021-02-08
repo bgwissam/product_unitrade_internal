@@ -234,7 +234,6 @@ class _ProductTileState extends State<ProductTile> {
 
   //return container wood
   Widget _buildWoodList() {
-    print(widget.roles);
     return InkWell(
       onTap: () {
         Navigator.push(
@@ -309,8 +308,7 @@ class _ProductTileState extends State<ProductTile> {
             context,
             MaterialPageRoute(
                 builder: (context) => ProductForm(
-                    woodProduct: widget.woodProduct,
-                    roles: widget.user.roles)));
+                    woodProduct: widget.woodProduct, roles: widget.roles)));
       },
       child: Container(
         child: new Column(
@@ -351,7 +349,7 @@ class _ProductTileState extends State<ProductTile> {
               flex: 1,
               child: Container(
                 child: new Text(
-                  'Thickness: ${widget.woodProduct.thickness} mm',
+                  'Thickness: ${widget.woodProduct.thickness.toString()} mm',
                   style: textStyle5,
                   textAlign: TextAlign.center,
                 ),
@@ -434,7 +432,7 @@ class _ProductTileState extends State<ProductTile> {
             MaterialPageRoute(
                 builder: (context) => ProductForm(
                     accessoriesProduct: widget.accessoriesProduct,
-                    roles: widget.user.roles)));
+                    roles: widget.roles)));
       },
       child: Container(
         child: new Column(
@@ -446,7 +444,9 @@ class _ProductTileState extends State<ProductTile> {
                       child: FadeInImage(
                         fit: BoxFit.contain,
                         image: CacheImage(
-                            widget.accessoriesProduct.imageListUrls[0] ?? ''),
+                            widget.accessoriesProduct.imageListUrls.isNotEmpty
+                                ? widget.accessoriesProduct.imageListUrls[0]
+                                : 'assets/images/no_image.png'),
                         placeholder: AssetImage(placeHolderImage),
                         height: 150,
                         width: 150,

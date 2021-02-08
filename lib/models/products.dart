@@ -36,9 +36,9 @@ class PaintMaterial {
   String productCategory;
   String productBrand;
   String productPackUnit;
-  double productPack;
-  double productPrice;
-  double productCost;
+  var productPack;
+  var productPrice;
+  var productCost;
   String color;
   String description;
   List<dynamic> productTags;
@@ -140,13 +140,15 @@ class Accessories {
   String productType;
   String productCategory;
   String productBrand;
-  double length;
-  double angle;
+  var length;
+  var angle;
   String closingType;
   String color;
   String description;
-  double productPrice;
-  double productCost;
+  String extensionType;
+  String itemSide;
+  var productPrice;
+  var productCost;
   List<dynamic> productTags;
   List<dynamic> imageListUrls;
   String pdfUrl;
@@ -163,6 +165,8 @@ class Accessories {
       this.closingType,
       this.color,
       this.description,
+      this.extensionType,
+      this.itemSide,
       this.productPrice,
       this.productCost,
       this.productTags,

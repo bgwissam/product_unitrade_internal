@@ -57,20 +57,20 @@ class _ProductFormState extends State<ProductForm> {
   String productType;
   String productCategory;
   String productBrand;
-  double productPack;
-  double productPrice;
-  double productCost;
+  var productPack;
+  var productPrice;
+  var productCost;
   String productPackUnit;
   String productDescription;
   List<String> productTags;
   String paintImageUrl;
-  double width;
-  double length;
-  double thickness;
+  var width;
+  var length;
+  var thickness;
   String dimensions;
   String watt;
   String voltage;
-  double angle;
+  var angle;
   String closingType;
   String productColor;
   String productImageUrl;
@@ -78,6 +78,15 @@ class _ProductFormState extends State<ProductForm> {
   List<String> _brandList = [];
   String error = 'No Error detected';
   bool loading = false;
+  //Options for the accessories tap
+  String extensionType;
+  String flapStrength;
+  String itemSide;
+  List<String> _runnersExtension = AccessoriesOptions.extensions();
+  List<String> _runnerClosing = AccessoriesOptions.closing();
+  List<String> _flapStrength = AccessoriesOptions.flapStrenght();
+  List<String> _itemSide = AccessoriesOptions.itemSide();
+
   ValueNotifier<bool> itemAdded = ValueNotifier<bool>(false);
   bool tagsListChanged = false;
   //check if current image is edited
@@ -199,12 +208,16 @@ class _ProductFormState extends State<ProductForm> {
           : imageListUrls =
               new List<dynamic>.from(widget.lightProduct.imageListUrls);
     } else if (widget.accessoriesProduct != null) {
+      itemCode = widget.accessoriesProduct.itemCode;
       productName = widget.accessoriesProduct.productName;
       productBrand = widget.accessoriesProduct.productBrand;
       productType = widget.accessoriesProduct.productType;
       productCategory = widget.accessoriesProduct.productCategory;
       length = widget.accessoriesProduct.length;
       angle = widget.accessoriesProduct.angle;
+      extensionType = widget.accessoriesProduct.extensionType;
+      itemSide = widget.accessoriesProduct.itemSide;
+      productPrice = widget.accessoriesProduct.productPrice;
       closingType = widget.accessoriesProduct.closingType;
       productColor = widget.accessoriesProduct.color;
       widget.accessoriesProduct.imageListUrls == null
@@ -1250,7 +1263,7 @@ class _ProductFormState extends State<ProductForm> {
                 },
               ),
             ),
-             SizedBox(
+            SizedBox(
               height: 15.0,
             ),
             //Product Width
@@ -1272,7 +1285,7 @@ class _ProductFormState extends State<ProductForm> {
                 },
               ),
             ),
-             SizedBox(
+            SizedBox(
               height: 15.0,
             ),
             //Product Thickness
@@ -1485,15 +1498,6 @@ class _ProductFormState extends State<ProductForm> {
 
 //builds the solid surface widget product details
   Widget _buildSolidWidget() {
-    if (!widget.roles.contains('isAdmin')) {
-      for (var item in widget.cartList)
-        if (!item.contains(widget.woodProduct.uid)) {
-          itemAdded.value = false;
-        } else {
-          itemAdded.value = true;
-          break;
-        }
-    }
     return widget.roles.contains('isAdmin')
         ? Column(
             children: <Widget>[
@@ -1525,7 +1529,7 @@ class _ProductFormState extends State<ProductForm> {
                     Expanded(
                       flex: 1,
                       child: TextFormField(
-                        initialValue: length != 0.0 ? length : '',
+                        initialValue: length != 0.0 ? length.toString() : '',
                         textCapitalization: TextCapitalization.characters,
                         style: textStyle1,
                         decoration:
@@ -1542,7 +1546,7 @@ class _ProductFormState extends State<ProductForm> {
                     Expanded(
                       flex: 1,
                       child: TextFormField(
-                        initialValue: width != 0.0 ? width : '',
+                        initialValue: width != 0.0 ? width.toString() : '',
                         textCapitalization: TextCapitalization.characters,
                         style: textStyle1,
                         decoration:
@@ -1559,7 +1563,8 @@ class _ProductFormState extends State<ProductForm> {
                     Expanded(
                       flex: 1,
                       child: TextFormField(
-                        initialValue: thickness != 0.0 ? thickness : '',
+                        initialValue:
+                            thickness != 0.0 ? thickness.toString() : '',
                         textCapitalization: TextCapitalization.characters,
                         decoration: textInputDecoration.copyWith(
                             labelText: 'Thickness'),
@@ -2162,150 +2167,348 @@ class _ProductFormState extends State<ProductForm> {
 
 //builds the accessories widget product details
   Widget _buildAccessoriesWidget() {
-    if (!widget.roles.contains('isAdmin')) {
-      for (var item in widget.cartList)
-        if (!item.contains(widget.accessoriesProduct.uid)) {
-          itemAdded.value = false;
-        } else {
-          itemAdded.value = true;
-          break;
-        }
-    }
     return widget.roles.contains('isAdmin')
-        ? Column(
-            children: <Widget>[
-              Container(
-                width: containerWidth,
-                child: TextFormField(
-                  initialValue: productName != null ? productName : '',
-                  textCapitalization: TextCapitalization.characters,
-                  style: textStyle1,
-                  decoration:
-                      textInputDecoration.copyWith(labelText: PRODUCT_NAME),
-                  validator: (val) =>
-                      val.isEmpty ? PRODUCT_NAME_VALIDATION : null,
-                  onChanged: (val) {
-                    setState(() {
-                      productName = val;
-                    });
-                  },
+        ? Container(
+            child: Column(
+              children: <Widget>[
+                //Product Name
+                Container(
+                  child: TextFormField(
+                    initialValue: productName != null ? productName : '',
+                    textCapitalization: TextCapitalization.characters,
+                    style: textStyle1,
+                    decoration:
+                        textInputDecoration.copyWith(labelText: PRODUCT_NAME),
+                    validator: (val) =>
+                        val.isEmpty ? PRODUCT_NAME_VALIDATION : null,
+                    onChanged: (val) {
+                      setState(() {
+                        productName = val;
+                      });
+                    },
+                  ),
                 ),
-              ),
-              SizedBox(
-                height: 15.0,
-              ),
-              Container(
-                width: containerWidth,
-                child: TextFormField(
-                  initialValue: length != null ? length : '',
-                  textCapitalization: TextCapitalization.characters,
-                  style: textStyle1,
-                  decoration:
-                      textInputDecoration.copyWith(labelText: PRODUCT_LENGHT),
-                  onChanged: (val) {
-                    setState(() {
-                      length = double.parse(val);
-                    });
-                  },
+                SizedBox(
+                  height: 15.0,
                 ),
-              ),
-              SizedBox(
-                height: 15.0,
-              ),
-              Container(
-                width: containerWidth,
-                alignment: Alignment.center,
-                child: Row(
-                  children: <Widget>[
-                    Expanded(
-                      flex: 1,
-                      child: TextFormField(
-                        initialValue: angle != null ? angle : '',
-                        textCapitalization: TextCapitalization.characters,
-                        style: textStyle1,
-                        decoration: textInputDecoration.copyWith(
-                            labelText: PRODUCT_ANGLE),
-                        onChanged: (val) {
-                          setState(() {
-                            angle = double.parse(val);
-                          });
-                        },
+                //Item Code field
+                Container(
+                  child: TextFormField(
+                    initialValue: itemCode != null ? itemCode : '',
+                    textCapitalization: TextCapitalization.characters,
+                    style: textStyle1,
+                    decoration:
+                        textInputDecoration.copyWith(labelText: PRODUCT_CODE),
+                    validator: (val) =>
+                        val.isEmpty ? PRODUCT_CODE_VALIDATION : null,
+                    onChanged: (val) {
+                      setState(() {
+                        itemCode = val;
+                      });
+                    },
+                  ),
+                ),
+                SizedBox(
+                  height: 15.0,
+                ),
+                productCategory != HINGES
+                    ? Row(
+                        children: [
+                          //Product Length
+                          productCategory != FLAP
+                              ? Flexible(
+                                  flex: 1,
+                                  fit: FlexFit.tight,
+                                  child: TextFormField(
+                                    initialValue: length != null
+                                        ? length.toString()
+                                        : zeroValue,
+                                    keyboardType: TextInputType.number,
+                                    inputFormatters: [
+                                      FilteringTextInputFormatter.digitsOnly
+                                    ],
+                                    style: textStyle1,
+                                    decoration: textInputDecoration.copyWith(
+                                        labelText: PRODUCT_LENGHT),
+                                    onChanged: (val) {
+                                      setState(() {
+                                        length = double.parse(val);
+                                      });
+                                    },
+                                  ),
+                                )
+                              : Container(),
+                          SizedBox(
+                            width: 6.0,
+                          ),
+                          productCategory != FLAP
+                              ? Flexible(
+                                  flex: 1,
+                                  fit: FlexFit.tight,
+                                  child: Container(
+                                    alignment: Alignment.bottomLeft,
+                                    child: DropdownButton<String>(
+                                      isExpanded: true,
+                                      value: extensionType,
+                                      hint: Text(EXTENSION_TYPE),
+                                      onChanged: (String val) {
+                                        setState(() {
+                                          extensionType = val;
+                                        });
+                                      },
+                                      selectedItemBuilder:
+                                          (BuildContext context) {
+                                        return _runnersExtension
+                                            .map((item) => Text(
+                                                  item,
+                                                  style: textStyle1,
+                                                ))
+                                            .toList();
+                                      },
+                                      items: _runnersExtension
+                                          .map((item) => DropdownMenuItem(
+                                                child: Text(item),
+                                                value: item,
+                                              ))
+                                          .toList(),
+                                    ),
+                                  ),
+                                )
+                              :
+                              //Flap strenght mechanism
+                              Flexible(
+                                  flex: 1,
+                                  fit: FlexFit.loose,
+                                  child: Container(
+                                    alignment: Alignment.bottomLeft,
+                                    child: DropdownButton<String>(
+                                      isExpanded: true,
+                                      value: flapStrength,
+                                      hint: Text(FLAP_STENGTH),
+                                      onChanged: (String val) {
+                                        setState(() {
+                                          flapStrength = val;
+                                        });
+                                      },
+                                      selectedItemBuilder:
+                                          (BuildContext context) {
+                                        return _flapStrength
+                                            .map((item) => Text(
+                                                  item,
+                                                  style: textStyle1,
+                                                ))
+                                            .toList();
+                                      },
+                                      items: _flapStrength
+                                          .map((item) => DropdownMenuItem(
+                                                child: Text(item),
+                                                value: item,
+                                              ))
+                                          .toList(),
+                                    ),
+                                  ),
+                                ),
+                          SizedBox(
+                            width: 6.0,
+                          ),
+                          Flexible(
+                            flex: 1,
+                            fit: FlexFit.loose,
+                            child: Container(
+                              alignment: Alignment.bottomLeft,
+                              child: DropdownButton<String>(
+                                isExpanded: true,
+                                value: closingType,
+                                hint: Text(CLOSING_TYPE),
+                                onChanged: (String val) {
+                                  setState(() {
+                                    closingType = val;
+                                  });
+                                },
+                                selectedItemBuilder: (BuildContext context) {
+                                  return _runnerClosing
+                                      .map((item) => Text(
+                                            item,
+                                            style: textStyle1,
+                                          ))
+                                      .toList();
+                                },
+                                items: _runnerClosing
+                                    .map((item) => DropdownMenuItem(
+                                          child: Text(item),
+                                          value: item,
+                                        ))
+                                    .toList(),
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
+                    : Row(
+                        children: [
+                          //Product Angle
+                          Container(
+                            width: MediaQuery.of(context).size.width / 2,
+                            alignment: Alignment.center,
+                            child: Row(
+                              children: <Widget>[
+                                Expanded(
+                                  flex: 1,
+                                  child: TextFormField(
+                                    initialValue: angle != null
+                                        ? angle.toString()
+                                        : zeroValue,
+                                    keyboardType: TextInputType.number,
+                                    inputFormatters: [
+                                      FilteringTextInputFormatter.deny(regExp),
+                                    ],
+                                    style: textStyle1,
+                                    decoration: textInputDecoration.copyWith(
+                                        labelText: PRODUCT_ANGLE),
+                                    onChanged: (val) {
+                                      setState(() {
+                                        if (val != null)
+                                          angle = double.parse(val);
+                                      });
+                                    },
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 10.0,
+                                ),
+                                //Closing type
+                                Expanded(
+                                  flex: 1,
+                                  child: TextFormField(
+                                    initialValue:
+                                        closingType != null ? closingType : '',
+                                    textCapitalization:
+                                        TextCapitalization.characters,
+                                    decoration: textInputDecoration.copyWith(
+                                        labelText: PRODUCT_CLOSING_TYPE),
+                                    validator: (val) => val.isEmpty
+                                        ? PRODUCT_CLOSING_TYPE_VALIDATION
+                                        : null,
+                                    onChanged: (val) {
+                                      setState(() {
+                                        closingType = val;
+                                      });
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                    SizedBox(
-                      width: 10.0,
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: TextFormField(
-                        initialValue: closingType != null ? closingType : '',
-                        textCapitalization: TextCapitalization.characters,
-                        decoration: textInputDecoration.copyWith(
-                            labelText: PRODUCT_CLOSING_TYPE),
-                        validator: (val) => val.isEmpty
-                            ? PRODUCT_CLOSING_TYPE_VALIDATION
-                            : null,
-                        onChanged: (val) {
-                          setState(() {
-                            closingType = val;
-                          });
-                        },
+
+                SizedBox(
+                  height: 15.0,
+                ),
+                productCategory == HINGES
+                    ?
+                    //Product Colour
+                    Container(
+                        child: TextFormField(
+                          initialValue:
+                              productColor != null ? productColor : '',
+                          textCapitalization: TextCapitalization.characters,
+                          decoration: textInputDecoration.copyWith(
+                              labelText: PRODUCT_COLOUR),
+                          validator: (val) =>
+                              val.isEmpty ? PRODUCT_COLOUR_VALIDATION : null,
+                          onChanged: (val) {
+                            setState(() {
+                              productColor = val;
+                            });
+                          },
+                        ),
+                      )
+                    :
+                    //Product Side
+                    Container(
+                        alignment: Alignment.bottomLeft,
+                        child: DropdownButton<String>(
+                          isExpanded: true,
+                          value: itemSide,
+                          hint: Text(ITEM_SIDE),
+                          onChanged: (String val) {
+                            setState(() {
+                              itemSide = val;
+                            });
+                          },
+                          selectedItemBuilder: (BuildContext context) {
+                            return _itemSide
+                                .map((item) => Text(
+                                      item,
+                                      style: textStyle1,
+                                    ))
+                                .toList();
+                          },
+                          items: _itemSide
+                              .map((item) => DropdownMenuItem(
+                                    child: Text(item),
+                                    value: item,
+                                  ))
+                              .toList(),
+                        ),
                       ),
-                    ),
-                  ],
+                SizedBox(
+                  height: 15.0,
                 ),
-              ),
-              SizedBox(
-                height: 15.0,
-              ),
-              Container(
-                width: containerWidth,
-                child: TextFormField(
-                  initialValue: productColor != null ? productColor : '',
-                  textCapitalization: TextCapitalization.characters,
-                  decoration:
-                      textInputDecoration.copyWith(labelText: PRODUCT_COLOUR),
-                  validator: (val) =>
-                      val.isEmpty ? PRODUCT_COLOUR_VALIDATION : null,
-                  onChanged: (val) {
-                    setState(() {
-                      productColor = val;
-                    });
-                  },
+                //Price field
+                Container(
+                  child: TextFormField(
+                    initialValue: productPrice != null
+                        ? productPrice.toString()
+                        : zeroValue,
+                    keyboardType:
+                        TextInputType.numberWithOptions(decimal: true),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.deny(regExp),
+                    ],
+                    style: textStyle1,
+                    decoration:
+                        textInputDecoration.copyWith(labelText: PRODUCT_PRICE),
+                    validator: (val) =>
+                        productValidators.productPriceValidator(val),
+                    onChanged: (val) {
+                      setState(() {
+                        productPrice = double.parse(val);
+                      });
+                    },
+                  ),
                 ),
-              ),
-              SizedBox(
-                height: 15.0,
-              ),
-              SizedBox(
-                height: 15.0,
-              ),
-              //Drop down button for brands list
-              Container(
-                width: containerWidth,
-                alignment: Alignment.bottomLeft,
-                child: new DropdownButton<String>(
-                  isExpanded: true,
-                  isDense: true,
-                  value: productBrand,
-                  hint: Text(SELECT_PRODUCT_BRAND),
-                  onChanged: (String val) {
-                    setState(() {
-                      productBrand = val;
-                    });
-                  },
-                  selectedItemBuilder: (BuildContext context) {
-                    return _brandList.map<Widget>((String item) {
-                      return Text(item, style: textStyle1);
-                    }).toList();
-                  },
-                  items: _brandList.map((String item) {
-                    return DropdownMenuItem<String>(
-                        child: Text(item), value: item);
-                  }).toList(),
+                SizedBox(
+                  height: 15.0,
                 ),
-              ),
-            ],
+
+                //Drop down button for brands list
+                Container(
+                  alignment: Alignment.bottomLeft,
+                  child: new DropdownButton<String>(
+                    isExpanded: true,
+                    isDense: true,
+                    value: productBrand,
+                    hint: Text(SELECT_PRODUCT_BRAND),
+                    onChanged: (String val) {
+                      setState(() {
+                        productBrand = val;
+                      });
+                    },
+                    selectedItemBuilder: (BuildContext context) {
+                      return _brandList.map<Widget>((String item) {
+                        return Text(item, style: textStyle1);
+                      }).toList();
+                    },
+                    items: _brandList.map((String item) {
+                      return DropdownMenuItem<String>(
+                          child: Text(item), value: item);
+                    }).toList(),
+                  ),
+                ),
+              ],
+            ),
           )
         : Column(
             children: <Widget>[

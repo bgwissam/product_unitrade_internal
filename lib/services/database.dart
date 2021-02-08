@@ -1058,6 +1058,8 @@ class DatabaseService {
           angle: doc.data['angle'],
           closingType: doc.data['closingType'],
           productCategory: doc.data['productCategory'],
+          extensionType: doc.data['extensionType'],
+          itemSide: doc.data['itemSide'],
           color: doc.data['color'],
           description: doc.data['description'],
           productPrice: doc.data['productPrice'],

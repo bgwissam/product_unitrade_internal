@@ -132,6 +132,10 @@ const String PRODUCT_WIDTH = 'Width';
 const String PRODUCT_WIDTH_VALIDATION = 'Width is required';
 const String PRODUCT_THICKNESS = 'Thickness';
 const String PRODUCT_THICKNESS_VALIDATION = 'Thickness is required';
+const String EXTENSION_TYPE = 'Extension Type';
+const String CLOSING_TYPE = 'Closing Type';
+const String FLAP_STENGTH = 'Flap Strength';
+const String ITEM_SIDE = 'Side';
 
 //Product Form validation
 const String PRODUCT_LENGTH_VAL_ZERO = 'Product length should be greater than zero';

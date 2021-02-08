@@ -409,6 +409,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         });
   }
 
+  
   //Map each product to its class type and set its values from the result array
   void mapProductToType(var productType, int index) {
     switch (productType) {
@@ -811,6 +812,35 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       padding: EdgeInsets.symmetric(vertical: 40.0, horizontal: 10.0),
       child: Column(
         children: [
+          //Salice
+          Container(
+            height: 120.0,
+            child: InkWell(
+              onTap: () {
+                if (roles.isNotEmpty)
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ProductType(
+                              productType: ACCESSORIES,
+                              brandName: 'SALICE',
+                              user: user,
+                              roles: roles)));
+              },
+              child: Container(
+                padding: EdgeInsets.all(5.0),
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey[500]),
+                    borderRadius: BorderRadius.circular(25.0)),
+                width: MediaQuery.of(context).size.width,
+                height: 150.0,
+                child: Image.asset('assets/images/brands/salice.jpg'),
+              ),
+            ),
+          ),
+          SizedBox(
+            height: distanceBetweenInkWells,
+          ),
         ],
       ),
     );

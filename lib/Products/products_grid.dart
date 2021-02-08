@@ -234,7 +234,7 @@ class _ProductGridState extends State<ProductsGrid> {
               child: productBuild());
         }
         break;
-        case FIRE_BUTTON:
+      case FIRE_BUTTON:
         {
           return StreamProvider<List<WoodProduct>>.value(
               value: DatabaseService().woodProducts(
@@ -244,7 +244,7 @@ class _ProductGridState extends State<ProductsGrid> {
               child: productBuild());
         }
         break;
-        case COR_BUTTON:
+      case COR_BUTTON:
         {
           return StreamProvider<List<WoodProduct>>.value(
               value: DatabaseService().solidSurfaceProducts(
@@ -254,7 +254,7 @@ class _ProductGridState extends State<ProductsGrid> {
               child: productBuild());
         }
         break;
-        case MON_BUTTON:
+      case MON_BUTTON:
         {
           return StreamProvider<List<WoodProduct>>.value(
               value: DatabaseService().solidSurfaceProducts(
@@ -264,7 +264,36 @@ class _ProductGridState extends State<ProductsGrid> {
               child: productBuild());
         }
         break;
-
+      case HINGES:
+        {
+          return StreamProvider<List<Accessories>>.value(
+              value: DatabaseService().accessoriesProducts(
+                  brandName: widget.brandName,
+                  productType: widget.productType,
+                  productCategory: widget.categoryType),
+              child: productBuild());
+        }
+        break;
+      case RUNNERS:
+        {
+          return StreamProvider<List<Accessories>>.value(
+              value: DatabaseService().accessoriesProducts(
+                  brandName: widget.brandName,
+                  productType: widget.productType,
+                  productCategory: widget.categoryType),
+              child: productBuild());
+        }
+        break;
+      case FLAP:
+        {
+          return StreamProvider<List<Accessories>>.value(
+              value: DatabaseService().accessoriesProducts(
+                  brandName: widget.brandName,
+                  productType: widget.productType,
+                  productCategory: widget.categoryType),
+              child: productBuild());
+        }
+        break;
       default:
         {
           return Container(

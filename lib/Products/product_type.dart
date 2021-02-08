@@ -45,6 +45,9 @@ class _ProductTypeState extends State<ProductType> {
       case SOLID_SURFACE:
         return _buildSolidSurface();
         break;
+      case ACCESSORIES:
+        return _buildAccessories();
+        break;
     }
   }
 
@@ -475,7 +478,7 @@ class _ProductTypeState extends State<ProductType> {
         child: Column(
           children: [
             //Acrylic based Products
-             Container(
+            Container(
               child: InkWell(
                 onTap: () => Navigator.push(
                     context,
@@ -507,7 +510,7 @@ class _ProductTypeState extends State<ProductType> {
               height: sizedBoxDistance,
             ),
             //Modified Acrylic
-             Container(
+            Container(
               child: InkWell(
                 onTap: () => Navigator.push(
                     context,
@@ -538,7 +541,115 @@ class _ProductTypeState extends State<ProductType> {
             SizedBox(
               height: sizedBoxDistance,
             ),
+          ],
+        ),
+      ),
+    );
+  }
 
+  //Build Accessories business unit
+  Widget _buildAccessories() {
+    return SingleChildScrollView(
+      child: Padding(
+        padding: EdgeInsets.all(20.0),
+        child: Column(
+          children: [
+            //Hinges
+            Container(
+              child: InkWell(
+                onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ProductsGrid(
+                              user: widget.user,
+                              roles: widget.roles,
+                              brandName: widget.brandName,
+                              productType: TAB_ACCESSORIES_TEXT,
+                              categoryType: HINGES,
+                            ))),
+                child: Container(
+                  padding: EdgeInsets.all(5.0),
+                  decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      border: Border.all(color: Colors.grey[500]),
+                      borderRadius: BorderRadius.circular(25.0)),
+                  width: MediaQuery.of(context).size.width,
+                  height: 120.0,
+                  child: Center(
+                    child: Text(
+                      HINGES,
+                      style: textStyle8,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+             SizedBox(
+              height: sizedBoxDistance,
+            ),
+            //Runners
+            Container(
+              child: InkWell(
+                onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ProductsGrid(
+                              user: widget.user,
+                              roles: widget.roles,
+                              brandName: widget.brandName,
+                              productType: TAB_ACCESSORIES_TEXT,
+                              categoryType: RUNNERS,
+                            ))),
+                child: Container(
+                  padding: EdgeInsets.all(5.0),
+                  decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      border: Border.all(color: Colors.grey[500]),
+                      borderRadius: BorderRadius.circular(25.0)),
+                  width: MediaQuery.of(context).size.width,
+                  height: 120.0,
+                  child: Center(
+                    child: Text(
+                      RUNNERS,
+                      style: textStyle8,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+             SizedBox(
+              height: sizedBoxDistance,
+            ),
+            //Flap Mechanism
+            Container(
+              child: InkWell(
+                onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ProductsGrid(
+                              user: widget.user,
+                              roles: widget.roles,
+                              brandName: widget.brandName,
+                              productType: TAB_ACCESSORIES_TEXT,
+                              categoryType: FLAP,
+                            ))),
+                child: Container(
+                  padding: EdgeInsets.all(5.0),
+                  decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      border: Border.all(color: Colors.grey[500]),
+                      borderRadius: BorderRadius.circular(25.0)),
+                  width: MediaQuery.of(context).size.width,
+                  height: 120.0,
+                  child: Center(
+                    child: Text(
+                      FLAP,
+                      style: textStyle8,
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),
