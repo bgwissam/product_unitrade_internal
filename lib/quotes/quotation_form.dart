@@ -12,10 +12,15 @@ import 'package:provider/provider.dart';
 class QuotationForm extends StatefulWidget {
   final String userId;
   final List<Clients> clients;
-  final List<PaintMaterial> products;
+  final List<PaintMaterial> paintProducts;
+  final List<WoodProduct> woodProducts;
   final Map<String, String> productsWithDescription;
   QuotationForm(
-      {this.userId, this.clients, this.products, this.productsWithDescription});
+      {this.userId,
+      this.clients,
+      this.paintProducts,
+      this.woodProducts,
+      this.productsWithDescription});
   @override
   _QuotationFormState createState() => _QuotationFormState();
 }
@@ -190,8 +195,6 @@ class _QuotationFormState extends State<QuotationForm> {
   }
 
   Widget _quotationDetails(BuildContext context) {
-
-
     //dynamic list to add more rows
     Widget dynamicRow = new Container(
       child: new ListView.builder(
@@ -466,7 +469,20 @@ class _QuotationFormState extends State<QuotationForm> {
                       onSuggestionSelected: (suggestions) {
                         _typeAheadController.text = suggestions;
                         //get the pack and price for each item
-                        widget.products.forEach((element) {
+                        var selecteItem = suggestions.split(' ');
+                        switch (selecteItem[0]) {
+                          case COATINGS:
+                              DatabaseService()
+                                  .paintProductbyItemCode(selecteItem[2]).forEach((data) {
+                                    print(data.indexWhere((element) => element.productPack == 25.0));
+                                  });
+                            
+                            break;
+                          case WOOD:
+                            break;
+                        }
+
+                        widget.paintProducts.forEach((element) {
                           var code = element.itemCode +
                               ' ' +
                               element.productPack.toString();
@@ -482,7 +498,7 @@ class _QuotationFormState extends State<QuotationForm> {
                       },
                       onSaved: (value) {
                         var _itemCode = value.split(' ');
-                        itemCode.add(_itemCode[0]);
+                        itemCode.add(_itemCode[1]);
                       },
                     ),
                   ),
@@ -607,8 +623,10 @@ class _QuotationFormState extends State<QuotationForm> {
   //Get list of suggestions for the product list
   List<String> getSuggestions(String query) {
     List<String> matches = [];
-    matches.addAll(widget.products
-        .map((e) => e.itemCode + ' ' + e.productPack.toString()));
+    matches.addAll(widget.paintProducts
+        .map((e) => COATINGS + ' | ${e.itemCode} ${e.productPack}'));
+    matches.addAll(widget.woodProducts.map((e) =>
+        WOOD + ' | ${e.productName} ${e.length}x${e.width}x${e.thickness}'));
     matches.retainWhere(
         (item) => item.toString().toLowerCase().contains(query.toLowerCase()));
     return matches;

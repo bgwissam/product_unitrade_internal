@@ -76,7 +76,7 @@ class _ProductTileState extends State<ProductTile> {
         .then((value) {
       return value.data['roles'];
     });
-    print('The result is: $result');
+    if (result.contains('isSuperAdmin')) isAdmin = true;
     return result;
   }
 
@@ -177,52 +177,30 @@ class _ProductTileState extends State<ProductTile> {
               indent: 10.0,
               endIndent: 10.0,
             ),
-            //Product name field
-            Expanded(
-              flex: 2,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: new Text(
-                  '${widget.product.itemCode} - ${widget.product.productName}',
-                  style: textStyle4,
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ),
+            //Product Name
+            widget.product.productName.isNotEmpty
+                ? Text(
+                    '${widget.product.itemCode} - ${widget.product.productName}',
+                    textAlign: TextAlign.center,
+                    style: textStyle4)
+                : Text(''),
             //Packing field
-            Expanded(
-              flex: 1,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    widget.product.productPack.toString(),
+            widget.product.productPack != null
+                ? Text(
+                    '${widget.product.productPack.toString()} ${widget.product.productPackUnit}',
                     style: textStyle5,
                     textAlign: TextAlign.center,
-                  ),
-                  SizedBox(
-                    width: 5.0,
-                  ),
-                  Text(
-                    widget.product.productPackUnit,
-                    style: textStyle5,
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              ),
-            ),
+                  )
+                : Text(''),
             //Price field
-            Expanded(
-              flex: 1,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: new Text(
-                  '${widget.product.productPrice.toString()} SR',
-                  style: textStyle5,
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ),
+            widget.product.productPrice != null
+                ? Text(
+                    '${widget.product.productPrice} SR',
+                    style: textStyle5,
+                    textAlign: TextAlign.center,
+                  )
+                : Text(''),
+
             !isAdmin
                 ? Container()
                 : Expanded(flex: 1, child: _buildUpdateDeleteButton(context))
@@ -273,26 +251,32 @@ class _ProductTileState extends State<ProductTile> {
               indent: 10.0,
               endIndent: 10.0,
             ),
-            Expanded(
-              flex: 1,
-              child: Container(
-                child: new Text(
-                  widget.woodProduct.productName,
-                  style: textStyle4,
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ),
-            Expanded(
-              flex: 1,
-              child: Container(
-                child: new Text(
-                  'Thickness: ${widget.woodProduct.thickness} mm',
-                  style: textStyle5,
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ),
+            //Wood product name and item code
+            widget.woodProduct.productName != null
+                ? Text(
+                    '${widget.woodProduct.itemCode} - ${widget.woodProduct.productName}',
+                    style: textStyle4,
+                    textAlign: TextAlign.center,
+                  )
+                : Text(''),
+            //wood product dimensions
+            widget.woodProduct.length != null
+                ? Text(
+                    '${widget.woodProduct.length} x ${widget.woodProduct.width} x ${widget.woodProduct.thickness} mm',
+                    style: textStyle5,
+                    textAlign: TextAlign.center,
+                  )
+                : Text(''),
+
+            //Wood product price
+            widget.woodProduct.productPrice != null
+                ? Text(
+                    '${widget.woodProduct.productPrice} SR',
+                    style: textStyle5,
+                    textAlign: TextAlign.center,
+                  )
+                : Text(''),
+
             !isAdmin ? Container() : _buildUpdateDeleteButton(context)
           ],
         ),
@@ -335,26 +319,31 @@ class _ProductTileState extends State<ProductTile> {
             SizedBox(
               height: 10.0,
             ),
-            Expanded(
-              flex: 1,
-              child: Container(
-                  width: 140.0,
-                  child: Text(
-                    widget.woodProduct.productName,
+            //Wood solid surface name and item code
+            widget.woodProduct.productName != null
+                ? Text(
+                    '${widget.woodProduct.itemCode} - ${widget.woodProduct.productName}',
                     style: textStyle4,
                     textAlign: TextAlign.center,
-                  )),
-            ),
-            Expanded(
-              flex: 1,
-              child: Container(
-                child: new Text(
-                  'Thickness: ${widget.woodProduct.thickness.toString()} mm',
-                  style: textStyle5,
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ),
+                  )
+                : Text(''),
+            //wood solid surface dimensions
+            widget.woodProduct.length != null
+                ? Text(
+                    '${widget.woodProduct.length} x ${widget.woodProduct.width} x ${widget.woodProduct.thickness} mm',
+                    style: textStyle5,
+                    textAlign: TextAlign.center,
+                  )
+                : Text(''),
+
+            //Wood solid surface price
+            widget.woodProduct.productPrice != null
+                ? Text(
+                    '${widget.woodProduct.productPrice} SR',
+                    style: textStyle5,
+                    textAlign: TextAlign.center,
+                  )
+                : Text(''),
             !isAdmin ? Container() : _buildUpdateDeleteButton(context)
           ],
         ),
@@ -425,6 +414,20 @@ class _ProductTileState extends State<ProductTile> {
 
   //return container accessories
   Widget _buildAccessoriesList() {
+    List<String> specs = [];
+    specs.clear();
+    //Fill the available specs for each item as accessories have many specs that needs to be shown
+    if(widget.accessoriesProduct.closingType != null)
+        specs.add('${widget.accessoriesProduct.closingType}');
+    if(widget.accessoriesProduct.length != null || widget.accessoriesProduct.itemSide !=null)
+        specs.add('${widget.accessoriesProduct.length} mm - ${widget.accessoriesProduct.itemSide}');
+    if(widget.accessoriesProduct.angle !=null)
+        specs.add('${widget.accessoriesProduct.angle}');
+    if(widget.accessoriesProduct.extensionType !=null)
+        specs.add('${widget.accessoriesProduct.extensionType}');
+    if(widget.accessoriesProduct.productPrice != null)
+      specs.add('${widget.accessoriesProduct.productPrice} SR');
+      
     return InkWell(
       onTap: () {
         Navigator.push(
@@ -459,41 +462,27 @@ class _ProductTileState extends State<ProductTile> {
             SizedBox(
               height: 10.0,
             ),
-            Expanded(
-              flex: 1,
-              child: Container(
-                  width: 140.0,
-                  child: Text(
-                    widget.accessoriesProduct.productName,
+            //Accessories item code and product name
+            widget.accessoriesProduct.productName != null
+                ? Text(
+                    '${widget.accessoriesProduct.itemCode} - ${widget.accessoriesProduct.productName}',
                     style: textStyle4,
                     textAlign: TextAlign.center,
-                  )),
-            ),
+                  )
+                : Text(''),
+
+            //loop over accesories specs
             Expanded(
-                flex: 1,
-                child: Column(
-                  children: [
-                    widget.accessoriesProduct.length != null
-                        ? Container(
-                            child: Text(
-                              '${widget.accessoriesProduct.length} mm',
-                              style: textStyle5,
-                              textAlign: TextAlign.center,
-                            ),
-                          )
-                        : Container(),
-                    widget.accessoriesProduct.angle != null
-                        ? Container(
-                            child: Text(
-                              '${widget.accessoriesProduct.angle} degrees',
-                              style: textStyle5,
-                              textAlign: TextAlign.center,
-                            ),
-                          )
-                        : Container(),
-                  ],
-                )),
-            !isAdmin ? Container() : _buildUpdateDeleteButton(context)
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: specs.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Text(specs[index], textAlign: TextAlign.center, style: textStyle5,);
+                },
+              ),
+            ),       
+          
+           !isAdmin ? Container() : _buildUpdateDeleteButton(context)
           ],
         ),
       ),

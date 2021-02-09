@@ -52,7 +52,7 @@ const textStyle4 = TextStyle(
   fontFamily: 'San Francisco',
   fontWeight: FontWeight.bold,
 );
-const textStyle5 = TextStyle(fontSize: 14.0, fontFamily: 'San Francisco');
+const textStyle5 = TextStyle(fontSize: 12.0, fontFamily: 'San Francisco');
 
 const textStyle6 = TextStyle(fontSize: 18.0, fontFamily: 'San Francisco');
 
@@ -66,6 +66,7 @@ const textStyle9 =
     TextStyle(fontSize: 20.0, fontFamily: 'San Fransisco', color: Colors.white);
 
 const textStyle10 = TextStyle(fontSize: 24.0, color: Colors.green);
+
 
 const buttonStyle =
     TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold, color: Colors.white);

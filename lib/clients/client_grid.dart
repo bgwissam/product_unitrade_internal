@@ -21,16 +21,23 @@ class ClientGrid extends StatefulWidget {
 class _ClientGridState extends State<ClientGrid> {
   @override
   Widget build(BuildContext context) {
-    return StreamProvider<List<Clients>>.value(
-        value: DatabaseService().clientDataBySalesId(salesId: widget.userId),
-        child: StreamProvider<List<PaintMaterial>>.value(
+    return MultiProvider(
+      providers: [
+        StreamProvider<List<Clients>>.value(
+            value:
+                DatabaseService().clientDataBySalesId(salesId: widget.userId)),
+        StreamProvider<List<PaintMaterial>>.value(
           value: DatabaseService().allPaintProduct,
-          child: widget.quotation
-              ? QuotationProviderBuild(
-                  userId: widget.userId,
-                )
-              : clientBuild(),
-        ));
+        ),
+        StreamProvider<List<WoodProduct>>.value(
+            value: DatabaseService().allWoodProduct),
+      ],
+      child: widget.quotation
+          ? QuotationProviderBuild(
+              userId: widget.userId,
+            )
+          : clientBuild(),
+    );
   }
 
   //build the client build widget
@@ -61,37 +68,37 @@ class _QuotationProviderBuildState extends State<QuotationProviderBuild> {
   Widget build(BuildContext context) {
     var clientProvider = Provider.of<List<Clients>>(context) ?? [];
     var paintProducts = Provider.of<List<PaintMaterial>>(context) ?? [];
+    var woodProducts = Provider.of<List<WoodProduct>>(context) ?? [];
 
     if (clientProvider.isNotEmpty)
       return Container(
         child: FutureBuilder(
-            future: _getProductData(paintProducts),
-            builder: (context, AsyncSnapshot snapshot) {
-              if (snapshot.hasData) {
-                if (snapshot.connectionState == ConnectionState.done) {
-                  return QuotationForm(
-                    userId: widget.userId,
-                    clients: clientProvider,
-                    productsWithDescription: productsWithDescription,
-                    products: paintProducts,
-                  );
-                } else if (snapshot.connectionState ==
-                    ConnectionState.waiting) {
-                  return ShowCustomDialog();
-                } else if (snapshot.connectionState == ConnectionState.none) {
-                  return Container(
-                    height: 100.0,
-                    width: 100.0,
-                    child: Text('Could not get product data'),
-                  );
-                }
-              } else {
+          future: _getProductData(paintProducts),
+          builder: (context, AsyncSnapshot snapshot) {
+            if (snapshot.hasData) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                return QuotationForm(
+                  userId: widget.userId,
+                  clients: clientProvider,
+                  productsWithDescription: productsWithDescription,
+                  paintProducts: paintProducts,
+                  woodProducts: woodProducts,
+                );
+              } else if (snapshot.connectionState == ConnectionState.waiting) {
                 return ShowCustomDialog();
+              } else if (snapshot.connectionState == ConnectionState.none) {
+                return Container(
+                  height: 100.0,
+                  width: 100.0,
+                  child: Text('Could not get product data'),
+                );
               }
+            } else {
               return ShowCustomDialog();
-            },
-            
-            ),
+            }
+            return ShowCustomDialog();
+          },
+        ),
       );
     else
       return NoDataExists(
@@ -110,7 +117,6 @@ class _QuotationProviderBuildState extends State<QuotationProviderBuild> {
     //check the products have their description before proceeding
     if (productNames.isNotEmpty) {
       productsWithDescription = Map.fromIterables(itemCodes, productNames);
-      
     }
 
     return productsWithDescription;

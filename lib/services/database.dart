@@ -438,7 +438,6 @@ class DatabaseService {
   //Get a list of paint product
   List<PaintMaterial> _productDataFromSnapShot(QuerySnapshot snapshot) {
     return snapshot.documents.map((doc) {
-      print('Pack Type: ${doc.data['productPackValue'].runtimeType} ${doc.data['productName']}');
       return PaintMaterial(
           uid: doc.documentID,
           itemCode: doc.data['itemCode'],
@@ -497,6 +496,15 @@ class DatabaseService {
         .where('uid', isEqualTo: uid)
         .snapshots()
         .map(_productDataFromSnapShot);
+  }
+
+  Stream<List<PaintMaterial>> paintProductbyItemCode(String itemCode) {
+    
+      return paintCollection
+          .where('itemCode', isEqualTo: itemCode)
+          .snapshots()
+          .map(_productDataFromSnapShot);
+    
   }
 
   //Stream all paint product
