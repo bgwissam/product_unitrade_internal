@@ -246,7 +246,7 @@ class _ProductGridState extends State<ProductsGrid> {
         break;
       case COR_BUTTON:
         {
-          return StreamProvider<List<WoodProduct>>.value(
+          return StreamProvider<List<SolidProduct>>.value(
               value: DatabaseService().solidSurfaceProducts(
                   brandName: widget.brandName,
                   productType: widget.productType,
@@ -256,7 +256,7 @@ class _ProductGridState extends State<ProductsGrid> {
         break;
       case MON_BUTTON:
         {
-          return StreamProvider<List<WoodProduct>>.value(
+          return StreamProvider<List<SolidProduct>>.value(
               value: DatabaseService().solidSurfaceProducts(
                   brandName: widget.brandName,
                   productType: widget.productType,

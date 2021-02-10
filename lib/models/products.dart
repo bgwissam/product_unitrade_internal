@@ -104,6 +104,45 @@ class WoodProduct {
       this.pdfUrl});
 }
 
+class SolidProduct {
+  String uid;
+  String itemCode;
+  String productName;
+  String productType;
+  String productCategory;
+  String productBrand;
+  var length;
+  var width;
+  var thickness;
+  double productPack;
+  String color;
+  String description;
+  var productPrice;
+  var productCost;
+  List<dynamic> productTags;
+  List<dynamic> imageListUrls;
+  String pdfUrl;
+
+  SolidProduct(
+      {this.uid,
+      this.itemCode,
+      this.productName,
+      this.productType,
+      this.productCategory,
+      this.productBrand,
+      this.length,
+      this.width,
+      this.thickness,
+      this.productPack,
+      this.color,
+      this.description,
+      this.productPrice,
+      this.productCost,
+      this.productTags,
+      this.imageListUrls,
+      this.pdfUrl});
+}
+
 class Lights {
   String uid;
   String productName;

@@ -646,6 +646,7 @@ class _ProductFormState extends State<ProductForm> {
                         productName: productName,
                         productBrand: productBrand,
                         productType: productType,
+                        itemCode: itemCode,
                         length: length,
                         width: width,
                         thickness: thickness,

@@ -14,12 +14,17 @@ class QuotationForm extends StatefulWidget {
   final List<Clients> clients;
   final List<PaintMaterial> paintProducts;
   final List<WoodProduct> woodProducts;
+  final List<SolidProduct> solidProducts;
+  final List<Accessories> accessoriesProducts;
+
   final Map<String, String> productsWithDescription;
   QuotationForm(
       {this.userId,
       this.clients,
       this.paintProducts,
       this.woodProducts,
+      this.solidProducts,
+      this.accessoriesProducts,
       this.productsWithDescription});
   @override
   _QuotationFormState createState() => _QuotationFormState();
@@ -44,13 +49,13 @@ class _QuotationFormState extends State<QuotationForm> {
   String userId;
   //Quotation item variables
   List<String> itemCode = [];
+  List<String> productName = [];
   List<String> itemDescription = [];
   List<double> quantity = [];
   List<double> price = [];
-  List<double> pack = [];
+  List<String> pack = [];
   List<Map<String, dynamic>> selectedProducts = [];
   List<String> itemCodes = [];
-  List<String> productNames = [];
   //create a temporary list for add price and pack for selected items
   double tempPack;
   double tempPrice;
@@ -433,7 +438,7 @@ class _QuotationFormState extends State<QuotationForm> {
               children: [
                 //Code
                 Expanded(
-                  flex: 2,
+                  flex: 1,
                   child: Center(
                     child: TypeAheadFormField(
                       textFieldConfiguration: TextFieldConfiguration(
@@ -469,53 +474,153 @@ class _QuotationFormState extends State<QuotationForm> {
                       onSuggestionSelected: (suggestions) {
                         _typeAheadController.text = suggestions;
                         //get the pack and price for each item
-                        var selecteItem = suggestions.split(' ');
-                        switch (selecteItem[0]) {
+                        var selecteItem = suggestions.split('|');
+                        switch (selecteItem[0].trim()) {
+                          //Get the details of the paint product selected item
                           case COATINGS:
-                              DatabaseService()
-                                  .paintProductbyItemCode(selecteItem[2]).forEach((data) {
-                                    print(data.indexWhere((element) => element.productPack == 25.0));
+                            DatabaseService()
+                                .paintProductbyItemCode(selecteItem[1].trim())
+                                .forEach((data) {
+                              data.indexWhere((element) {
+                                if (element.productPack.toString() ==
+                                    selecteItem[2].toString().trim()) {
+                                  setState(() {
+                                    _priceController.text =
+                                        element.productPrice.toString();
+                                    _packController.text =
+                                        element.productPack.toString();
                                   });
-                            
+                                  return true;
+                                } else {
+                                  print('No matching element');
+                                  return false;
+                                }
+                              });
+                            });
                             break;
+                          //Get the details of the wood product selected item
                           case WOOD:
+                            DatabaseService()
+                                .woodProductbyItemCode(selecteItem[1].trim())
+                                .forEach((data) {
+                              data.indexWhere((element) {
+                                if (element.itemCode == selecteItem[1].trim()) {
+                                  var dimensions =
+                                      '${element.length}x${element.width}x${element.thickness}';
+
+                                  if (dimensions.isEmpty)
+                                    dimensions = 'No Pack';
+                                  setState(() {
+                                    _priceController.text =
+                                        element.productPrice.toString();
+                                    _packController.text =
+                                        dimensions.toString();
+                                  });
+                                  return true;
+                                }
+                                return false;
+                              });
+                            });
+                            break;
+                          //Get the details of the solid suraface selected item
+                          case SOLID_SURFACE:
+                            DatabaseService()
+                                .solidSurfaceProductbyItemCode(
+                                    selecteItem[1].trim())
+                                .forEach((data) {
+                              data.indexWhere((element) {
+                                if (element.itemCode == selecteItem[1].trim()) {
+                                  var dimensions =
+                                      '${element.length}x${element.width}x${element.thickness}';
+
+                                  if (dimensions.isEmpty)
+                                    dimensions = 'No Pack';
+                                  setState(() {
+                                    _priceController.text =
+                                        element.productPrice.toString();
+                                    _packController.text =
+                                        dimensions.toString();
+                                  });
+
+                                  return true;
+                                }
+
+                                return false;
+                              });
+                            });
+                            break;
+                          //Get details for the selected product in accessories
+                          case ACCESSORIES:
+                            DatabaseService()
+                                .accessoriesProductbyItemCode(
+                                    selecteItem[1].trim())
+                                .forEach((data) {
+                              data.indexWhere((element) {
+                                if (element.itemCode == selecteItem[1].trim()) {
+                                  var dimensions = new StringBuffer();
+                                  if (element.length != null)
+                                    dimensions.write(element.length.toString());
+                                  if (element.angle != null) {
+                                    if (dimensions.isNotEmpty)
+                                      dimensions.write('-');
+                                    dimensions.write(element.angle.toString());
+                                  }
+
+                                  if (element.extensionType != null) {
+                                    if (dimensions.isNotEmpty)
+                                      dimensions.write('-');
+                                    dimensions.write(
+                                        element.extensionType.toString());
+                                  }
+
+                                  if (dimensions.isEmpty) {
+                                    dimensions.write('No Pack');
+                                  }
+
+                                  setState(() {
+                                    _priceController.text =
+                                        element.productPrice.toString();
+                                    _packController.text =
+                                        dimensions.toString();
+                                  });
+
+                                  return true;
+                                }
+
+                                return false;
+                              });
+                            });
                             break;
                         }
-
-                        widget.paintProducts.forEach((element) {
-                          var code = element.itemCode +
-                              ' ' +
-                              element.productPack.toString();
-
-                          if (code == suggestions) {
-                            _priceController.text =
-                                element.productPrice.toString();
-                            _packController.text =
-                                element.productPack.toString();
-                          }
-                          return true;
-                        });
                       },
                       onSaved: (value) {
                         var _itemCode = value.split(' ');
-                        itemCode.add(_itemCode[1]);
+                        itemCode.add(_itemCode[2]);
                       },
                     ),
                   ),
                 ),
-                SizedBox(
-                  width: 5.0,
-                ),
+              ],
+            ),
+          ),
+          SizedBox(
+            height: 15.0,
+          ),
+          //Quantity and price row
+          Container(
+            width: MediaQuery.of(context).size.width - 10,
+            child: Row(
+              children: [
                 //Packing
                 Expanded(
                   flex: 1,
                   child: Center(
                     child: TextFormField(
                         controller: _packController,
-                        style: textStyle1,
+                        enabled: false,
                         decoration: InputDecoration(
-                          labelText: ITEM_PACK,
                           filled: true,
+                          labelText: ITEM_PACK,
                           fillColor: Colors.grey[100],
                           enabledBorder: OutlineInputBorder(
                               borderRadius:
@@ -529,24 +634,13 @@ class _QuotationFormState extends State<QuotationForm> {
                         validator: (val) =>
                             val.isEmpty ? ITEM_PACK_VALIDATION : null,
                         onSaved: (val) {
-                          pack.add(double.parse(val));
+                          pack.add(val);
                         }),
                   ),
                 ),
                 SizedBox(
                   width: 5.0,
                 ),
-              ],
-            ),
-          ),
-          SizedBox(
-            height: 15.0,
-          ),
-          //Quantity and price row
-          Container(
-            width: MediaQuery.of(context).size.width - 10,
-            child: Row(
-              children: [
                 //Quantity
                 Expanded(
                   flex: 1,
@@ -585,6 +679,7 @@ class _QuotationFormState extends State<QuotationForm> {
                     child: TextFormField(
                         controller: _priceController,
                         style: textStyle1,
+                        enabled: false,
                         keyboardType: TextInputType.number,
                         decoration: InputDecoration(
                           filled: true,
@@ -623,10 +718,23 @@ class _QuotationFormState extends State<QuotationForm> {
   //Get list of suggestions for the product list
   List<String> getSuggestions(String query) {
     List<String> matches = [];
+    //Adding paint product to the input list
     matches.addAll(widget.paintProducts
-        .map((e) => COATINGS + ' | ${e.itemCode} ${e.productPack}'));
+        .map((e) => COATINGS + ' | ${e.itemCode} | ${e.productPack}'));
+
+    //Adding wood products to the input list
     matches.addAll(widget.woodProducts.map((e) =>
-        WOOD + ' | ${e.productName} ${e.length}x${e.width}x${e.thickness}'));
+        WOOD +
+        ' | ${e.itemCode} | ${e.productName} | ${e.length}x${e.width}x${e.thickness}'));
+    //Adding solid surface products to the input list
+    matches.addAll(widget.solidProducts.map((e) =>
+        SOLID_SURFACE +
+        ' | ${e.itemCode} | ${e.productName} | ${e.length}x${e.width}x${e.thickness}'));
+    //Adding accessories to the input list
+    matches.addAll(widget.accessoriesProducts.map((e) =>
+        ACCESSORIES +
+        ' | ${e.itemCode} | ${e.productName} | ${e.length ?? ''} ${e.angle ?? ''} ${e.extensionType ?? ''}'));
+
     matches.retainWhere(
         (item) => item.toString().toLowerCase().contains(query.toLowerCase()));
     return matches;

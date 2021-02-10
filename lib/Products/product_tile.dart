@@ -12,6 +12,7 @@ import 'package:cache_image/cache_image.dart';
 class ProductTile extends StatefulWidget {
   final PaintMaterial product;
   final WoodProduct woodProduct;
+  final SolidProduct solidProduct;
   final Lights lightProduct;
   final Accessories accessoriesProduct;
   final UserData user;
@@ -33,6 +34,7 @@ class ProductTile extends StatefulWidget {
       {this.product,
       this.woodProduct,
       this.lightProduct,
+      this.solidProduct,
       this.accessoriesProduct,
       this.user,
       this.productBrand,
@@ -299,13 +301,13 @@ class _ProductTileState extends State<ProductTile> {
           children: <Widget>[
             Expanded(
               flex: 3,
-              child: widget.woodProduct.imageListUrls != null
+              child: widget.solidProduct.imageListUrls != null
                   ? Container(
                       child: FadeInImage(
                         fit: BoxFit.contain,
                         image: CacheImage(
-                            widget.woodProduct.imageListUrls.isNotEmpty
-                                ? widget.woodProduct.imageListUrls[0]
+                            widget.solidProduct.imageListUrls.isNotEmpty
+                                ? widget.solidProduct.imageListUrls[0]
                                 : 'assets/image/no_logo.png'),
                         placeholder: AssetImage(placeHolderImage),
                         height: 150,
@@ -320,26 +322,26 @@ class _ProductTileState extends State<ProductTile> {
               height: 10.0,
             ),
             //Wood solid surface name and item code
-            widget.woodProduct.productName != null
+            widget.solidProduct.productName != null
                 ? Text(
-                    '${widget.woodProduct.itemCode} - ${widget.woodProduct.productName}',
+                    '${widget.solidProduct.itemCode} - ${widget.solidProduct.productName}',
                     style: textStyle4,
                     textAlign: TextAlign.center,
                   )
                 : Text(''),
             //wood solid surface dimensions
-            widget.woodProduct.length != null
+            widget.solidProduct.length != null
                 ? Text(
-                    '${widget.woodProduct.length} x ${widget.woodProduct.width} x ${widget.woodProduct.thickness} mm',
+                    '${widget.solidProduct.length} x ${widget.solidProduct.width} x ${widget.solidProduct.thickness} mm',
                     style: textStyle5,
                     textAlign: TextAlign.center,
                   )
                 : Text(''),
 
             //Wood solid surface price
-            widget.woodProduct.productPrice != null
+            widget.solidProduct.productPrice != null
                 ? Text(
-                    '${widget.woodProduct.productPrice} SR',
+                    '${widget.solidProduct.productPrice} SR',
                     style: textStyle5,
                     textAlign: TextAlign.center,
                   )

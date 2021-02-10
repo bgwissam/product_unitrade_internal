@@ -499,12 +499,10 @@ class DatabaseService {
   }
 
   Stream<List<PaintMaterial>> paintProductbyItemCode(String itemCode) {
-    
-      return paintCollection
-          .where('itemCode', isEqualTo: itemCode)
-          .snapshots()
-          .map(_productDataFromSnapShot);
-    
+    return paintCollection
+        .where('itemCode', isEqualTo: itemCode)
+        .snapshots()
+        .map(_productDataFromSnapShot);
   }
 
   //Stream all paint product
@@ -665,8 +663,15 @@ class DatabaseService {
     } catch (e) {
       print(e);
     }
-
     return document;
+  }
+
+  //Obtain wood product through item code
+  Stream<List<WoodProduct>> woodProductbyItemCode(String itemCode) {
+    return woodCollection
+        .where('itemCode', isEqualTo: itemCode)
+        .snapshots()
+        .map(_woodProductDataFromSnapShot);
   }
 
   //stream wood products by id
@@ -787,10 +792,10 @@ class DatabaseService {
   }
 
   //Get List of solid surface product
-  List<WoodProduct> _solidSurfcaeProductDataFromSnapShot(
+  List<SolidProduct> _solidSurfcaeProductDataFromSnapShot(
       QuerySnapshot snapshot) {
     return snapshot.documents.map((doc) {
-      return WoodProduct(
+      return SolidProduct(
           uid: doc.documentID,
           itemCode: doc.data['itemCode'],
           productName: doc.data['productName'],
@@ -799,7 +804,6 @@ class DatabaseService {
           length: doc.data['length'],
           width: doc.data['width'],
           thickness: doc.data['thickness'],
-          productPack: doc.data['productPack'],
           productCategory: doc.data['productCategory'],
           color: doc.data['color'],
           description: doc.data['description'],
@@ -812,7 +816,7 @@ class DatabaseService {
   }
 
   //Stream data from solid surface document
-  Stream<List<WoodProduct>> solidSurfaceProducts(
+  Stream<List<SolidProduct>> solidSurfaceProducts(
       {String brandName,
       String productType,
       String productCategory,
@@ -825,10 +829,25 @@ class DatabaseService {
         .map(_solidSurfcaeProductDataFromSnapShot);
   }
 
+  //Return all solid products in the collection
+  Stream<List<SolidProduct>> get allSolidProduct {
+    return solidCollection
+        .snapshots()
+        .map(_solidSurfcaeProductDataFromSnapShot);
+  }
+
   //Stream item from solid surface document reference to its id
-  Stream<List<WoodProduct>> solidSurfaceProductId(String uid) {
+  Stream<List<SolidProduct>> solidSurfaceProductId(String uid) {
     return solidCollection
         .where('uid', isEqualTo: uid)
+        .snapshots()
+        .map(_solidSurfcaeProductDataFromSnapShot);
+  }
+
+  //Stream product by item code
+  Stream<List<SolidProduct>> solidSurfaceProductbyItemCode(String itemCode) {
+    return solidCollection
+        .where('itemCode', isEqualTo: itemCode)
         .snapshots()
         .map(_solidSurfcaeProductDataFromSnapShot);
   }
@@ -1091,10 +1110,25 @@ class DatabaseService {
         .map(_accessoriesProductDataFromSnapShot);
   }
 
+  //Return all accessories products
+  Stream<List<Accessories>> get allAccessoriesProduct {
+    return accessoriesCollection
+        .snapshots()
+        .map(_accessoriesProductDataFromSnapShot);
+  }
+
   //Stream item from accessories document reference to its id
   Stream<List<Accessories>> accessoriesProductId(String uid) {
     return accessoriesCollection
         .where('uid', isEqualTo: uid)
+        .snapshots()
+        .map(_accessoriesProductDataFromSnapShot);
+  }
+
+  //Stream items using the item code
+  Stream<List<Accessories>> accessoriesProductbyItemCode(String itemCode) {
+    return accessoriesCollection
+        .where('itemCode', isEqualTo: itemCode)
         .snapshots()
         .map(_accessoriesProductDataFromSnapShot);
   }

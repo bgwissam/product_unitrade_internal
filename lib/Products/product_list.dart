@@ -42,7 +42,7 @@ class _ProductListState extends State<ProductList> {
         products = Provider.of<List<PaintMaterial>>(context) ?? [];
         break;
       case TAB_SS_TEXT:
-        products = Provider.of<List<WoodProduct>>(context) ?? [];
+        products = Provider.of<List<SolidProduct>>(context) ?? [];
         break;
       case TAB_WOOD_TEXT:
         products = Provider.of<List<WoodProduct>>(context) ?? [];
@@ -94,7 +94,7 @@ class _ProductListState extends State<ProductList> {
                     case TAB_SS_TEXT:
                       return ProductTile(
                         roles: widget.roles,
-                        woodProduct: products[index],
+                        solidProduct: products[index],
                         productBrand: widget.productBrand,
                         productType: widget.productType,
                         user: user,

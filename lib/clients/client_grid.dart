@@ -31,6 +31,10 @@ class _ClientGridState extends State<ClientGrid> {
         ),
         StreamProvider<List<WoodProduct>>.value(
             value: DatabaseService().allWoodProduct),
+        StreamProvider<List<SolidProduct>>.value(
+            value: DatabaseService().allSolidProduct),
+        StreamProvider<List<Accessories>>.value(
+            value: DatabaseService().allAccessoriesProduct)
       ],
       child: widget.quotation
           ? QuotationProviderBuild(
@@ -69,6 +73,8 @@ class _QuotationProviderBuildState extends State<QuotationProviderBuild> {
     var clientProvider = Provider.of<List<Clients>>(context) ?? [];
     var paintProducts = Provider.of<List<PaintMaterial>>(context) ?? [];
     var woodProducts = Provider.of<List<WoodProduct>>(context) ?? [];
+    var solidProducts = Provider.of<List<SolidProduct>>(context) ?? [];
+    var accessoriesProducts = Provider.of<List<Accessories>>(context) ?? [];
 
     if (clientProvider.isNotEmpty)
       return Container(
@@ -83,6 +89,8 @@ class _QuotationProviderBuildState extends State<QuotationProviderBuild> {
                   productsWithDescription: productsWithDescription,
                   paintProducts: paintProducts,
                   woodProducts: woodProducts,
+                  solidProducts: solidProducts,
+                  accessoriesProducts: accessoriesProducts,
                 );
               } else if (snapshot.connectionState == ConnectionState.waiting) {
                 return ShowCustomDialog();
