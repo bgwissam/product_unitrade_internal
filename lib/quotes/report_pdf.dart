@@ -290,7 +290,7 @@ PdfGrid getGrid(List<Map<String, dynamic>> products) {
   //Add rows
   for (int i = 0; i < products.length; i++) {
     var productCode = products[i]['itemCode'] ?? ' ';
-    var productName = products[i]['itemDescription'] ?? ' ';
+    var productName = products[i]['productName'] ?? ' ';
     double productQuantity = products[i]['quantity'] ?? 0;
     double productPrice = products[i]['price'] ?? 0;
     var productTotal = productQuantity * productPrice;

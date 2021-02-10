@@ -113,9 +113,7 @@ class _PDFDocumentViewerState extends State<PDFDocumentViewer> {
                         onPressed: () {
                           Navigator.of(context).pushNamedAndRemoveUntil(
                               '/home', (Route<dynamic> route) => false);
-                          // Navigator.pop(context);
-                          // Navigator.pop(context);
-                          // Navigator.pop(context);
+                         
                         },
                       )
                     ],

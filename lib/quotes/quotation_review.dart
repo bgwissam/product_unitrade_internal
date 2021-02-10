@@ -129,7 +129,7 @@ class _QuotationReviewState extends State<QuotationReview> {
                 Expanded(
                   flex: 1,
                   child: Text(
-                    widget.totalValue.toString(),
+                    widget.totalValue.toStringAsFixed(2),
                     style: textStyle10,
                   ),
                 )

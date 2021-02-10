@@ -154,7 +154,7 @@ class _QuotationFormState extends State<QuotationForm> {
                     });
                     selectedProducts.add({
                       'itemCode': itemCode[i],
-                      'itemDescription': prodName,
+                      'itemDescription': productName[i],
                       'itemPack': pack[i],
                       'quantity': quantity[i],
                       'price': price[i]
@@ -392,6 +392,7 @@ class _QuotationFormState extends State<QuotationForm> {
   void _addTableRow() {
     if (itemCode.length != 0) {
       itemCode = [];
+      productName = [];
       itemDescription = [];
       quantity = [];
       price = [];
@@ -408,6 +409,7 @@ class _QuotationFormState extends State<QuotationForm> {
   void _removeTableRow() {
     if (itemCode.length != 0) {
       itemCode = [];
+      productName = [];
       itemDescription = [];
       quantity = [];
       price = [];
@@ -507,7 +509,6 @@ class _QuotationFormState extends State<QuotationForm> {
                                 if (element.itemCode == selecteItem[1].trim()) {
                                   var dimensions =
                                       '${element.length}x${element.width}x${element.thickness}';
-
                                   if (dimensions.isEmpty)
                                     dimensions = 'No Pack';
                                   setState(() {
@@ -583,10 +584,8 @@ class _QuotationFormState extends State<QuotationForm> {
                                     _packController.text =
                                         dimensions.toString();
                                   });
-
                                   return true;
                                 }
-
                                 return false;
                               });
                             });
@@ -594,8 +593,9 @@ class _QuotationFormState extends State<QuotationForm> {
                         }
                       },
                       onSaved: (value) {
-                        var _itemCode = value.split(' ');
-                        itemCode.add(_itemCode[2]);
+                        var _itemCode = value.split(' | ');
+                        itemCode.add(_itemCode[1]);
+                        productName.add(_itemCode[2]);
                       },
                     ),
                   ),
