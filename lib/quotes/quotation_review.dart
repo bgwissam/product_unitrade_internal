@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class QuotationReview extends StatefulWidget {
+  final String salesCordinator;
   final String customerName;
   final String customerEmail;
   final String customerPhone;
@@ -24,7 +25,8 @@ class QuotationReview extends StatefulWidget {
   final String supplierEmail;
 
   QuotationReview(
-      {this.customerName,
+      {this.salesCordinator,
+      this.customerName,
       this.customerEmail,
       this.customerPhone,
       this.clientId,
@@ -160,6 +162,7 @@ class _QuotationReviewState extends State<QuotationReview> {
         if (result != null) {
           //close loading navigator
           await reportView(
+            saleCordinator: widget.salesCordinator,
             context: context,
             quoteId: result,
             products: widget.products,
@@ -279,7 +282,8 @@ class _QuotationReviewState extends State<QuotationReview> {
                           ),
                           Expanded(
                             flex: 1,
-                            child: Text(widget.products[index]['itemPack'].toString()),
+                            child: Text(
+                                widget.products[index]['itemPack'].toString()),
                           ),
                           Expanded(
                             flex: 1,
@@ -323,8 +327,7 @@ class _QuotationReviewState extends State<QuotationReview> {
                           ),
                           borderSide: BorderSide(color: Colors.blue)),
                     ),
-                    validator: (val) =>
-                        val.isEmpty ? CONTACT_NAME_EMPTY : null,
+                    validator: (val) => val.isEmpty ? CONTACT_NAME_EMPTY : null,
                     onSaved: (val) {
                       setState(() {
                         contactName = val;
@@ -370,7 +373,6 @@ class _QuotationReviewState extends State<QuotationReview> {
               )
             ],
           ),
-          
         ],
       ),
     );

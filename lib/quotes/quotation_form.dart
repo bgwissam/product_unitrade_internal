@@ -35,6 +35,8 @@ class _QuotationFormState extends State<QuotationForm> {
   var _formKey = GlobalKey<FormState>();
 
   int currentRowNumber = 1;
+  //An email for the sales coordinator
+  String salesCoordinatorEmailAddress = 'joel.linatoc@nesma.com';
   String clientName = '';
   String clientEmail;
   String clientPhone;
@@ -118,12 +120,10 @@ class _QuotationFormState extends State<QuotationForm> {
 
     if (clientEmailAddress != null) {
       for (var data in clientEmailAddress) {
-        print(clientName);
         if (data.clientName == clientName) {
           clientEmail = data.email;
           clientPhone = data.clientPhoneNumber;
           clientId = data.uid;
-          print(clientEmail);
         }
       }
     }
@@ -168,6 +168,7 @@ class _QuotationFormState extends State<QuotationForm> {
                     context,
                     MaterialPageRoute(
                         builder: (context) => QuotationReview(
+                              salesCordinator: salesCoordinatorEmailAddress,
                               customerName: clientName,
                               customerEmail: clientEmail,
                               customerPhone: clientPhone,
@@ -313,12 +314,14 @@ class _QuotationFormState extends State<QuotationForm> {
                       },
                       selectedItemBuilder: (BuildContext context) {
                         return _paymentTerms
-                            .map((item) => Center(
-                                  child: Text(
-                                    item,
-                                    style: textStyle1,
-                                  ),
-                                ))
+                            .map(
+                              (item) => Center(
+                                child: Text(
+                                  item,
+                                  style: textStyle1,
+                                ),
+                              ),
+                            )
                             .toList();
                       },
                       items: _paymentTerms

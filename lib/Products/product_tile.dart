@@ -294,7 +294,7 @@ class _ProductTileState extends State<ProductTile> {
             context,
             MaterialPageRoute(
                 builder: (context) => ProductForm(
-                    woodProduct: widget.woodProduct, roles: widget.roles)));
+                    solidProduct: widget.solidProduct, roles: widget.roles)));
       },
       child: Container(
         child: new Column(

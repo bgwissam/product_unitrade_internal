@@ -180,20 +180,20 @@ class _SignInState extends State<SignIn> {
                               if (result != null) {
                                 if (result == 'User not verified') {
                                   setState(() {
+                                    loading = false;
                                     showEmailVerification = true;
                                     error = result;
                                   });
                                 } else if(result == 'User is verified') {
                                   setState(() {
+                                    loading = false;
                                     Navigator.push(context, MaterialPageRoute(builder: (context) => Wrapper(),));
                                   });
                                 }
                               } else {
                                 error = 'Unknown error, contact developer';
                               }
-                              setState(() {
-                                loading = false;
-                              });
+                             
                             }
                           },
                         ),

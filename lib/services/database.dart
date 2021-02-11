@@ -225,7 +225,9 @@ class DatabaseService {
       String clientAddress,
       String clientSector,
       String email,
-      String salesInCharge}) async {
+      String salesInCharge,
+      String contactName,
+      String paymentTerms}) async {
     try {
       return clientCollection.add({
         'clientName': clientName,
@@ -233,7 +235,9 @@ class DatabaseService {
         'clientAddress': clientAddress,
         'clientSector': clientSector,
         'clientEmail': email,
-        'salesInCharge': salesInCharge
+        'salesInCharge': salesInCharge,
+        'contactName': contactName,
+        'paymentTerms': paymentTerms,
       }).then((value) => value);
     } catch (e) {
       print('An error occured in adding the client: $e');
@@ -247,7 +251,9 @@ class DatabaseService {
       String clientPhone,
       String clientAddress,
       String clientSector,
-      String email}) async {
+      String email,
+      String contactName,
+      String paymentTerms}) async {
     try {
       return clientCollection.document(uid).updateData({
         'clientName': clientName,
@@ -255,6 +261,8 @@ class DatabaseService {
         'clientAddress': clientAddress,
         'clientSector': clientSector,
         'clientEmail': email,
+        'contactName': contactName,
+        'paymentTerms': paymentTerms,
       }).then((value) => value);
     } catch (e) {
       print('Client could not be updated: $e');
@@ -286,7 +294,9 @@ class DatabaseService {
           clientCity: doc.data['clientAddress'],
           clientBusinessSector: doc.data['clientSector'],
           email: doc.data['clientEmail'],
-          salesInCharge: doc.data['salesInCharge']);
+          salesInCharge: doc.data['salesInCharge'],
+          contactPerson: doc.data['contactName'],
+          paymentTerms: doc.data['paymentTerms']);
     }).toList();
   }
 

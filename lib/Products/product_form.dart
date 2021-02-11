@@ -25,6 +25,7 @@ import 'package:Products/Products/product_validators.dart';
 class ProductForm extends StatefulWidget {
   final PaintMaterial paintProducts;
   final WoodProduct woodProduct;
+  final SolidProduct solidProduct;
   final Lights lightProduct;
   final Accessories accessoriesProduct;
   final Brands brands;
@@ -38,6 +39,7 @@ class ProductForm extends StatefulWidget {
     this.paintProducts,
     this.brands,
     this.woodProduct,
+    this.solidProduct,
     this.lightProduct,
     this.accessoriesProduct,
     this.roles,
@@ -1409,7 +1411,7 @@ class _ProductFormState extends State<ProductForm> {
                       child: Row(
                         children: <Widget>[
                           Text(
-                            length != null ? length : '',
+                            length != null ? length.toString() : '',
                             style: labelTextStyle,
                           ),
                           Text(
@@ -1417,7 +1419,7 @@ class _ProductFormState extends State<ProductForm> {
                             style: labelTextStyle,
                           ),
                           Text(
-                            width != null ? width : '',
+                            width != null ? width.toString() : '',
                             style: labelTextStyle,
                           ),
                           Text(
@@ -1425,7 +1427,7 @@ class _ProductFormState extends State<ProductForm> {
                             style: labelTextStyle,
                           ),
                           Text(
-                            thickness != null ? thickness : '',
+                            thickness != null ? thickness.toString() : '',
                             style: labelTextStyle,
                           ),
                           Text(
@@ -1685,7 +1687,7 @@ class _ProductFormState extends State<ProductForm> {
                       child: Row(
                         children: <Widget>[
                           Text(
-                            length != null ? length : '',
+                            length != null ? length.toString() : '',
                             style: labelTextStyle,
                           ),
                           Text(
@@ -1693,7 +1695,7 @@ class _ProductFormState extends State<ProductForm> {
                             style: labelTextStyle,
                           ),
                           Text(
-                            width != null ? width : '',
+                            width != null ? width.toString() : '',
                             style: labelTextStyle,
                           ),
                           Text(
@@ -1701,7 +1703,7 @@ class _ProductFormState extends State<ProductForm> {
                             style: labelTextStyle,
                           ),
                           Text(
-                            thickness != null ? thickness : '',
+                            thickness != null ? thickness.toString() : '',
                             style: labelTextStyle,
                           ),
                           Text(
@@ -1766,57 +1768,6 @@ class _ProductFormState extends State<ProductForm> {
                   ),
                 ],
               ),
-              SizedBox(
-                height: 20.0,
-              ),
-              Row(
-                children: <Widget>[
-                  Expanded(
-                    flex: 2,
-                    child: RaisedButton(
-                      elevation: 2.0,
-                      color: !itemAdded.value
-                          ? Colors.green[200]
-                          : Colors.red[200],
-                      splashColor: Colors.amberAccent,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.0)),
-                      child: !itemAdded.value
-                          ? Text(ADD_TO_CART)
-                          : Text(REMOVE_FROM_CART),
-                      onPressed: () async {
-                        setState(() {
-                          itemAdded.value = !itemAdded.value;
-                        });
-                        if (itemAdded.value) {
-                          //add the item to the cart list if it doesn't already exist.
-                          widget.cartList
-                              .add('solid ${widget.woodProduct.uid}');
-                          await currentFile.writeToDocument(widget.cartList);
-                          await currentFile.loadDocument();
-                        } else {
-                          //check if the cart list contains the product
-                          //remove the product from the index position, since the item won't match
-                          //if the product has quantity added.
-                          int index = 0;
-                          for (var item = 0;
-                              item < widget.cartList.length;
-                              item++) {
-                            if (widget.cartList[item]
-                                .contains(widget.woodProduct.uid)) {
-                              index = item;
-                              break;
-                            }
-                          }
-                          widget.cartList.removeAt(index);
-                          await currentFile.writeToDocument(widget.cartList);
-                          await currentFile.loadDocument();
-                        }
-                      },
-                    ),
-                  )
-                ],
-              )
             ],
           );
   }

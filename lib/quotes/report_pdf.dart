@@ -14,6 +14,7 @@ Future<void> reportView({
   context,
   List<List<dynamic>> quotationContent,
   List<Map<String, dynamic>> products,
+  String saleCordinator,
   String quoteId,
   String clientName,
   String clientPhone,
@@ -97,6 +98,7 @@ Future<void> reportView({
     //Open the pdf document in the PDF Document Viewer
     await Navigator.of(context).push(MaterialPageRoute(
         builder: (_) => PDFDocumentViewer(
+              salesCordinator: saleCordinator,
               quoteId: quoteId,
               clientEmail: 'bgwissam@gmail.com',
               clientName: clientName,
@@ -113,13 +115,15 @@ Future<void> reportView({
 }
 
 //Draw Logo of Unitrade
-void drawLogo(PdfDocument doc, PdfPage page, Size pageSize, ByteData imageLogo) {
+void drawLogo(
+    PdfDocument doc, PdfPage page, Size pageSize, ByteData imageLogo) {
   //read image data
   final Uint8List imageData = imageLogo.buffer.asUint8List();
   //load image using PdfBitmap
   final PdfBitmap image = PdfBitmap(imageData);
   //Draw image to pdf
-  page.graphics.drawImage(image, Rect.fromLTWH(10, 10, pageSize.width - 140, 80));
+  page.graphics
+      .drawImage(image, Rect.fromLTWH(10, 10, pageSize.width - 140, 80));
 }
 
 //Draw Quotation Header
@@ -133,8 +137,6 @@ PdfLayoutResult drawHeader(
     double totalValue,
     String quoteId) {
   final PdfFont contentFont = PdfStandardFont(PdfFontFamily.helvetica, 15);
-
-
 
   //Draws the rectangle that we will place in the net value
   page.graphics.drawRectangle(
@@ -155,7 +157,6 @@ PdfLayoutResult drawHeader(
       format: PdfStringFormat(
           alignment: PdfTextAlignment.center,
           lineAlignment: PdfVerticalAlignment.middle));
-
 
   //Create data foramt and convert it to text.
   final DateFormat format = DateFormat.yMMMMd('en_US');
@@ -207,8 +208,11 @@ void drawGrid(PdfPage page, PdfGrid grid, PdfLayoutResult result,
   grandTotal = total + taxValue;
   //Draw the Tax value
   page.graphics.drawString('Vat 15%: ', contentFont,
-      bounds: Rect.fromLTWH(quantityCellBounds.left -30, result.bounds.bottom + 15,
-          quantityCellBounds.width, quantityCellBounds.height));
+      bounds: Rect.fromLTWH(
+          quantityCellBounds.left - 30,
+          result.bounds.bottom + 15,
+          quantityCellBounds.width,
+          quantityCellBounds.height));
 
   page.graphics.drawString(taxValue.toString(), contentFont,
       bounds: Rect.fromLTWH(
@@ -219,8 +223,11 @@ void drawGrid(PdfPage page, PdfGrid grid, PdfLayoutResult result,
 
   //Draw grand total.
   page.graphics.drawString('Grand Total', contentFont,
-      bounds: Rect.fromLTWH(quantityCellBounds.left - 30, result.bounds.bottom + 40,
-          quantityCellBounds.width *2, quantityCellBounds.height));
+      bounds: Rect.fromLTWH(
+          quantityCellBounds.left - 30,
+          result.bounds.bottom + 40,
+          quantityCellBounds.width * 2,
+          quantityCellBounds.height));
 
   page.graphics.drawString(grandTotal.toString(), contentFont,
       bounds: Rect.fromLTWH(
@@ -246,10 +253,6 @@ void drawGrid(PdfPage page, PdfGrid grid, PdfLayoutResult result,
           bounds: Rect.fromLTWH(
               25, 460, pageSize.width - 50, pageSize.height - 120));
 }
-
-
-
-
 
 //Draw the invoice footer data.
 void drawFooter(PdfPage page, Size pageSize) {
