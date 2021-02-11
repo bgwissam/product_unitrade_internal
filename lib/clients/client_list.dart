@@ -46,44 +46,46 @@ class _ClientListState extends State<ClientList> {
             SizedBox(
               height: 15,
             ),
-            SingleChildScrollView(
-              child: ListView.builder(
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  itemCount: clients.length ?? 0,
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    return InkWell(
-                      onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ClientForm(
-                                    client: clients[index],
-                                  ))),
-                      child: Container(
-                        padding: const EdgeInsets.all(15.0),
-                        child: Table(
-                          children: [
-                            TableRow(
-                              children: [
-                                TableCell(
-                                    child: Center(
-                                        child: Text(clients[index]
-                                            .clientName
-                                            .toString()))),
-                                TableCell(
-                                    child: Center(
-                                  child: Text(clients[index]
-                                      .clientPhoneNumber
-                                      .toString()),
-                                )),
-                              ],
-                            ),
-                          ],
+            Expanded(
+              child: SingleChildScrollView(
+                child: ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    itemCount: clients.length ?? 0,
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      return InkWell(
+                        onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ClientForm(
+                                      client: clients[index],
+                                    ))),
+                        child: Container(
+                          padding: const EdgeInsets.all(15.0),
+                          child: Table(
+                            children: [
+                              TableRow(
+                                children: [
+                                  TableCell(
+                                      child: Center(
+                                          child: Text(clients[index]
+                                              .clientName
+                                              .toString()))),
+                                  TableCell(
+                                      child: Center(
+                                    child: Text(clients[index]
+                                        .clientPhoneNumber
+                                        .toString()),
+                                  )),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    );
-                  }),
+                      );
+                    }),
+              ),
             ),
           ],
         ),

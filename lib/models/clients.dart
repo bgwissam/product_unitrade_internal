@@ -6,7 +6,8 @@ class Clients {
   String clientBusinessSector;
   String email;
   String salesInCharge;
-
+  String contactPerson;
+  String paymentTerms;
   
   Clients({
     this.uid,
@@ -16,5 +17,7 @@ class Clients {
     this.clientBusinessSector,
     this.email,
     this.salesInCharge,
+    this.contactPerson,
+    this.paymentTerms
   });
 }

@@ -6,6 +6,7 @@ import 'package:advance_pdf_viewer/advance_pdf_viewer.dart';
 import 'package:flutter/material.dart';
 
 class PDFDocumentViewer extends StatefulWidget {
+  final String salesCordinator;
   final String quoteId;
   final PDFDocument doc;
   final String clientEmail;
@@ -17,7 +18,8 @@ class PDFDocumentViewer extends StatefulWidget {
   final String path;
   final File file;
   PDFDocumentViewer(
-      {this.quoteId,
+      {this.salesCordinator,
+      this.quoteId,
       this.doc,
       this.clientEmail,
       this.clientName,
@@ -66,10 +68,10 @@ class _PDFDocumentViewerState extends State<PDFDocumentViewer> {
     });
     EmailManagement sendQuote = new EmailManagement();
     //get the saved quote to updated status
-    
+
     //disable sending email after first click
     var result = await sendQuote.sendEmail(
-        toRecipient: widget.clientEmail,
+        toRecipient: widget.salesCordinator,
         clientName: widget.clientName,
         adminRecipient: widget.supplierEmail,
         subject: widget.subject,

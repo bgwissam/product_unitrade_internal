@@ -33,7 +33,8 @@ class EmailManagement {
       buffer.write('<tr><td>Thank you</td></tr></table>');
 
       return mail.add({
-        'to': [toRecipient, adminRecipient],
+        'to': [toRecipient],
+        'cc': [adminRecipient],
         'message': {
           'subject': subject,
           'html': buffer.toString(),

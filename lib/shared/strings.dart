@@ -223,6 +223,10 @@ const String CLIENT_BUSINESS_VALIDATION = 'Business sector of client is mandator
 const String CLIENT_LIST = 'Client List';
 const String CLIENT_EMAIL = 'Email';
 const String CLIENT_EMAIL_VALIDATION = 'Email is required, can\'t be empty';
+const String CONTACT_PERSON = 'Contact';
+const String CONTACT_PERSON_EMPTY_VALIDATION = 'contact name can not be empty';
+const String CLIENT_ADDRESS = 'Address';
+const String BUSINESS_SECTOR = 'Business Sector';
 //Quotes
 const String QUOTATION_FORM = 'Sending Quotes';
 const String PAYMENT_TERMS = 'Payment Terms';

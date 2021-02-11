@@ -23,6 +23,9 @@ class _ClientFormState extends State<ClientForm> {
   String emailAddress;
   String addressCity;
   String businessSector;
+  String paymentTerms;
+  String contactPerson;
+  List<String> _paymentTermsList = PaymentTerms.terms();
 
   @override
   void initState() {
@@ -34,6 +37,8 @@ class _ClientFormState extends State<ClientForm> {
       emailAddress = widget.client.email;
       addressCity = widget.client.clientCity;
       businessSector = widget.client.clientBusinessSector;
+      contactName = widget.client.contactPerson;
+      paymentTerms = widget.client.paymentTerms;
     }
   }
 
@@ -83,7 +88,7 @@ class _ClientFormState extends State<ClientForm> {
                         val.isEmpty ? CLIENT_NAME_VALIDATION : null,
                     onChanged: (val) {
                       setState(() {
-                        clientName = val.toUpperCase();
+                        clientName = val.toUpperCase().trim();
                       });
                     },
                   ),
@@ -127,7 +132,7 @@ class _ClientFormState extends State<ClientForm> {
                         val.isEmpty ? CLIENT_PHONE_VALIDATION : null,
                     onChanged: (val) {
                       setState(() {
-                        phoneNumber = val;
+                        phoneNumber = val.trim();
                       });
                     },
                   ),
@@ -167,9 +172,110 @@ class _ClientFormState extends State<ClientForm> {
                         val.isEmpty ? CLIENT_EMAIL_VALIDATION : null,
                     onChanged: (val) {
                       setState(() {
-                        emailAddress = val;
+                        emailAddress = val.trim();
                       });
                     },
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(
+            height: 15.0,
+          ),
+          //Client contact Person
+          Container(
+            padding: EdgeInsets.all(5.0),
+            child: Row(
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: Text(CONTACT_PERSON),
+                ),
+                Expanded(
+                  flex: 2,
+                  child: TextFormField(
+                    initialValue: contactName != null ? contactName : '',
+                    style: textStyle1,
+                    decoration: InputDecoration(
+                      filled: true,
+                      hintText: 'Ex: Mr. John Carter',
+                      fillColor: Colors.grey[100],
+                      enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                          borderSide: BorderSide(color: Colors.grey)),
+                      focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                          borderSide: BorderSide(color: Colors.blue)),
+                    ),
+                    validator: (val) =>
+                        val.isEmpty ? CONTACT_PERSON_EMPTY_VALIDATION : null,
+                    onChanged: (val) {
+                      setState(() {
+                        contactName = val.trim();
+                      });
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(
+            height: 15.0,
+          ),
+          //Payment Terms
+          Container(
+            padding: EdgeInsets.all(5.0),
+            child: Row(
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: Text(PAYMENT_TERMS),
+                ),
+                Expanded(
+                  flex: 2,
+                  child: Container(
+                    alignment: AlignmentDirectional.centerStart,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(15.0),
+                      ),
+                      color: Colors.grey[100],
+                      border: Border.all(width: 1.0, color: Colors.grey),
+                    ),
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton(
+                        isExpanded: true,
+                        value: paymentTerms,
+                        hint: Center(
+                          child: Text(PAYMENT_TERMS),
+                        ),
+                        onChanged: (val) {
+                          setState(() {
+                            paymentTerms = val;
+                          });
+                        },
+                        selectedItemBuilder: (BuildContext context) {
+                          return _paymentTermsList
+                              .map((item) => Center(
+                                      child: Text(
+                                    item,
+                                    style: textStyle1,
+                                  )))
+                              .toList();
+                        },
+                        items: _paymentTermsList
+                            .map(
+                              (item) => DropdownMenuItem(
+                                child: Text(
+                                  item,
+                                ),
+                                value: item,
+                              ),
+                            )
+                            .toList(),
+                      ),
+                    ),
                   ),
                 ),
               ],
@@ -201,12 +307,10 @@ class _ClientFormState extends State<ClientForm> {
                       borderRadius: BorderRadius.circular(15.0),
                     ),
                     child: DropdownButtonHideUnderline(
-                      child: DropdownButtonFormField<String>(
-                        isDense: true,
+                      child: DropdownButton(
                         isExpanded: true,
                         value: addressCity,
-                        validator: (val) =>
-                            val == null ? 'Area is required' : null,
+                        hint: Center(child: Text(CLIENT_ADDRESS)),
                         onChanged: (String val) {
                           setState(() {
                             addressCity = val;
@@ -215,9 +319,11 @@ class _ClientFormState extends State<ClientForm> {
                         selectedItemBuilder: (BuildContext context) {
                           return CitiesSaudiArabia.cities()
                               .map<Widget>((String city) {
-                            return Text(
-                              city,
-                              style: textStyle1,
+                            return Center(
+                              child: Text(
+                                city,
+                                style: textStyle1,
+                              ),
                             );
                           }).toList();
                         },
@@ -260,12 +366,11 @@ class _ClientFormState extends State<ClientForm> {
                       borderRadius: BorderRadius.circular(15.0),
                     ),
                     child: DropdownButtonHideUnderline(
-                      child: DropdownButtonFormField<String>(
+                      child: DropdownButton(
                         isDense: true,
                         isExpanded: true,
                         value: businessSector,
-                        validator: (val) =>
-                            val == null ? 'Select business sector' : null,
+                        hint: Center(child: Text(BUSINESS_SECTOR)),
                         onChanged: (String val) {
                           setState(() {
                             businessSector = val;
@@ -274,9 +379,11 @@ class _ClientFormState extends State<ClientForm> {
                         selectedItemBuilder: (BuildContext context) {
                           return BusinessType.sector()
                               .map<Widget>((String item) {
-                            return Text(
-                              item,
-                              style: textStyle1,
+                            return Center(
+                              child: Text(
+                                item,
+                                style: textStyle1,
+                              ),
                             );
                           }).toList();
                         },
@@ -317,7 +424,9 @@ class _ClientFormState extends State<ClientForm> {
                         clientAddress: addressCity,
                         clientSector: businessSector,
                         email: emailAddress,
-                        salesInCharge: widget.userId);
+                        salesInCharge: widget.userId,
+                        contactName: contactName,
+                        paymentTerms: paymentTerms);
                     if (result != null) {
                       showDialog(
                           context: context,
@@ -345,7 +454,9 @@ class _ClientFormState extends State<ClientForm> {
                         clientPhone: phoneNumber,
                         email: emailAddress,
                         clientAddress: addressCity,
-                        clientSector: businessSector);
+                        clientSector: businessSector,
+                        contactName: contactName,
+                        paymentTerms: paymentTerms);
 
                     showDialog(
                         context: context,
