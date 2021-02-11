@@ -2,6 +2,7 @@ import 'dart:core';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:Products/models/products.dart';
+import 'package:Products/models/enquiries.dart';
 
 class EmailManagement {
   final CollectionReference mail = Firestore.instance.collection('quote_mail');
@@ -21,24 +22,28 @@ class EmailManagement {
       String uid;
       var response;
       StringBuffer buffer = new StringBuffer();
-      //Capitalize the first letter of the email text items 
+      //Capitalize the first letter of the email text items
       contact.firstLetterToUpperCase;
       text.firstLetterToUpperCase;
       //set the detais
-      buffer.write('<table><tr><td>Dear ${contact.firstLetterToUpperCase},</td></tr><tr>\n</tr>');
-      buffer.write('<tr><td>${text.firstLetterToUpperCase}</td></tr><tr>\n\n</tr>');
+      buffer.write(
+          '<table><tr><td>Dear ${contact.firstLetterToUpperCase},</td></tr><tr>\n</tr>');
+      buffer.write(
+          '<tr><td>${text.firstLetterToUpperCase}</td></tr><tr>\n\n</tr>');
       buffer.write('<tr><td>Thank you</td></tr></table>');
-      
+
       return mail.add({
         'to': [toRecipient, adminRecipient],
-        'message': {'subject': subject, 
-                    'html': buffer.toString(),
-                    'attachments': [
-                      {
-                        'filename': '$clientName.pdf',
-                        'path': path,
-                      },
-                      ],},
+        'message': {
+          'subject': subject,
+          'html': buffer.toString(),
+          'attachments': [
+            {
+              'filename': '$clientName.pdf',
+              'path': path,
+            },
+          ],
+        },
       }).then((value) {
         uid = value.documentID;
         return uid;
@@ -49,7 +54,6 @@ class EmailManagement {
       print('The email process did not succeed: $e');
     }
   }
-
 
 //save the orders into the database
   Future saveQuotation(
@@ -120,12 +124,34 @@ class EmailManagement {
   //Update quotation
   Future updateQuote({String pdfUrl, String uid}) async {
     try {
-      return quotationCollection.document(uid).updateData({
-        'pdfUrl': pdfUrl
-      }).then((value) => value);
+      return quotationCollection
+          .document(uid)
+          .updateData({'pdfUrl': pdfUrl}).then((value) => value);
     } catch (e) {
       print('pdf Url could not be saved to the database: $e');
     }
+  }
+
+  //quotation data
+  List<QuoteData> _quoteDataBySnapshot(QuerySnapshot snapshot) {
+    return snapshot.documents.map((doc) {
+      return QuoteData(
+          quoteId: doc.data['quoteId'] ?? '',
+          clientId: doc.data['clientId'] ?? '',
+          clientName: doc.data['clientName'] ?? '',
+          paymentTerms: doc.data['paymentTerms'] ?? '',
+          products: doc.data['products'] ?? '',
+          userId: doc.data['userId'] ?? '',
+          status: doc.data['status'] ?? '');
+    });
+  }
+
+  //Stream data for the saved quotes
+  Stream<List<QuoteData>> getQuoteDataById(String quoteId) {
+    return quotationCollection
+        .where('quoteId', isEqualTo: quoteId)
+        .snapshots()
+        .map(_quoteDataBySnapshot);
   }
 
   //Get list of orders
@@ -152,12 +178,11 @@ class EmailManagement {
       return null;
     }
   }
-
 }
 
 extension StringExtension on String {
   get firstLetterToUpperCase {
-    if(this != null){
+    if (this != null) {
       return this[0].toUpperCase() + this.substring(1);
     } else {
       return null;

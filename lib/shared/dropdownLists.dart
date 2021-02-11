@@ -119,12 +119,16 @@ class CitiesSaudiArabia {
   }
 }
 
+
+//Set the type of the business targeted
 class BusinessType {
   static List<String> sector() {
     return ['Factory', 'Carpentry', 'Retail', 'Contractor',];
   }
 }
 
+
+//Accessories specs
 class AccessoriesOptions {
   static List<String> extensions() {
     return [
@@ -151,6 +155,20 @@ class AccessoriesOptions {
     return [
       'Left',
       'Right'
+    ];
+  }
+}
+
+//Set payment terms drop down list for the quotation form
+class PaymentTerms {
+  static List<String> terms() {
+    return [
+      'Cash',
+      '15 days',
+      '30 days',
+      '45 days',
+      '60 days',
+      '90 days'
     ];
   }
 }

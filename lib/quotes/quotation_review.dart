@@ -156,7 +156,6 @@ class _QuotationReviewState extends State<QuotationReview> {
             clientId: widget.clientId,
             paymentTerms: widget.paymentTerms,
             userId: widget.userId);
-
         //check if item is saved
         if (result != null) {
           //close loading navigator

@@ -6,6 +6,7 @@ import 'package:advance_pdf_viewer/advance_pdf_viewer.dart';
 import 'package:flutter/material.dart';
 
 class PDFDocumentViewer extends StatefulWidget {
+  final String quoteId;
   final PDFDocument doc;
   final String clientEmail;
   final String clientName;
@@ -16,7 +17,8 @@ class PDFDocumentViewer extends StatefulWidget {
   final String path;
   final File file;
   PDFDocumentViewer(
-      {this.doc,
+      {this.quoteId,
+      this.doc,
       this.clientEmail,
       this.clientName,
       this.supplierEmail,
@@ -31,7 +33,7 @@ class PDFDocumentViewer extends StatefulWidget {
 
 class _PDFDocumentViewerState extends State<PDFDocumentViewer> {
   bool _isButtonDisabled = false;
-  
+
   String emailStatus;
   @override
   Widget build(BuildContext context) {
@@ -63,6 +65,8 @@ class _PDFDocumentViewerState extends State<PDFDocumentViewer> {
       _isButtonDisabled = true;
     });
     EmailManagement sendQuote = new EmailManagement();
+    //get the saved quote to updated status
+    
     //disable sending email after first click
     var result = await sendQuote.sendEmail(
         toRecipient: widget.clientEmail,
@@ -79,9 +83,8 @@ class _PDFDocumentViewerState extends State<PDFDocumentViewer> {
         //delay the creation of the email 2 seconds
         Future.delayed(Duration(seconds: 3), () async {
           var result = await event.data['delivery']['state'] ?? null;
-
           if (result != null) {
-            switch(result) {
+            switch (result) {
               case 'SUCCESS':
                 emailStatus = EMAIL_SENT;
                 break;
@@ -96,7 +99,6 @@ class _PDFDocumentViewerState extends State<PDFDocumentViewer> {
                 break;
               default:
                 emailStatus = EMAIL_PENDING;
-
             }
             Future.delayed(Duration(seconds: 2), () {
               //show dialog after delay
@@ -106,14 +108,13 @@ class _PDFDocumentViewerState extends State<PDFDocumentViewer> {
                 builder: (BuildContext context) {
                   return AlertDialog(
                     title: Text(EMAIL_STATUS),
-                    content:Text(emailStatus),
+                    content: Text(emailStatus),
                     actions: [
                       FlatButton(
                         child: Text(OK_BUTTON),
                         onPressed: () {
                           Navigator.of(context).pushNamedAndRemoveUntil(
                               '/home', (Route<dynamic> route) => false);
-                         
                         },
                       )
                     ],

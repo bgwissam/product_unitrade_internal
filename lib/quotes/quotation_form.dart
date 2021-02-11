@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:provider/provider.dart';
+import 'package:Products/shared/dropdownLists.dart';
 
 class QuotationForm extends StatefulWidget {
   final String userId;
@@ -61,6 +62,8 @@ class _QuotationFormState extends State<QuotationForm> {
   double tempPrice;
   //dyanamic widget
   List<Widget> dynamicList = [];
+  //Payment terms drop down list
+  List<String> _paymentTerms = PaymentTerms.terms();
 
   TextEditingController _clientNameField = TextEditingController();
 
@@ -286,27 +289,48 @@ class _QuotationFormState extends State<QuotationForm> {
               ),
               Expanded(
                 flex: 3,
-                child: TextFormField(
-                    initialValue: paymentTerms != null ? paymentTerms : '',
-                    style: textStyle1,
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: Colors.grey[100],
-                      enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                          borderSide: BorderSide(color: Colors.grey)),
-                      focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(15.0),
-                          ),
-                          borderSide: BorderSide(color: Colors.blue)),
+                child: Container(
+                  alignment: AlignmentDirectional.centerStart,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(15.0),
                     ),
-                    validator: (val) =>
-                        val.isEmpty ? PAYMENT_TERMS_VALIDATION : null,
-                    onSaved: (val) {
-                      paymentTerms = val;
-                    }),
-              )
+                    border: Border.all(width: 1.0, color: Colors.grey),
+                  ),
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton<String>(
+                      isExpanded: true,
+                      value: paymentTerms,
+                      hint: Center(
+                        child: Text(
+                          PAYMENT_TERMS,
+                        ),
+                      ),
+                      onChanged: (String val) {
+                        setState(() {
+                          paymentTerms = val;
+                        });
+                      },
+                      selectedItemBuilder: (BuildContext context) {
+                        return _paymentTerms
+                            .map((item) => Center(
+                                  child: Text(
+                                    item,
+                                    style: textStyle1,
+                                  ),
+                                ))
+                            .toList();
+                      },
+                      items: _paymentTerms
+                          .map((item) => DropdownMenuItem(
+                                child: Center(child: Text(item)),
+                                value: item,
+                              ))
+                          .toList(),
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
           SizedBox(
