@@ -111,19 +111,19 @@ class _QuotationFormState extends State<QuotationForm> {
   _getEmailAddress(String name) {
     return StreamProvider<List<Clients>>.value(
       value: DatabaseService().clientEmailByName(name: name),
-      child: emailContainerBuild(),
+      child: emailContainerBuild(name),
     );
   }
 
-  emailContainerBuild() {
+  emailContainerBuild(String name) {
     var clientEmailAddress = Provider.of<List<Clients>>(context) ?? [];
-
     if (clientEmailAddress != null) {
       for (var data in clientEmailAddress) {
-        if (data.clientName == clientName) {
+        if (data.clientName == name) {
           clientEmail = data.email;
           clientPhone = data.clientPhoneNumber;
           clientId = data.uid;
+          paymentTerms = data.paymentTerms;
         }
       }
     }

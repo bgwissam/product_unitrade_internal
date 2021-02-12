@@ -212,7 +212,7 @@ class _ClientFormState extends State<ClientForm> {
                         val.isEmpty ? CONTACT_PERSON_EMPTY_VALIDATION : null,
                     onChanged: (val) {
                       setState(() {
-                        contactName = val.trim();
+                        contactName = val..toUpperCase().trim();
                       });
                     },
                   ),
