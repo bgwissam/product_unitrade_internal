@@ -8,6 +8,7 @@ import 'package:Products/shared/strings.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'client_list.dart';
+import 'package:Products/shared/loading.dart';
 
 class ClientGrid extends StatefulWidget {
   final String userId;
@@ -24,17 +25,36 @@ class _ClientGridState extends State<ClientGrid> {
     return MultiProvider(
       providers: [
         StreamProvider<List<Clients>>.value(
-            value:
-                DatabaseService().clientDataBySalesId(salesId: widget.userId)),
+          value: DatabaseService().clientDataBySalesId(salesId: widget.userId),
+          child: Loading(),
+          catchError: (context, error) {
+            return error;
+          },
+        ),
         StreamProvider<List<PaintMaterial>>.value(
           value: DatabaseService().allPaintProduct,
+          catchError: (context, error) {
+            return error;
+          },
         ),
         StreamProvider<List<WoodProduct>>.value(
-            value: DatabaseService().allWoodProduct),
+          value: DatabaseService().allWoodProduct,
+          catchError: (context, error) {
+            return error;
+          },
+        ),
         StreamProvider<List<SolidProduct>>.value(
-            value: DatabaseService().allSolidProduct),
+          value: DatabaseService().allSolidProduct,
+          catchError: (context, error) {
+            return error;
+          },
+        ),
         StreamProvider<List<Accessories>>.value(
-            value: DatabaseService().allAccessoriesProduct)
+          value: DatabaseService().allAccessoriesProduct,
+          catchError: (context, error) {
+            return error;
+          },
+        )
       ],
       child: widget.quotation
           ? QuotationProviderBuild(

@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:Products/Products/product_type.dart';
 import 'package:algolia/algolia.dart';
+import 'package:async/async.dart';
 import 'package:cache_image/cache_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -26,7 +27,8 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   PaintMaterial paintProducts;
-  WoodProduct woodSolidProducts;
+  WoodProduct woodProduct;
+  SolidProduct solidProduct;
   Accessories accessoriesProducts;
   Lights lightProducts;
   TabController _tabController;
@@ -54,11 +56,21 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   String phoneNumber;
   String countryOfResidence;
   String cityOfResidence;
+  //Controller for text field
+  AsyncMemoizer _memoizer = AsyncMemoizer();
+  TextEditingController _searchTextField = new TextEditingController();
   //This search method will perform a search of several indices in the algolia database, the return
   //result will be listed in our listview builder
-  Future _search() async {
-    setState(() {});
+  _fetchSearchData() {
+    print(isTyping);
+    return isTyping
+        ? this._memoizer.runOnce(() async {
+            return _search();
+          })
+        : _search();
+  }
 
+  Future _search() async {
     Algolia algolia = Algolia.init(
         applicationId: 'EINFBWASYK',
         apiKey: '86ddd40b6747ad6183a42935a26c9c4a');
@@ -67,32 +79,21 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         (await (algolia.instance.index('paint').search(searchWord))
                 .getObjects())
             .hits;
-    // List<AlgoliaObjectSnapshot> queryWood =
-    //     (await (algolia.instance.index('wood').search(searchWord)).getObjects())
-    //         .hits;
-    // List<AlgoliaObjectSnapshot> querySolid =
-    //     (await (algolia.instance.index('solid_surface').search(searchWord))
-    //             .getObjects())
-    //         .hits;
+    List<AlgoliaObjectSnapshot> queryWood =
+        (await (algolia.instance.index('wood').search(searchWord)).getObjects())
+            .hits;
+    List<AlgoliaObjectSnapshot> querySolid =
+        (await (algolia.instance.index('solid_surface').search(searchWord))
+                .getObjects())
+            .hits;
 
-    // List<AlgoliaObjectSnapshot> queryAccessories =
-    //     (await (algolia.instance.index('accessories').search(searchWord))
-    //             .getObjects())
-    //         .hits;
+    List<AlgoliaObjectSnapshot> queryAccessories =
+        (await (algolia.instance.index('accessories').search(searchWord))
+                .getObjects())
+            .hits;
 
-    // List<AlgoliaObjectSnapshot> queryLights =
-    //     (await (algolia.instance.index('light').search(searchWord))
-    //             .getObjects())
-    //         .hits;
-
-    return Future.delayed(const Duration(milliseconds: 600))
-        .then((value) => _results = queryPaint
-            //  +
-            //     queryWood +
-            //     querySolid +
-            //     queryAccessories +
-            //     queryLights
-            );
+    return Future.delayed(const Duration(milliseconds: 600)).then((value) =>
+        _results = queryPaint + queryWood + querySolid + queryAccessories);
   }
 
   //get the first name of the user
@@ -102,34 +103,42 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         .document(widget.userId)
         .get()
         .then((value) {
-      print('These are the use data:  ${value.data}');
-      firstName = value.data['firstName'];
-      lastName = value.data['lastName'];
-      company = value.data['company'];
-      phoneNumber = value.data['phoneNumber'];
-      countryOfResidence = value.data['countryOfResidence'];
-      cityOfResidence = value.data['cityOfResidence'];
-      emailAddress = value.data['emailAddress'];
-      roles = value.data['roles'];
-      if (firstName != null) {
-        firstName = firstName.capitalize();
-      }
-      if (lastName != null) {
-        lastName = lastName.capitalize();
-      }
-      if (company != null) {
-        company = company.capitalize();
-      }
+      setState(() {
+        firstName = value.data['firstName'];
+        lastName = value.data['lastName'];
+        company = value.data['company'];
+        phoneNumber = value.data['phoneNumber'];
+        countryOfResidence = value.data['countryOfResidence'];
+        cityOfResidence = value.data['cityOfResidence'];
+        emailAddress = value.data['emailAddress'];
+        roles = value.data['roles'];
+        if (firstName != null) {
+          firstName = firstName.capitalize();
+        }
+        if (lastName != null) {
+          lastName = lastName.capitalize();
+        }
+        if (company != null) {
+          company = company.capitalize();
+        }
+      });
     });
   }
 
   @override
   void initState() {
     super.initState();
+    _searchTextField.addListener(() {
+      searchWord = _searchTextField.text;
+      _searchTextField.value = _searchTextField.value.copyWith(
+          text: searchWord,
+          selection: TextSelection(
+              baseOffset: searchWord.length, extentOffset: searchWord.length),
+          composing: TextRange.empty);
+    });
     _getUserData();
     _tabController = new TabController(length: 4, vsync: this);
   }
-
 
   //Dailog box for exsiting app
   Future onBackPressed() async {
@@ -204,22 +213,31 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                     text: TAB_WOOD_TEXT,
                   ),
                   new Tab(text: TAB_SS_TEXT),
-                 
                   new Tab(text: TAB_ACCESSORIES_TEXT)
                 ],
                 controller: _tabController,
                 indicatorSize: TabBarIndicatorSize.tab,
               )),
-          drawer: ProfileDrawer(
-            userId: widget.userId,
-            firstName: firstName,
-            lastName: lastName,
-            emailAddress: emailAddress,
-            company: company,
-            phoneNumber: phoneNumber,
-            countryOfResidence: countryOfResidence,
-            cityOfResidence: cityOfResidence,
-          ),
+          drawer: roles != null
+              ? ProfileDrawer(
+                  userId: widget.userId,
+                  roles: roles,
+                  firstName: firstName,
+                  lastName: lastName,
+                  emailAddress: emailAddress,
+                  company: company,
+                  phoneNumber: phoneNumber,
+                  countryOfResidence: countryOfResidence,
+                  cityOfResidence: cityOfResidence,
+                )
+              : Center(
+                  child: Container(
+                    width: MediaQuery.of(context).size.width / 2,
+                    height: MediaQuery.of(context).size.height / 4,
+                    color: Colors.transparent,
+                    child: Loading(),
+                  ),
+                ),
           body: !isSearching
               ? TabBarView(
                   children: [
@@ -236,6 +254,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
   @override
   void dispose() {
+    _searchTextField.clear();
     super.dispose();
   }
 
@@ -256,11 +275,13 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                   ),
                   hintText: SEARCH,
                 ),
+                controller: _searchTextField,
                 onChanged: (value) {
                   setState(() {
-                    searchWord = value;
-                    _search();
                     isTyping = true;
+                    searchWord = value;
+                    Future.delayed(Duration(milliseconds: 500));
+                    _search();
                   });
                 },
               ),
@@ -285,8 +306,9 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   //Build the list view for search results
   Widget _buildSearchResults() {
     return FutureBuilder(
-        future: _search(),
+        future: _fetchSearchData(),
         builder: (context, AsyncSnapshot snapshot) {
+          print(snapshot.connectionState);
           if (snapshot.connectionState == ConnectionState.done) {
             if (snapshot.hasData) {
               if (_results.isNotEmpty) {
@@ -329,7 +351,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                           style: textStyle1,
                         ),
                         onTap: () {
-                          woodSolidProducts = new WoodProduct();
+                          woodProduct = new WoodProduct();
+                          solidProduct = new SolidProduct();
                           paintProducts = new PaintMaterial();
                           accessoriesProducts = new Accessories();
                           lightProducts = new Lights();
@@ -342,18 +365,17 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => ProductForm(
+                                          roles: roles,
                                           paintProducts: paintProducts,
                                         )));
                           } else if (_results[index].data['productType'] ==
-                                  TAB_WOOD_TEXT ||
-                              _results[index].data['productType'] ==
-                                  TAB_SS_TEXT) {
+                              TAB_WOOD_TEXT) {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => ProductForm(
-                                          woodProduct: woodSolidProducts,
-                                          cartList: cartList,
+                                          roles: roles,
+                                          woodProduct: woodProduct,
                                         )));
                           } else if (_results[index].data['productType'] ==
                               TAB_ACCESSORIES_TEXT) {
@@ -361,18 +383,18 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => ProductForm(
+                                          roles: roles,
                                           accessoriesProduct:
                                               accessoriesProducts,
-                                          cartList: cartList,
                                         )));
                           } else if (_results[index].data['productType'] ==
-                              TAB_LIGHT_TEXT) {
+                              TAB_SS_TEXT) {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => ProductForm(
-                                          lightProduct: lightProducts,
-                                          cartList: cartList,
+                                          solidProduct: solidProduct,
+                                          roles: roles,
                                         )));
                           }
                         },
@@ -409,7 +431,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         });
   }
 
-  
   //Map each product to its class type and set its values from the result array
   void mapProductToType(var productType, int index) {
     switch (productType) {
@@ -422,6 +443,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           paintProducts.productCategory =
               _results[index].data['productCategory'];
           paintProducts.productBrand = _results[index].data['productBrand'];
+          paintProducts.productPrice = _results[index].data['productPrice'];
           paintProducts.productPackUnit =
               _results[index].data['productPackUnit'];
           paintProducts.color = _results[index].data['color'];
@@ -433,39 +455,38 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       case TAB_WOOD_TEXT:
         {
           //set all the records of the class
-          woodSolidProducts.uid = _results[index].objectID;
-          woodSolidProducts.productName = _results[index].data['productName'];
-          woodSolidProducts.productType = _results[index].data['productType'];
-          woodSolidProducts.productCategory =
-              _results[index].data['productCategory'];
-          woodSolidProducts.productBrand = _results[index].data['productBrand'];
-          woodSolidProducts.length = _results[index].data['length'];
-          woodSolidProducts.width = _results[index].data['width'];
-          woodSolidProducts.thickness = _results[index].data['thickness'];
-          woodSolidProducts.color = _results[index].data['color'];
-          woodSolidProducts.description = _results[index].data['description'];
-          woodSolidProducts.productTags = _results[index].data['tags'];
-          woodSolidProducts.imageListUrls =
-              _results[index].data['imageListUrls'];
+          woodProduct.uid = _results[index].objectID;
+          woodProduct.productName = _results[index].data['productName'];
+          woodProduct.productType = _results[index].data['productType'];
+          woodProduct.productCategory = _results[index].data['productCategory'];
+          woodProduct.productBrand = _results[index].data['productBrand'];
+          woodProduct.productPrice = _results[index].data['productPrice'];
+          woodProduct.length = _results[index].data['length'];
+          woodProduct.width = _results[index].data['width'];
+          woodProduct.thickness = _results[index].data['thickness'];
+          woodProduct.color = _results[index].data['color'];
+          woodProduct.description = _results[index].data['description'];
+          woodProduct.productTags = _results[index].data['tags'];
+          woodProduct.imageListUrls = _results[index].data['imageListUrls'];
         }
         break;
       case TAB_SS_TEXT:
         {
           //set all the records of the class
-          woodSolidProducts.uid = _results[index].objectID;
-          woodSolidProducts.productName = _results[index].data['productName'];
-          woodSolidProducts.productType = _results[index].data['productType'];
-          woodSolidProducts.productCategory =
+          solidProduct.uid = _results[index].objectID;
+          solidProduct.productName = _results[index].data['productName'];
+          solidProduct.productType = _results[index].data['productType'];
+          solidProduct.productCategory =
               _results[index].data['productCategory'];
-          woodSolidProducts.productBrand = _results[index].data['productBrand'];
-          woodSolidProducts.length = _results[index].data['length'];
-          woodSolidProducts.width = _results[index].data['width'];
-          woodSolidProducts.thickness = _results[index].data['thickness'];
-          woodSolidProducts.color = _results[index].data['color'];
-          woodSolidProducts.description = _results[index].data['description'];
-          woodSolidProducts.productTags = _results[index].data['tags'];
-          woodSolidProducts.imageListUrls =
-              _results[index].data['imageListUrls'];
+          solidProduct.productBrand = _results[index].data['productBrand'];
+          solidProduct.productPrice = _results[index].data['productPrice'];
+          solidProduct.length = _results[index].data['length'];
+          solidProduct.width = _results[index].data['width'];
+          solidProduct.thickness = _results[index].data['thickness'];
+          solidProduct.color = _results[index].data['color'];
+          solidProduct.description = _results[index].data['description'];
+          solidProduct.productTags = _results[index].data['tags'];
+          solidProduct.imageListUrls = _results[index].data['imageListUrls'];
         }
         break;
       case TAB_ACCESSORIES_TEXT:
@@ -478,6 +499,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
               _results[index].data['productCategory'];
           accessoriesProducts.productBrand =
               _results[index].data['productBrand'];
+          accessoriesProducts.productPrice =
+              _results[index].data['productPrice'];
           accessoriesProducts.length = _results[index].data['length'];
           accessoriesProducts.angle = _results[index].data['length'];
           accessoriesProducts.closingType = _results[index].data['closingType'];
@@ -645,7 +668,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           SizedBox(
             height: distanceBetweenInkWells,
           ),
-          //SONAE 
+          //SONAE
           Container(
             height: 120.0,
             child: InkWell(
@@ -674,7 +697,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           SizedBox(
             height: distanceBetweenInkWellLabel,
           ),
-          //FORMICA 
+          //FORMICA
           Container(
             height: 120.0,
             child: InkWell(
@@ -703,7 +726,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           SizedBox(
             height: distanceBetweenInkWellLabel,
           ),
-          //HALSPAN 
+          //HALSPAN
           Container(
             height: 120.0,
             child: InkWell(
@@ -742,7 +765,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     return SingleChildScrollView(
       padding: EdgeInsets.symmetric(vertical: 40.0, horizontal: 10.0),
       child: Column(
-        children:[
+        children: [
           //Corian Brand
           Container(
             height: 120.0,
@@ -772,7 +795,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           SizedBox(
             height: distanceBetweenInkWells,
           ),
-          //SONAE 
+          //SONAE
           Container(
             height: 120.0,
             child: InkWell(
@@ -845,6 +868,4 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       ),
     );
   }
-
-  
 }

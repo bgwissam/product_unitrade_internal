@@ -196,19 +196,22 @@ class _ProductFormState extends State<ProductForm> {
           ? imageListUrls = []
           : imageListUrls =
               new List<dynamic>.from(widget.woodProduct.imageListUrls);
-    } else if (widget.lightProduct != null) {
-      productName = widget.lightProduct.productName;
-      productBrand = widget.lightProduct.productBrand;
-      productType = widget.lightProduct.productType;
-      productCategory = widget.lightProduct.productCategory;
-      dimensions = widget.lightProduct.dimensions;
-      watt = widget.lightProduct.watt;
-      voltage = widget.lightProduct.voltage;
-      productColor = widget.lightProduct.color;
-      widget.lightProduct.imageListUrls == null
+    } else if (widget.solidProduct != null) {
+      productName = widget.solidProduct.productName;
+      productBrand = widget.solidProduct.productBrand;
+      productType = widget.solidProduct.productType;
+      productCategory = widget.solidProduct.productCategory;
+      itemCode = widget.solidProduct.itemCode;
+      length = widget.solidProduct.length;
+      width = widget.solidProduct.width;
+      thickness = widget.solidProduct.thickness;
+      productColor = widget.solidProduct.color;
+      productPrice = widget.solidProduct.productPrice;
+      _pdfUrl = widget.solidProduct.pdfUrl ?? null;
+      widget.solidProduct.imageListUrls == null
           ? imageListUrls = []
           : imageListUrls =
-              new List<dynamic>.from(widget.lightProduct.imageListUrls);
+              new List<dynamic>.from(widget.solidProduct.imageListUrls);
     } else if (widget.accessoriesProduct != null) {
       itemCode = widget.accessoriesProduct.itemCode;
       productName = widget.accessoriesProduct.productName;
@@ -1179,6 +1182,27 @@ class _ProductFormState extends State<ProductForm> {
               SizedBox(
                 height: 15.0,
               ),
+              //Product Price
+               productPrice != null
+                  ? Row(
+                      children: [
+                        Expanded(
+                          flex: 2,
+                          child: Text(PRODUCT_PRICE),
+                        ),
+                        Expanded(
+                          flex: 3,
+                          child: Text(
+                            productPrice.toString() + ' SR',
+                            style: labelTextStyle4,
+                          ),
+                        )
+                      ],
+                    )
+                  : SizedBox.shrink(),
+              SizedBox(
+                height: 15.0,
+              ),
               //Show current PDF File Data sheet
               _pdfUrl != null
                   ? FlatButton(
@@ -1361,6 +1385,7 @@ class _ProductFormState extends State<ProductForm> {
           ])
         : Column(
             children: <Widget>[
+              //Product Images
               widget.woodProduct.imageListUrls != null
                   ? Container(
                       height: 270,
@@ -1387,6 +1412,7 @@ class _ProductFormState extends State<ProductForm> {
               SizedBox(
                 height: 20.0,
               ),
+              //Product Name
               Row(
                 children: [
                   Expanded(
@@ -1403,6 +1429,7 @@ class _ProductFormState extends State<ProductForm> {
               SizedBox(
                 height: 15.0,
               ),
+              //Product Dimensions
               Row(
                 children: [
                   Expanded(flex: 2, child: Text(PRODUCT_PACKAGE)),
@@ -1441,6 +1468,7 @@ class _ProductFormState extends State<ProductForm> {
               SizedBox(
                 height: 15.0,
               ),
+              //Product Color
               Row(
                 children: [
                   Expanded(
@@ -1459,6 +1487,7 @@ class _ProductFormState extends State<ProductForm> {
               SizedBox(
                 height: 15.0,
               ),
+              //Product Brand
               Row(
                 children: [
                   Expanded(
@@ -1477,6 +1506,28 @@ class _ProductFormState extends State<ProductForm> {
               SizedBox(
                 height: 15.0,
               ),
+              //Product Price
+               productPrice != null
+                  ? Row(
+                      children: [
+                        Expanded(
+                          flex: 2,
+                          child: Text(PRODUCT_PRICE),
+                        ),
+                        Expanded(
+                          flex: 3,
+                          child: Text(
+                            productPrice.toString() + ' SR',
+                            style: labelTextStyle4,
+                          ),
+                        )
+                      ],
+                    )
+                  : SizedBox.shrink(),
+              SizedBox(
+                height: 15.0,
+              ),
+              //Product Description
               Row(
                 children: [
                   Expanded(
@@ -1495,6 +1546,25 @@ class _ProductFormState extends State<ProductForm> {
               SizedBox(
                 height: 20.0,
               ),
+              //Show current PDF File Data sheet
+              _pdfUrl != null
+                  ? FlatButton(
+                      padding: EdgeInsets.all(15.0),
+                      color: Colors.red[200],
+                      height: 40.0,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          side: BorderSide(color: Colors.black)),
+                      child: Text(TDS),
+                      onPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => PDFFileViewer(
+                              pdfUrl: _pdfUrl,
+                              productName: productName,
+                            ),
+                          )))
+                  : SizedBox(),
             ],
           );
   }
@@ -1635,15 +1705,17 @@ class _ProductFormState extends State<ProductForm> {
               ),
             ],
           )
+        //Non-admin user
         : Column(
             children: <Widget>[
-              widget.woodProduct.imageListUrls != null
+              widget.solidProduct.imageListUrls != null
+              //Product Images
                   ? Container(
                       height: 270,
                       child: ListView.builder(
                         shrinkWrap: true,
                         scrollDirection: Axis.horizontal,
-                        itemCount: widget.woodProduct.imageListUrls.length,
+                        itemCount: widget.solidProduct.imageListUrls.length,
                         itemBuilder: (context, index) {
                           return Container(
                             margin: const EdgeInsets.all(4.0),
@@ -1652,7 +1724,7 @@ class _ProductFormState extends State<ProductForm> {
                             child: Image(
                               fit: BoxFit.contain,
                               image: CacheImage(
-                                  widget.woodProduct.imageListUrls[index]),
+                                  widget.solidProduct.imageListUrls[index]),
                               height: 260.0,
                               width: 260.0,
                             ),
@@ -1663,6 +1735,7 @@ class _ProductFormState extends State<ProductForm> {
               SizedBox(
                 height: 20.0,
               ),
+              //Product Name
               Row(
                 children: [
                   Expanded(
@@ -1679,6 +1752,7 @@ class _ProductFormState extends State<ProductForm> {
               SizedBox(
                 height: 15.0,
               ),
+              //Product Dimensions
               Row(
                 children: [
                   Expanded(flex: 2, child: Text(PRODUCT_PACKAGE)),
@@ -1687,7 +1761,7 @@ class _ProductFormState extends State<ProductForm> {
                       child: Row(
                         children: <Widget>[
                           Text(
-                            length != null ? length.toString() : '',
+                            length != 0.0 ? length.toString() : '',
                             style: labelTextStyle,
                           ),
                           Text(
@@ -1695,7 +1769,7 @@ class _ProductFormState extends State<ProductForm> {
                             style: labelTextStyle,
                           ),
                           Text(
-                            width != null ? width.toString() : '',
+                            width != 0.0 ? width.toString() : '',
                             style: labelTextStyle,
                           ),
                           Text(
@@ -1703,7 +1777,7 @@ class _ProductFormState extends State<ProductForm> {
                             style: labelTextStyle,
                           ),
                           Text(
-                            thickness != null ? thickness.toString() : '',
+                            thickness != 0.0 ? thickness.toString() : '',
                             style: labelTextStyle,
                           ),
                           Text(
@@ -1717,6 +1791,7 @@ class _ProductFormState extends State<ProductForm> {
               SizedBox(
                 height: 15.0,
               ),
+              //Product Color
               Row(
                 children: [
                   Expanded(
@@ -1735,6 +1810,7 @@ class _ProductFormState extends State<ProductForm> {
               SizedBox(
                 height: 15.0,
               ),
+              //Product Brand
               Row(
                 children: [
                   Expanded(
@@ -1753,6 +1829,28 @@ class _ProductFormState extends State<ProductForm> {
               SizedBox(
                 height: 15.0,
               ),
+              //Product Price
+               productPrice != null
+                  ? Row(
+                      children: [
+                        Expanded(
+                          flex: 2,
+                          child: Text(PRODUCT_PRICE),
+                        ),
+                        Expanded(
+                          flex: 3,
+                          child: Text(
+                            productPrice.toString() + ' SR',
+                            style: labelTextStyle4,
+                          ),
+                        )
+                      ],
+                    )
+                  : SizedBox.shrink(),
+              SizedBox(
+                height: 15.0,
+              ),
+              //Product Description
               Row(
                 children: [
                   Expanded(
@@ -1768,6 +1866,28 @@ class _ProductFormState extends State<ProductForm> {
                   ),
                 ],
               ),
+              SizedBox(
+                height: 15.0,
+              ),
+              //Show current PDF File Data sheet
+              _pdfUrl != null
+                  ? FlatButton(
+                      padding: EdgeInsets.all(15.0),
+                      color: Colors.red[200],
+                      height: 40.0,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          side: BorderSide(color: Colors.black)),
+                      child: Text(TDS),
+                      onPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => PDFFileViewer(
+                              pdfUrl: _pdfUrl,
+                              productName: productName,
+                            ),
+                          )))
+                  : SizedBox(),
             ],
           );
   }
@@ -2462,6 +2582,7 @@ class _ProductFormState extends State<ProductForm> {
               ],
             ),
           )
+          //Non-admin users
         : Column(
             children: <Widget>[
               widget.accessoriesProduct.imageListUrls != null
@@ -2541,23 +2662,6 @@ class _ProductFormState extends State<ProductForm> {
               SizedBox(
                 height: 15.0,
               ),
-              closingType != null
-                  ? Row(
-                      children: [
-                        Expanded(flex: 2, child: Text(PRODUCT_CLOSING_TYPE)),
-                        Expanded(
-                          flex: 3,
-                          child: Text(
-                            closingType,
-                            style: labelTextStyle,
-                          ),
-                        ),
-                      ],
-                    )
-                  : SizedBox.shrink(),
-              SizedBox(
-                height: 15.0,
-              ),
               productColor != null
                   ? Row(
                       children: [
@@ -2598,6 +2702,80 @@ class _ProductFormState extends State<ProductForm> {
               SizedBox(
                 height: 15.0,
               ),
+              productPrice != null
+                  ? Row(
+                      children: [
+                        Expanded(
+                          flex: 2,
+                          child: Text(PRODUCT_PRICE),
+                        ),
+                        Expanded(
+                          flex: 3,
+                          child: Text(
+                            productPrice.toString() + ' SR',
+                            style: labelTextStyle4,
+                          ),
+                        )
+                      ],
+                    )
+                  : SizedBox.shrink(),
+              SizedBox(
+                height: 15.0,
+              ),
+              extensionType != null
+                  ? Row(children: [
+                      Expanded(
+                        flex: 2,
+                        child: Text(EXTENSION_TYPE),
+                      ),
+                      Expanded(
+                        flex: 3,
+                        child: Text(
+                          extensionType,
+                          style: labelTextStyle,
+                        ),
+                      )
+                    ])
+                  : SizedBox.shrink(),
+              SizedBox(
+                height: 15.0,
+              ),
+              closingType != null
+                  ? Row(children: [
+                      Expanded(
+                        flex: 2,
+                        child: Text(CLOSING_TYPE),
+                      ),
+                      Expanded(
+                        flex: 3,
+                        child: Text(
+                          closingType,
+                          style: labelTextStyle,
+                        ),
+                      )
+                    ])
+                  : SizedBox.shrink(),
+              SizedBox(
+                height: 15.0,
+              ),
+              itemSide != null
+                  ? Row(children: [
+                      Expanded(
+                        flex: 2,
+                        child: Text(ITEM_SIDE),
+                      ),
+                      Expanded(
+                        flex: 3,
+                        child: Text(
+                          itemSide,
+                          style: labelTextStyle,
+                        ),
+                      )
+                    ])
+                  : SizedBox.shrink(),
+              SizedBox(
+                height: 15.0,
+              ),
               productDescription != null
                   ? Row(
                       children: [
@@ -2617,57 +2795,28 @@ class _ProductFormState extends State<ProductForm> {
                       ],
                     )
                   : SizedBox.shrink(),
-              SizedBox(
-                height: 20.0,
-              ),
-              Row(
-                children: <Widget>[
-                  Expanded(
-                    flex: 2,
-                    child: RaisedButton(
-                      elevation: 2.0,
-                      color: !itemAdded.value
-                          ? Colors.green[200]
-                          : Colors.red[200],
-                      splashColor: Colors.amberAccent,
+                SizedBox(
+                  height: 15.0,
+                ),
+                //Show current PDF File Data sheet
+              _pdfUrl != null
+                  ? FlatButton(
+                      padding: EdgeInsets.all(15.0),
+                      color: Colors.red[200],
+                      height: 40.0,
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.0)),
-                      child: !itemAdded.value
-                          ? Text(ADD_TO_CART)
-                          : Text(REMOVE_FROM_CART),
-                      onPressed: () async {
-                        setState(() {
-                          itemAdded.value = !itemAdded.value;
-                        });
-                        if (itemAdded.value) {
-                          //add the item to the cart list if it doesn't already exist.
-                          widget.cartList.add(
-                              'accessories ${widget.accessoriesProduct.uid}');
-                          await currentFile.writeToDocument(widget.cartList);
-                          await currentFile.loadDocument();
-                        } else {
-                          //check if the cart list contains the product
-                          //remove the product from the index position, since the item won't match
-                          //if the product has quantity added.
-                          int index = 0;
-                          for (var item = 0;
-                              item < widget.cartList.length;
-                              item++) {
-                            if (widget.cartList[item]
-                                .contains(widget.accessoriesProduct.uid)) {
-                              index = item;
-                              break;
-                            }
-                          }
-                          widget.cartList.removeAt(index);
-                          await currentFile.writeToDocument(widget.cartList);
-                          await currentFile.loadDocument();
-                        }
-                      },
-                    ),
-                  )
-                ],
-              )
+                          borderRadius: BorderRadius.circular(15),
+                          side: BorderSide(color: Colors.black)),
+                      child: Text(TDS),
+                      onPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => PDFFileViewer(
+                              pdfUrl: _pdfUrl,
+                              productName: productName,
+                            ),
+                          )))
+                  : SizedBox(),
             ],
           );
   }

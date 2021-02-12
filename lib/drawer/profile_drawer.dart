@@ -10,6 +10,7 @@ import 'package:Products/shared/strings.dart';
 
 class ProfileDrawer extends StatefulWidget {
   final String userId;
+  final List<dynamic> roles;
   final String firstName;
   final String lastName;
   final String emailAddress;
@@ -20,6 +21,7 @@ class ProfileDrawer extends StatefulWidget {
   final bool isAdmin;
   ProfileDrawer(
       {this.userId,
+      this.roles,
       this.firstName,
       this.lastName,
       this.company,
@@ -131,22 +133,26 @@ class _ProfileDrawerState extends State<ProfileDrawer> {
                             )));
               },
             ),
-            ExpansionTile(
-              leading: Icon(Icons.lock),
-              title: Text(USERS),
-              children: [
-               
-                //View current users
-                ListTile(
-                  leading: Icon(Icons.app_settings_alt_sharp),
-                  title: Text(CURRENT_USERS),
-                  onTap: () async {
-                    Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => UserGrid()));
-                  }
-                ),
-              ],
-            ),
+            widget.roles != null
+                ? widget.roles.contains('isSuperAdmin')
+                    ? ExpansionTile(
+                        leading: Icon(Icons.lock),
+                        title: Text(USERS),
+                        children: [
+                          //View current users
+                          ListTile(
+                              leading: Icon(Icons.app_settings_alt_sharp),
+                              title: Text(CURRENT_USERS),
+                              onTap: () async {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => UserGrid()));
+                              }),
+                        ],
+                      )
+                    : SizedBox.shrink()
+                : SizedBox.shrink(),
 
             ListTile(
               leading: Icon(Icons.person),
