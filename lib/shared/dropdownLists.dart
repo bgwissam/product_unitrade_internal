@@ -172,3 +172,16 @@ class PaymentTerms {
     ];
   }
 }
+
+//Set discount rate drop down list
+class DiscountRate {
+  static List<String> rate() {
+    return [
+      '1',
+      '2',
+      '3',
+      '4',
+      '5',
+    ];
+  }
+}

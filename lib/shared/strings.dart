@@ -261,3 +261,4 @@ const String EMAIL_FAIL = 'Email failed to reach your recipient';
 const String EMAIL_PREP = 'Email is being prepared';
 const String EMAIL_PENDING = 'Please wait...';
 const String UNKNOWN_ERROR = 'Contact administrator!';
+const String DISCOUNT_RATE = 'Discount';

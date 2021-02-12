@@ -438,6 +438,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         {
           //set the records of the class
           paintProducts.uid = _results[index].objectID;
+          paintProducts.itemCode = _results[index].data['itemCode'];
           paintProducts.productName = _results[index].data['productName'];
           paintProducts.productType = _results[index].data['productType'];
           paintProducts.productCategory =
@@ -456,6 +457,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         {
           //set all the records of the class
           woodProduct.uid = _results[index].objectID;
+          woodProduct.itemCode = _results[index].data['itemCode'];
           woodProduct.productName = _results[index].data['productName'];
           woodProduct.productType = _results[index].data['productType'];
           woodProduct.productCategory = _results[index].data['productCategory'];
@@ -474,6 +476,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         {
           //set all the records of the class
           solidProduct.uid = _results[index].objectID;
+          solidProduct.itemCode = _results[index].data['itemCode'];
           solidProduct.productName = _results[index].data['productName'];
           solidProduct.productType = _results[index].data['productType'];
           solidProduct.productCategory =
@@ -493,6 +496,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         {
           //set all the records of the class
           accessoriesProducts.uid = _results[index].objectID;
+          accessoriesProducts.itemCode = _results[index].data['itemCode'];
           accessoriesProducts.productName = _results[index].data['productName'];
           accessoriesProducts.productType = _results[index].data['productType'];
           accessoriesProducts.productCategory =
@@ -505,6 +509,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           accessoriesProducts.angle = _results[index].data['length'];
           accessoriesProducts.closingType = _results[index].data['closingType'];
           accessoriesProducts.color = _results[index].data['color'];
+          accessoriesProducts.itemSide = _results[index].data['itemSide'];
           accessoriesProducts.description = _results[index].data['description'];
           accessoriesProducts.productTags = _results[index].data['tags'];
           accessoriesProducts.imageListUrls =
@@ -695,7 +700,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
             ),
           ),
           SizedBox(
-            height: distanceBetweenInkWellLabel,
+            height: distanceBetweenInkWells,
           ),
           //FORMICA
           Container(
@@ -724,7 +729,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
             ),
           ),
           SizedBox(
-            height: distanceBetweenInkWellLabel,
+            height: distanceBetweenInkWells,
           ),
           //HALSPAN
           Container(
@@ -753,7 +758,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
             ),
           ),
           SizedBox(
-            height: distanceBetweenInkWellLabel,
+            height: distanceBetweenInkWells,
           ),
         ],
       ),

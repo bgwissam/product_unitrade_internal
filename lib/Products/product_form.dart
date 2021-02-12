@@ -1110,6 +1110,22 @@ class _ProductFormState extends State<ProductForm> {
               SizedBox(
                 height: 15.0,
               ),
+              //Item Code
+              itemCode != null ? Row(
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: Text(ITEM_CODE),
+                  ),
+                  Expanded(
+                    flex: 3,
+                    child: Text(itemCode, style: labelTextStyle,),
+                  )
+                ],
+              ) : SizedBox.shrink(),
+              SizedBox(
+                height: 15.0,
+              ),
               //product packing field
               Row(
                 children: [
@@ -1426,6 +1442,22 @@ class _ProductFormState extends State<ProductForm> {
                   ),
                 ],
               ),
+              SizedBox(
+                height: 15.0,
+              ),
+              //Item Code
+              itemCode != null ? Row(
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: Text(ITEM_CODE),
+                  ),
+                  Expanded(
+                    flex: 3,
+                    child: Text(itemCode, style: labelTextStyle,),
+                  )
+                ],
+              ) : SizedBox.shrink(),
               SizedBox(
                 height: 15.0,
               ),
@@ -1749,6 +1781,22 @@ class _ProductFormState extends State<ProductForm> {
                   ),
                 ],
               ),
+              SizedBox(
+                height: 15.0,
+              ),
+              //Item Code
+              itemCode != null ? Row(
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: Text(ITEM_CODE),
+                  ),
+                  Expanded(
+                    flex: 3,
+                    child: Text(itemCode, style: labelTextStyle,),
+                  )
+                ],
+              ) : SizedBox.shrink(),
               SizedBox(
                 height: 15.0,
               ),
@@ -2554,7 +2602,6 @@ class _ProductFormState extends State<ProductForm> {
                 SizedBox(
                   height: 15.0,
                 ),
-
                 //Drop down button for brands list
                 Container(
                   alignment: Alignment.bottomLeft,
@@ -2625,6 +2672,22 @@ class _ProductFormState extends State<ProductForm> {
                   ),
                 ],
               ),
+              SizedBox(
+                height: 15.0,
+              ),
+              //Item Code
+              itemCode != null ? Row(
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: Text(ITEM_CODE),
+                  ),
+                  Expanded(
+                    flex: 3,
+                    child: Text(itemCode, style: labelTextStyle,),
+                  )
+                ],
+              ) : SizedBox.shrink(),
               SizedBox(
                 height: 15.0,
               ),

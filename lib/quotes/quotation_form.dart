@@ -57,6 +57,7 @@ class _QuotationFormState extends State<QuotationForm> {
   List<double> quantity = [];
   List<double> price = [];
   List<String> pack = [];
+  List<String> discount = [];
   List<Map<String, dynamic>> selectedProducts = [];
   List<String> itemCodes = [];
   //create a temporary list for add price and pack for selected items
@@ -211,6 +212,7 @@ class _QuotationFormState extends State<QuotationForm> {
         itemBuilder: (_, index) => dynamicList[index],
       ),
     );
+    
 
     return Padding(
       padding: const EdgeInsets.all(12.0),
@@ -456,6 +458,10 @@ class _QuotationFormState extends State<QuotationForm> {
     TextEditingController _typeAheadController = TextEditingController();
     TextEditingController _packController = TextEditingController();
     TextEditingController _priceController = TextEditingController();
+    //Discount array
+    List<String> _discountRate = DiscountRate.rate();
+    String _discount = '1';
+
     return Container(
       child: Padding(
         padding: const EdgeInsets.all(12.0),
@@ -633,7 +639,7 @@ class _QuotationFormState extends State<QuotationForm> {
           SizedBox(
             height: 15.0,
           ),
-          //Quantity and price row
+          //Quantity, pack and price row
           Container(
             width: MediaQuery.of(context).size.width - 10,
             child: Row(
@@ -729,6 +735,49 @@ class _QuotationFormState extends State<QuotationForm> {
                   ),
                 ),
               ],
+            ),
+          ),
+          SizedBox(
+            height: 15.0,
+          ),
+          //Discount field
+          Container(
+            width: MediaQuery.of(context).size.width - 10,
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton<String>(
+                isExpanded: true,
+                value: discount.isNotEmpty ? discount[index - 1]: null,
+                hint: Center(
+                  child: Text(
+                    DISCOUNT_RATE,
+                  ),
+                ),
+                onChanged: (val) {
+                  setState(() {
+                    index > discount.length ? discount.add(val) : discount[index -1] = val;
+                    
+                    print(discount);
+                  });
+                },
+                selectedItemBuilder: (BuildContext context) {
+                  return _discountRate
+                      .map(
+                        (item) => Center(
+                          child: Text(
+                            item.toString(),
+                            style: textStyle1,
+                          ),
+                        ),
+                      )
+                      .toList();
+                },
+                items: _discountRate
+                    .map((item) => DropdownMenuItem<String>(
+                          child: Center(child: Text(item.toString())),
+                          value: item,
+                        ))
+                    .toList(),
+              ),
             ),
           ),
         ]),
