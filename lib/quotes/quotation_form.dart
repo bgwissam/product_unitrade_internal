@@ -57,7 +57,8 @@ class _QuotationFormState extends State<QuotationForm> {
   List<double> quantity = [];
   List<double> price = [];
   List<String> pack = [];
-  List<String> discount = [];
+  List<int> discount = [];
+  List<double> itemTotal = [];
   List<Map<String, dynamic>> selectedProducts = [];
   List<String> itemCodes = [];
   //create a temporary list for add price and pack for selected items
@@ -88,6 +89,7 @@ class _QuotationFormState extends State<QuotationForm> {
       quantity.clear();
       price.clear();
       pack.clear();
+      itemTotal.clear();
       selectedProducts.clear();
     }
   }
@@ -144,7 +146,7 @@ class _QuotationFormState extends State<QuotationForm> {
                 totalValue = 0;
                 setState(() {
                   for (var i = 0; i < itemCode.length; i++) {
-                    totalValue += quantity[i] * price[i];
+                    totalValue += itemTotal[i];
                     //get item description
                     String prodName;
                     widget.productsWithDescription.keys.firstWhere((e) {
@@ -161,7 +163,8 @@ class _QuotationFormState extends State<QuotationForm> {
                       'itemDescription': productName[i],
                       'itemPack': pack[i],
                       'quantity': quantity[i],
-                      'price': price[i]
+                      'price': price[i],
+                      'itemTotal': itemTotal[i],
                     });
                   }
                 });
@@ -212,7 +215,6 @@ class _QuotationFormState extends State<QuotationForm> {
         itemBuilder: (_, index) => dynamicList[index],
       ),
     );
-    
 
     return Padding(
       padding: const EdgeInsets.all(12.0),
@@ -346,35 +348,8 @@ class _QuotationFormState extends State<QuotationForm> {
             child: dynamicRow,
           ),
           Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                    vertical: 10.0, horizontal: 10.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Container(
-                      child: Text(TOTAL_VALUE, style: textStyle3),
-                    ),
-                    SizedBox(
-                      width: 15.0,
-                    ),
-                    Container(
-                      width: 120.0,
-                      height: 50.0,
-                      child: Center(
-                        child: Text(
-                          totalValue == null ? '0.0' : totalValue.toString(),
-                        ),
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.grey[200],
-                        borderRadius: BorderRadius.circular(15.0),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 10.0),
                 child: Row(
@@ -425,7 +400,6 @@ class _QuotationFormState extends State<QuotationForm> {
       itemDescription = [];
       quantity = [];
       price = [];
-      totalValue = 0;
     }
     //product list shouldn't be more than 20 items
     if (dynamicList.length < 20) {
@@ -442,7 +416,6 @@ class _QuotationFormState extends State<QuotationForm> {
       itemDescription = [];
       quantity = [];
       price = [];
-      totalValue = 0;
     }
 
     if (dynamicList.length > 1) {
@@ -458,9 +431,23 @@ class _QuotationFormState extends State<QuotationForm> {
     TextEditingController _typeAheadController = TextEditingController();
     TextEditingController _packController = TextEditingController();
     TextEditingController _priceController = TextEditingController();
+    TextEditingController _itemTotal = TextEditingController();
+    double _quantity, _price, _discount = 0;
+    //calculate total per each item
+    _itemTotalValue() {
+      var tValue = 0.0;
+      if (_quantity != null && _price != null) {
+        tValue = _quantity * (_price - (_price * (_discount / 100)));
+      }
+      _itemTotal.text = tValue.toString();
+      if(_discount != null)
+      _priceController.text = (_price - (_price * (_discount / 100))).toString();
+      
+    }
+
+    //set listener on the field that will affect the item total
+    _itemTotal.addListener(_itemTotalValue);
     //Discount array
-    List<String> _discountRate = DiscountRate.rate();
-    String _discount = '1';
 
     return Container(
       child: Padding(
@@ -695,6 +682,13 @@ class _QuotationFormState extends State<QuotationForm> {
                                   BorderRadius.all(Radius.circular(15.0)),
                               borderSide: BorderSide(color: Colors.blue)),
                         ),
+                        onChanged: (val) {
+                          _quantity = double.parse(val);
+                          _priceController.text != ''
+                              ? _price = double.parse(_priceController.text)
+                              : _price = 0;
+                          _itemTotalValue();
+                        },
                         validator: (val) =>
                             val.isEmpty ? ITEM_QUANTITY_VALIDATION : null,
                         onSaved: (val) {
@@ -741,44 +735,79 @@ class _QuotationFormState extends State<QuotationForm> {
             height: 15.0,
           ),
           //Discount field
-          Container(
-            width: MediaQuery.of(context).size.width - 10,
-            child: DropdownButtonHideUnderline(
-              child: DropdownButton<String>(
-                isExpanded: true,
-                value: discount.isNotEmpty ? discount[index - 1]: null,
-                hint: Center(
-                  child: Text(
-                    DISCOUNT_RATE,
-                  ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                flex: 1,
+                child: Center(
+                  child: TextFormField(
+                      maxLength: 1,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp(r"[1-5]"))
+                      ],
+                      initialValue: '',
+                      style: textStyle1,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        filled: true,
+                        labelText: DISCOUNT_RATE,
+                        fillColor: Colors.grey[100],
+                        enabledBorder: OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(15.0)),
+                            borderSide: BorderSide(color: Colors.grey)),
+                        focusedBorder: OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(15.0)),
+                            borderSide: BorderSide(color: Colors.blue)),
+                      ),
+                      onChanged: (val) {
+                        val != ''
+                            ? _discount = double.parse(val)
+                            : _discount = 0;
+                        _itemTotalValue();
+                      },
+                      onSaved: (val) {
+                        discount.add(int.parse(val));
+                      }),
                 ),
-                onChanged: (val) {
-                  setState(() {
-                    index > discount.length ? discount.add(val) : discount[index -1] = val;
-                    
-                    print(discount);
-                  });
-                },
-                selectedItemBuilder: (BuildContext context) {
-                  return _discountRate
-                      .map(
-                        (item) => Center(
-                          child: Text(
-                            item.toString(),
-                            style: textStyle1,
-                          ),
-                        ),
-                      )
-                      .toList();
-                },
-                items: _discountRate
-                    .map((item) => DropdownMenuItem<String>(
-                          child: Center(child: Text(item.toString())),
-                          value: item,
-                        ))
-                    .toList(),
               ),
-            ),
+              SizedBox(
+                width: 10.0,
+              ),
+              Expanded(
+                  flex: 1, child: Center(child: Text('%', style: textStyle1))),
+              SizedBox(
+                width: 10.0,
+              ),
+              Expanded(
+                flex: 2,
+                child: Center(
+                  child: TextFormField(
+                      controller: _itemTotal,
+                      style: textStyle1,
+                      enabled: false,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        filled: true,
+                        labelText: ITEM_TOTAL,
+                        fillColor: Colors.grey[100],
+                        enabledBorder: OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(15.0)),
+                            borderSide: BorderSide(color: Colors.grey)),
+                        focusedBorder: OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(15.0)),
+                            borderSide: BorderSide(color: Colors.blue)),
+                      ),
+                      onSaved: (val) {
+                        itemTotal.add(double.parse(val));
+                      }),
+                ),
+              )
+            ],
           ),
         ]),
       ),
