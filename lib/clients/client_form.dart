@@ -257,7 +257,7 @@ class _ClientFormState extends State<ClientForm> {
                         },
                         selectedItemBuilder: (BuildContext context) {
                           return _paymentTermsList
-                              .map((item) => Center(
+                              .map<Widget>((item) => Center(
                                       child: Text(
                                     item,
                                     style: textStyle1,
@@ -266,7 +266,7 @@ class _ClientFormState extends State<ClientForm> {
                         },
                         items: _paymentTermsList
                             .map(
-                              (item) => DropdownMenuItem(
+                              (item) => DropdownMenuItem<String>(
                                 child: Text(
                                   item,
                                 ),

@@ -264,6 +264,30 @@ class _ProductGridState extends State<ProductsGrid> {
               child: productBuild());
         }
         break;
+         case COR_SINKS:
+      {
+        return StreamProvider<List<SolidProduct>>.value(
+          value: DatabaseService().solidSurfaceProducts(
+            brandName: widget.brandName,
+            productType: widget.productType,
+            productCategory: widget.categoryType
+          ),
+          child: productBuild(),
+        );
+      }
+      break;
+      case SS_ADHESIVE_BUTTON:
+      {
+        return StreamProvider<List<SolidProduct>>.value(
+          value: DatabaseService().solidSurfaceProducts(
+            brandName: widget.brandName,
+            productType: widget.productType,
+            productCategory: widget.categoryType
+          ),
+          child: productBuild(),
+        );
+      }
+      break;
       case HINGES:
         {
           return StreamProvider<List<Accessories>>.value(

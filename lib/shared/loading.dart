@@ -10,8 +10,8 @@ class Loading extends StatelessWidget {
         padding: const EdgeInsets.all(20.0),
         child: Center(
           child: SpinKitWave(
-            color: Colors.purple,
-            size: 55.0,
+            color: Colors.amber,
+            size: 40.0,
           ),
         ),
       ),

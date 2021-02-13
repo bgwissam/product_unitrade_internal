@@ -146,6 +146,7 @@ class _QuotationFormState extends State<QuotationForm> {
                 totalValue = 0;
                 setState(() {
                   for (var i = 0; i < itemCode.length; i++) {
+                    print(productName[i]);
                     totalValue += itemTotal[i];
                     //get item description
                     String prodName;
@@ -318,7 +319,7 @@ class _QuotationFormState extends State<QuotationForm> {
                       },
                       selectedItemBuilder: (BuildContext context) {
                         return _paymentTerms
-                            .map(
+                            .map<Widget>(
                               (item) => Center(
                                 child: Text(
                                   item,
@@ -329,7 +330,7 @@ class _QuotationFormState extends State<QuotationForm> {
                             .toList();
                       },
                       items: _paymentTerms
-                          .map((item) => DropdownMenuItem(
+                          .map((item) => DropdownMenuItem<String>(
                                 child: Center(child: Text(item)),
                                 value: item,
                               ))
@@ -505,7 +506,7 @@ class _QuotationFormState extends State<QuotationForm> {
                                 .forEach((data) {
                               data.indexWhere((element) {
                                 if (element.productPack.toString() ==
-                                    selecteItem[2].toString().trim()) {
+                                    selecteItem[3].toString().trim()) {
                                   setState(() {
                                     _priceController.text =
                                         element.productPrice.toString();
@@ -683,16 +684,16 @@ class _QuotationFormState extends State<QuotationForm> {
                               borderSide: BorderSide(color: Colors.blue)),
                         ),
                         onChanged: (val) {
-                          _quantity = double.parse(val);
+                          _quantity = double.tryParse(val);
                           _priceController.text != ''
-                              ? _price = double.parse(_priceController.text)
+                              ? _price = double.tryParse(_priceController.text)
                               : _price = 0;
                           _itemTotalValue();
                         },
                         validator: (val) =>
                             val.isEmpty ? ITEM_QUANTITY_VALIDATION : null,
                         onSaved: (val) {
-                          quantity.add(double.parse(val));
+                          quantity.add(double.tryParse(val));
                         }),
                   ),
                 ),
@@ -724,7 +725,7 @@ class _QuotationFormState extends State<QuotationForm> {
                         validator: (val) =>
                             val.isEmpty ? ITEM_PRICE_VALIDATION : null,
                         onSaved: (val) {
-                          price.add(double.parse(val));
+                          price.add(double.tryParse(val));
                         }),
                   ),
                 ),
@@ -764,12 +765,13 @@ class _QuotationFormState extends State<QuotationForm> {
                       ),
                       onChanged: (val) {
                         val != ''
-                            ? _discount = double.parse(val)
+                            ? _discount = double.tryParse(val)
                             : _discount = 0;
                         _itemTotalValue();
                       },
                       onSaved: (val) {
-                        discount.add(int.parse(val));
+                        
+                        _discount > 0 ? discount.add(int.tryParse(val)): discount.add(0);
                       }),
                 ),
               ),
@@ -803,7 +805,7 @@ class _QuotationFormState extends State<QuotationForm> {
                             borderSide: BorderSide(color: Colors.blue)),
                       ),
                       onSaved: (val) {
-                        itemTotal.add(double.parse(val));
+                        itemTotal.add(double.tryParse(val));
                       }),
                 ),
               )
@@ -825,7 +827,7 @@ class _QuotationFormState extends State<QuotationForm> {
     List<String> matches = [];
     //Adding paint product to the input list
     matches.addAll(widget.paintProducts
-        .map((e) => COATINGS + ' | ${e.itemCode} | ${e.productPack}'));
+        .map((e) => COATINGS + ' | ${e.itemCode} | ${e.productName} | ${e.productPack}'));
 
     //Adding wood products to the input list
     matches.addAll(widget.woodProducts.map((e) =>

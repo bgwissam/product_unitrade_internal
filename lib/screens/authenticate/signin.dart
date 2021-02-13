@@ -1,4 +1,4 @@
-import 'package:Products/screens/authenticate/register.dart';
+import 'package:Products/quotes/quotation_review.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:Products/shared/strings.dart';
@@ -6,7 +6,6 @@ import '../../shared/constants.dart';
 import '../../shared/loading.dart';
 import '../../services/auth.dart';
 import 'package:Products/screens/wrapper.dart';
-
 
 class SignIn extends StatefulWidget {
   final String message;
@@ -18,6 +17,7 @@ class SignIn extends StatefulWidget {
 class _SignInState extends State<SignIn> {
   final AuthService _auth = AuthService();
   final _formKey = GlobalKey<FormState>();
+  final _loadingKey = GlobalKey<FormState>();
   bool loading;
   bool showEmailVerification;
   //text field state
@@ -27,7 +27,7 @@ class _SignInState extends State<SignIn> {
 
   void initState() {
     super.initState();
-    
+
     widget.message != null ? error = widget.message : error = null;
     showEmailVerification = false;
     loading = false;
@@ -168,50 +168,34 @@ class _SignInState extends State<SignIn> {
                             style: buttonStyle,
                           ),
                           onPressed: () async {
-                            if (_formKey.currentState.validate()) {
-                              setState(() {
-                                loading = true;
-                              });
+                            if (_formKey.currentState.validate()) {                             
+                              Dialogs.showLoadingDialog(context, _loadingKey);
+                              
                               dynamic result =
                                   await _auth.signInWithUserNameandPassword(
                                       email, password);
-                              print(
-                                  '${this.runtimeType} signing in result: $result');
+
+                              print('The result is: $result');
+
                               if (result != null) {
-                                if (result == 'User not verified') {
-                                  setState(() {
-                                    loading = false;
-                                    showEmailVerification = true;
-                                    error = result;
-                                  });
-                                } else if(result == 'User is verified') {
-                                  setState(() {
-                                    loading = false;
-                                    Navigator.push(context, MaterialPageRoute(builder: (context) => Wrapper(),));
-                                  });
-                                }
+                                //loading = false;
+                                Navigator.of(_loadingKey.currentContext, rootNavigator: true).pop();
+                                Future.delayed(Duration(milliseconds: 500))
+                                    .then((value) {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => Wrapper(),
+                                      ));
+                                });
                               } else {
-                                error = 'Unknown error, contact developer';
+                                setState(() {
+                                  loading = false;
+                                  Navigator.pop(context);
+                                  error = result;
+                                });
                               }
-                             
                             }
-                          },
-                        ),
-                        SizedBox(
-                          width: 15.0,
-                        ),
-                        //A registeration button to register new users
-                        RaisedButton(
-                          color: Colors.brown[500],
-                          child: Text(
-                            REGISTER,
-                            style: buttonStyle,
-                          ),
-                          onPressed: () async {
-                            await Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Register()));
                           },
                         ),
                       ],
@@ -244,7 +228,6 @@ class _ForgotEmailPageState extends State<ForgotEmailPage> {
       ),
       body: Form(
         key: _formKey,
-        autovalidate: _autoValidate,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,

@@ -62,7 +62,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   //This search method will perform a search of several indices in the algolia database, the return
   //result will be listed in our listview builder
   _fetchSearchData() {
-    print(isTyping);
     return isTyping
         ? this._memoizer.runOnce(() async {
             return _search();
@@ -74,7 +73,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     Algolia algolia = Algolia.init(
         applicationId: 'EINFBWASYK',
         apiKey: '86ddd40b6747ad6183a42935a26c9c4a');
-
+    _results = [];
     List<AlgoliaObjectSnapshot> queryPaint =
         (await (algolia.instance.index('paint').search(searchWord))
                 .getObjects())
@@ -92,8 +91,12 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 .getObjects())
             .hits;
 
+    setState(() {
+      _results = queryPaint + queryWood + querySolid + queryAccessories;
+    });
+
     return Future.delayed(const Duration(milliseconds: 600)).then((value) =>
-        _results = queryPaint + queryWood + querySolid + queryAccessories);
+        _results);
   }
 
   //get the first name of the user
@@ -308,7 +311,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     return FutureBuilder(
         future: _fetchSearchData(),
         builder: (context, AsyncSnapshot snapshot) {
-          print(snapshot.connectionState);
           if (snapshot.connectionState == ConnectionState.done) {
             if (snapshot.hasData) {
               if (_results.isNotEmpty) {
@@ -403,7 +405,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
               } else {
                 return Container(
                   padding: const EdgeInsets.symmetric(
-                      vertical: 10.0, horizontal: 10.0),
+                      vertical: 50.0, horizontal: 10.0),
                   child: Text('No data was found for your search results'),
                 );
               }

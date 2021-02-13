@@ -26,12 +26,13 @@ class _WrapperState extends State<Wrapper> {
     // await FirebaseAuth.instance.currentUser()
     //   ..reload();
     var user = await FirebaseAuth.instance.currentUser();
-    if (user != null) {
+        if (user != null) {
       if (user.isEmailVerified) {
         setState(() {
           _userIsVerified = true;
         });
       }
+     print('The current user $_userIsVerified');
     }
   }
 
@@ -42,11 +43,6 @@ class _WrapperState extends State<Wrapper> {
     print('${this.runtimeType} is user verified: $_userIsVerified');
     if (userData == null) {
       return Authenticate();
-    } 
-    else if(!_userIsVerified) {
-      message = 'User is not verified';
-      //_auth.signOut();
-      return SignIn(message: message);
     } 
     else {
       return Home(

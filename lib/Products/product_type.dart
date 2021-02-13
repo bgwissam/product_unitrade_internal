@@ -541,6 +541,70 @@ class _ProductTypeState extends State<ProductType> {
             SizedBox(
               height: sizedBoxDistance,
             ),
+            //Sinks
+            Container(
+              child: InkWell(
+                onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ProductsGrid(
+                              user: widget.user,
+                              roles: widget.roles,
+                              brandName: widget.brandName,
+                              productType: TAB_SS_TEXT,
+                              categoryType: COR_SINKS,
+                            ))),
+                child: Container(
+                  padding: EdgeInsets.all(5.0),
+                  decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      border: Border.all(color: Colors.grey[500]),
+                      borderRadius: BorderRadius.circular(25.0)),
+                  width: MediaQuery.of(context).size.width,
+                  height: 120.0,
+                  child: Center(
+                      child: Text(
+                    COR_SINKS,
+                    style: textStyle8,
+                  )),
+                ),
+              ),
+            ),
+            SizedBox(
+              height: sizedBoxDistance,
+            ),
+            //Adhesives
+            Container(
+              child: InkWell(
+                onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ProductsGrid(
+                              user: widget.user,
+                              roles: widget.roles,
+                              brandName: widget.brandName,
+                              productType: TAB_SS_TEXT,
+                              categoryType: SS_ADHESIVE_BUTTON,
+                            ))),
+                child: Container(
+                  padding: EdgeInsets.all(5.0),
+                  decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      border: Border.all(color: Colors.grey[500]),
+                      borderRadius: BorderRadius.circular(25.0)),
+                  width: MediaQuery.of(context).size.width,
+                  height: 120.0,
+                  child: Center(
+                      child: Text(
+                    SS_ADHESIVE_BUTTON,
+                    style: textStyle8,
+                  )),
+                ),
+              ),
+            ),
+            SizedBox(
+              height: sizedBoxDistance,
+            ),
           ],
         ),
       ),
@@ -584,7 +648,7 @@ class _ProductTypeState extends State<ProductType> {
                 ),
               ),
             ),
-             SizedBox(
+            SizedBox(
               height: sizedBoxDistance,
             ),
             //Runners
@@ -617,7 +681,7 @@ class _ProductTypeState extends State<ProductType> {
                 ),
               ),
             ),
-             SizedBox(
+            SizedBox(
               height: sizedBoxDistance,
             ),
             //Flap Mechanism

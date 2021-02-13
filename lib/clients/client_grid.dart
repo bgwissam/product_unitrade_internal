@@ -8,7 +8,6 @@ import 'package:Products/shared/strings.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'client_list.dart';
-import 'package:Products/shared/loading.dart';
 
 class ClientGrid extends StatefulWidget {
   final String userId;
@@ -26,7 +25,6 @@ class _ClientGridState extends State<ClientGrid> {
       providers: [
         StreamProvider<List<Clients>>.value(
           value: DatabaseService().clientDataBySalesId(salesId: widget.userId),
-          child: Loading(),
           catchError: (context, error) {
             return error;
           },
@@ -95,8 +93,7 @@ class _QuotationProviderBuildState extends State<QuotationProviderBuild> {
     var woodProducts = Provider.of<List<WoodProduct>>(context) ?? [];
     var solidProducts = Provider.of<List<SolidProduct>>(context) ?? [];
     var accessoriesProducts = Provider.of<List<Accessories>>(context) ?? [];
-
-    if (clientProvider.isNotEmpty)
+    if (clientProvider.isNotEmpty) {
       return Container(
         child: FutureBuilder(
           future: _getProductData(paintProducts),
@@ -128,6 +125,7 @@ class _QuotationProviderBuildState extends State<QuotationProviderBuild> {
           },
         ),
       );
+    }
     else
       return NoDataExists(
         contexttext: 'No available clients in your database exist',

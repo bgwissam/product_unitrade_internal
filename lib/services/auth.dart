@@ -35,12 +35,10 @@ class AuthService {
       AuthResult result = await _auth.signInWithEmailAndPassword(
           email: email.trim(), password: password);
       FirebaseUser user = result.user;
-      if (user.isEmailVerified) {
-        print('${this.runtimeType} current user is verified ${user.uid}');
-        return 'User is verified';
+      if (user.uid != null) {
+        return user.uid;
       } else {
-        print('${this.runtimeType} current user is not verified ${user.uid}');
-        return 'User not verified';
+        return null;
       }
     } catch (e) {
       return e.message.toString();

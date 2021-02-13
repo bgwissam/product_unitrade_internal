@@ -65,7 +65,7 @@ const String HPL_BUTTON = 'HPL';
 const String COR_BUTTON = 'Acrylic Solid';
 const String MON_BUTTON = 'Acrylic Composit';
 const String SS_ADHESIVE_BUTTON = 'Adh. Solid Surface';
-
+const String COR_SINKS = 'Acrylic Sink';
 //Constant strings for Accessories
 const String SALICE_BUTTON = 'Fit Out';
 const String HINGES = 'Hinges';
