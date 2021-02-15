@@ -270,3 +270,7 @@ const String ITEM_TOTAL = 'Total';
 
 //Quote List
 const String QUOTE_LIST = 'Quotation List';
+
+//Quote Tile
+const String QUOTE_DATE = 'Date';
+const String TOTAL_ITEMS = 'Number of products';

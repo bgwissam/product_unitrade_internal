@@ -38,6 +38,12 @@ const labelTextStyle4 = TextStyle(
   color: Colors.red,
 );
 
+const labelTextStyle5 = TextStyle(
+  fontSize: 14.0,
+  fontWeight: FontWeight.w800,
+  color: Colors.black,
+);
+
 const textStyle1 = TextStyle(fontSize: 18.0, fontFamily: 'San Francisco');
 
 const textStyle2 = TextStyle(

@@ -147,17 +147,7 @@ class _QuotationFormState extends State<QuotationForm> {
                 setState(() {
                   for (var i = 0; i < itemCode.length; i++) {
                     totalValue += itemTotal[i];
-                    //get item description
-                    // String prodName;
-                    // widget.productsWithDescription.keys.firstWhere((e) {
-                    //   if (e == itemCode[i]) {
-                    //     prodName = widget.productsWithDescription[e];
-                    //     return true;
-                    //   } else
-                    //     return false;
-                    // }, orElse: () {
-                    //   return null;
-                    // });
+                  
                     selectedProducts.add({
                       'itemCode': itemCode[i],
                       'itemDescription': productName[i],
