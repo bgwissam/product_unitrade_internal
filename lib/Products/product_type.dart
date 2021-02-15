@@ -75,6 +75,7 @@ class _ProductTypeState extends State<ProductType> {
                       child: Container(
                         padding: EdgeInsets.all(5.0),
                         decoration: BoxDecoration(
+                            color: Colors.grey[300],
                             border: Border.all(color: Colors.grey[500]),
                             borderRadius: BorderRadius.circular(25.0)),
                         width: MediaQuery.of(context).size.width,
@@ -108,6 +109,7 @@ class _ProductTypeState extends State<ProductType> {
                       child: Container(
                         padding: EdgeInsets.all(5.0),
                         decoration: BoxDecoration(
+                            color: Colors.grey[300],
                             border: Border.all(color: Colors.grey[500]),
                             borderRadius: BorderRadius.circular(25.0)),
                         width: MediaQuery.of(context).size.width,
@@ -141,6 +143,7 @@ class _ProductTypeState extends State<ProductType> {
                       child: Container(
                         padding: EdgeInsets.all(5.0),
                         decoration: BoxDecoration(
+                            color: Colors.grey[300],
                             border: Border.all(color: Colors.grey[500]),
                             borderRadius: BorderRadius.circular(25.0)),
                         width: MediaQuery.of(context).size.width,
@@ -174,6 +177,7 @@ class _ProductTypeState extends State<ProductType> {
                       child: Container(
                         padding: EdgeInsets.all(5.0),
                         decoration: BoxDecoration(
+                            color: Colors.grey[300],
                             border: Border.all(color: Colors.grey[500]),
                             borderRadius: BorderRadius.circular(25.0)),
                         width: MediaQuery.of(context).size.width,
@@ -207,6 +211,7 @@ class _ProductTypeState extends State<ProductType> {
                       child: Container(
                         padding: EdgeInsets.all(5.0),
                         decoration: BoxDecoration(
+                            color: Colors.grey[300],
                             border: Border.all(color: Colors.grey[500]),
                             borderRadius: BorderRadius.circular(25.0)),
                         width: MediaQuery.of(context).size.width,
@@ -240,6 +245,7 @@ class _ProductTypeState extends State<ProductType> {
                       child: Container(
                         padding: EdgeInsets.all(5.0),
                         decoration: BoxDecoration(
+                            color: Colors.grey[300],
                             border: Border.all(color: Colors.grey[500]),
                             borderRadius: BorderRadius.circular(25.0)),
                         width: MediaQuery.of(context).size.width,
@@ -273,6 +279,7 @@ class _ProductTypeState extends State<ProductType> {
                       child: Container(
                         padding: EdgeInsets.all(5.0),
                         decoration: BoxDecoration(
+                            color: Colors.grey[300],
                             border: Border.all(color: Colors.grey[500]),
                             borderRadius: BorderRadius.circular(25.0)),
                         width: MediaQuery.of(context).size.width,
@@ -314,6 +321,7 @@ class _ProductTypeState extends State<ProductType> {
                 child: Container(
                   padding: EdgeInsets.all(5.0),
                   decoration: BoxDecoration(
+                      color: Colors.grey[300],
                       border: Border.all(color: Colors.grey[500]),
                       borderRadius: BorderRadius.circular(25.0)),
                   width: MediaQuery.of(context).size.width,
