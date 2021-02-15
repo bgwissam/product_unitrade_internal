@@ -127,22 +127,21 @@ class _ProductFormState extends State<ProductForm> {
   RegExp regExp = new RegExp(r'^[a-zA-Z]');
   //will upload new images to the database
   Future getImages(int index) async {
-    var tempImage = await ImagePicker.pickImage(
+    var tempImage = await ImagePicker().getImage(
         maxHeight: 600.0, maxWidth: 1800.0, source: ImageSource.gallery);
-    setState(() {
-      images[index] = tempImage;
-    });
+    return tempImage;
   }
 
   //will edit current images and upload new ones
   Future updateCurrentImages(int index) async {
-    var tempImage = await ImagePicker.pickImage(
+    var tempImage = await ImagePicker().getImage(
         maxHeight: 600.0, maxWidth: 600.0, source: ImageSource.gallery);
     setState(() {
       if (tempImage != null) {
         editCurrentImage = true;
         imageListUrls[index] = tempImage;
       }
+      return tempImage;
     });
   }
 

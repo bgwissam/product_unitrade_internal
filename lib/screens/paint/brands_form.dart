@@ -12,7 +12,7 @@ import 'package:Products/shared/loading.dart';
 import 'package:Products/shared/strings.dart';
 
 class BrandsForm extends StatefulWidget {
-  Brands brand;
+  final Brands brand;
   BrandsForm({this.brand});
   @override
   _BrandsFormState createState() => _BrandsFormState();
@@ -41,12 +41,10 @@ class _BrandsFormState extends State<BrandsForm> {
   File image;
   String _imageUrl;
   Future getImage() async {
-    var tempImage = await ImagePicker.pickImage(
+    var tempImage = await ImagePicker().getImage(
         maxHeight: 600.0, maxWidth: 1800.0, source: ImageSource.gallery);
 
-    setState(() {
-      image = tempImage;
-    });
+    return tempImage;
   }
 
   @override
@@ -75,10 +73,11 @@ class _BrandsFormState extends State<BrandsForm> {
     }
     return categoryString;
   }
+
   //sets the list of strings into a list of categories
   StringBuffer _setCategoryList(String categoryString) {
     categories = StringBuffer();
-    if(categoryString != null){
+    if (categoryString != null) {
       categories.write(categoryString);
     }
     return categories;
@@ -87,11 +86,10 @@ class _BrandsFormState extends State<BrandsForm> {
   //Convert the string buffer to List<String>
   List<dynamic> _convertCategoryToList() {
     category = [];
-    if(categories != null){
+    if (categories != null) {
       var spliCategories = categories.toString().split(',');
       spliCategories.forEach((element) {
-        if(element != ' ' || element != ',')
-          category.add(element);
+        if (element != ' ' || element != ',') category.add(element);
       });
     }
     return category;
@@ -180,8 +178,9 @@ class _BrandsFormState extends State<BrandsForm> {
           Container(
             width: containerWidth,
             child: TextFormField(
-              initialValue:
-                  category.length == 0 ? null : _displayCategoryList().toString(),
+              initialValue: category.length == 0
+                  ? null
+                  : _displayCategoryList().toString(),
               textCapitalization: TextCapitalization.characters,
               decoration: textInputDecoration.copyWith(
                   labelText: 'Categories',

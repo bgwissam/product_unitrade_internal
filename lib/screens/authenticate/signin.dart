@@ -168,9 +168,9 @@ class _SignInState extends State<SignIn> {
                             style: buttonStyle,
                           ),
                           onPressed: () async {
-                            if (_formKey.currentState.validate()) {                             
+                            if (_formKey.currentState.validate()) {
                               Dialogs.showLoadingDialog(context, _loadingKey);
-                              
+
                               dynamic result =
                                   await _auth.signInWithUserNameandPassword(
                                       email, password);
@@ -179,15 +179,15 @@ class _SignInState extends State<SignIn> {
 
                               if (result != null) {
                                 //loading = false;
-                                Navigator.of(_loadingKey.currentContext, rootNavigator: true).pop();
-                                Future.delayed(Duration(milliseconds: 500))
-                                    .then((value) {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => Wrapper(),
-                                      ));
-                                });
+                                Navigator.of(_loadingKey.currentContext,
+                                        rootNavigator: true)
+                                    .pop();
+
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => Wrapper(),
+                                    ));
                               } else {
                                 setState(() {
                                   loading = false;
@@ -217,7 +217,6 @@ class ForgotEmailPage extends StatefulWidget {
 class _ForgotEmailPageState extends State<ForgotEmailPage> {
   final _formKey = GlobalKey<FormState>();
   String email;
-  bool _autoValidate = false;
   final AuthService _auth = AuthService();
 
   Widget build(BuildContext context) {
@@ -283,9 +282,6 @@ class _ForgotEmailPageState extends State<ForgotEmailPage> {
                 style: buttonStyle,
               ),
               onPressed: () async {
-                setState(() {
-                  _autoValidate = true;
-                });
                 if (_formKey.currentState.validate()) {
                   dynamic result = await _auth.resetPassword(email);
                   if (result == null) {

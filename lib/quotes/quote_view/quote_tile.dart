@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:Products/shared/strings.dart';
 import 'package:Products/models/enquiries.dart';
 import 'package:Products/shared/constants.dart';
 import 'package:intl/intl.dart';

@@ -20,7 +20,6 @@ class EmailManagement {
       File file}) async {
     try {
       String uid;
-      var response;
       StringBuffer buffer = new StringBuffer();
       //Capitalize the first letter of the email text items
       contact.firstLetterToUpperCase;
@@ -49,7 +48,7 @@ class EmailManagement {
         uid = value.documentID;
         return uid;
       }).catchError((e) {
-        response = e;
+        return e;
       });
     } catch (e) {
       print('The email process did not succeed: $e');

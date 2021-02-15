@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:Products/shared/strings.dart';
 import 'package:provider/provider.dart';
 import 'package:Products/models/enquiries.dart';
 import 'quote_tile.dart';

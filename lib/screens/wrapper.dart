@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'authenticate/authenticate.dart';
 import './home/home.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import './authenticate/signin.dart';
 
 
 class Wrapper extends StatefulWidget {
