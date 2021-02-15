@@ -140,11 +140,12 @@ class EmailManagement {
           quoteId: doc.data['quoteId'] ?? '',
           clientId: doc.data['clientId'] ?? '',
           clientName: doc.data['clientName'] ?? '',
+          dateTime: doc.data['dateTime'] ?? '',
           paymentTerms: doc.data['paymentTerms'] ?? '',
-          products: doc.data['products'] ?? '',
+          itemQuoted: doc.data['itemsQuoted'] ?? '',
           userId: doc.data['userId'] ?? '',
           status: doc.data['status'] ?? '');
-    });
+    }).toList();
   }
 
   //Stream data for the saved quotes
@@ -153,6 +154,19 @@ class EmailManagement {
         .where('quoteId', isEqualTo: quoteId)
         .snapshots()
         .map(_quoteDataBySnapshot);
+  }
+
+  //Stream quote per user
+  Stream<List<QuoteData>> getQuoteDataByUserId({String userId}) {
+    return quotationCollection
+        .where('userId', isEqualTo: userId)
+        .snapshots()
+        .map(_quoteDataBySnapshot);
+  }
+
+  //Stream all quotes in our database
+  Stream<List<QuoteData>> get allQuotes {
+    return quotationCollection.snapshots().map(_quoteDataBySnapshot);
   }
 
   //Get list of orders

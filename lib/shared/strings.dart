@@ -227,6 +227,8 @@ const String CONTACT_PERSON = 'Contact';
 const String CONTACT_PERSON_EMPTY_VALIDATION = 'contact name can not be empty';
 const String CLIENT_ADDRESS = 'Address';
 const String BUSINESS_SECTOR = 'Business Sector';
+
+
 //Quotes
 const String QUOTATION_FORM = 'Sending Quotes';
 const String PAYMENT_TERMS = 'Payment Terms';
@@ -250,6 +252,8 @@ const String QUOTE_SENT_FAILED = 'Quotation failed to be sent, please check admi
 const String QUOTE_PENDING = 'Please wait quotation on it\'s way';
 const String EMAIL_STATUS = 'Email Status';
 const String QUOTATION = 'Quotation';
+const String QUOTES = 'Quotes';
+const String VIEW_QUOTES = 'View Quotes';
 const String MESSAGE_CONTENT = 'Content';
 const String MESSAGE_CONTENT_VALIDATION = 'Message text can\'t be empty';
 const String CONTACT_NAME = 'Attention';
@@ -263,3 +267,6 @@ const String EMAIL_PENDING = 'Please wait...';
 const String UNKNOWN_ERROR = 'Contact administrator!';
 const String DISCOUNT_RATE = 'Discount';
 const String ITEM_TOTAL = 'Total';
+
+//Quote List
+const String QUOTE_LIST = 'Quotation List';

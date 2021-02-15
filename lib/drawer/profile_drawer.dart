@@ -7,6 +7,7 @@ import 'package:Products/account/account_page.dart';
 import 'package:Products/services/auth.dart';
 import 'package:Products/shared/constants.dart';
 import 'package:Products/shared/strings.dart';
+import 'package:Products/quotes/quote_view/quote_grid.dart';
 
 class ProfileDrawer extends StatefulWidget {
   final String userId;
@@ -50,7 +51,7 @@ class _ProfileDrawerState extends State<ProfileDrawer> {
           padding: EdgeInsets.zero,
           children: <Widget>[
             _drawerHeader(),
-            //Clients
+            //Clients section
             ExpansionTile(
               leading: Icon(Icons.person),
               title: Text(CLIENTS),
@@ -86,19 +87,42 @@ class _ProfileDrawerState extends State<ProfileDrawer> {
                 ),
               ],
             ),
-            //send a quotation
-            ListTile(
-              leading: Icon(Icons.mail_outline),
-              title: Text(SEND_QUOTE),
-              enabled: true,
-              onTap: () async {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => ClientGrid(
-                            userId: widget.userId, quotation: true)));
-              },
+            //Quotation section
+            ExpansionTile(
+              leading: Icon(Icons.mail),
+              title: Text(QUOTES),
+              children: [
+                //send a quotation
+                ListTile(
+                  leading: Icon(Icons.mail_outline),
+                  title: Text(SEND_QUOTE),
+                  enabled: true,
+                  onTap: () async {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ClientGrid(
+                                userId: widget.userId, quotation: true)));
+                  },
+                ),
+
+                //View current quotations
+                ListTile(
+                  leading: Icon(Icons.list_rounded),
+                  title: Text(VIEW_QUOTES),
+                  enabled: true,
+                  onTap: () async {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => QuoteGrid(
+                                  userId: widget.userId,
+                                )));
+                  },
+                )
+              ],
             ),
+
             //Send a sales orders
             ListTile(
               leading: Icon(Icons.mail_outline),
