@@ -24,4 +24,17 @@ class QuoteData {
   });
 }
 
+class Items {
+  String name;
+  dynamic value;
 
+  Items(
+    this.name,
+    this.value,
+  );
+
+  @override
+  String toString() {
+    return '{${this.name}, ${this.value}}';
+  }
+}

@@ -3,8 +3,6 @@ import 'package:Products/models/enquiries.dart';
 import 'package:Products/shared/constants.dart';
 import 'package:intl/intl.dart';
 import 'package:Products/shared/strings.dart';
-import '../quotation_form.dart';
-import 'package:Products/clients/client_grid.dart';
 import 'package:Products/services/email_management.dart';
 
 class QuoteTile extends StatefulWidget {
@@ -36,20 +34,19 @@ class _QuoteTileState extends State<QuoteTile> {
   }
 
   void getSelectedProducts(String id) async {
-    List<Map<String, dynamic>> selecteProducts = [];
+    List<Items> selecteProducts = [];
     Map<String, dynamic> oneProduct;
     EmailManagement products = new EmailManagement();
-    await products.quotationCollection.document(quoteId).get().then((value) {
-      if (value.documentID == id) {
-        var result = value.data.entries.map((e) {
-          
-          oneProduct = {e.key: e.value};
-          print(oneProduct);
-          return oneProduct;
-        });
-        
+    var document = await products.quotationCollection.document(quoteId).get();
+    if (document.exists) {
+      var items = document.data['itemsQuoted'];
+      for (int i = 0; i < items.length; i++) {
+        print(items[i]['itemPack']);
+        oneProduct = {items[i].keys.toString(): items[i].values};
+        selecteProducts = oneProduct.entries.map((e) => Items(e.key, e.value)).toList();
       }
-    });
+        print(selecteProducts);
+    }
   }
 
   @override
