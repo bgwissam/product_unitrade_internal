@@ -12,21 +12,29 @@ import 'package:Products/shared/dropdownLists.dart';
 
 class QuotationForm extends StatefulWidget {
   final String userId;
+  final String customerName;
+  final String paymentTerms;
+  final List<double> quantity;
   final List<Clients> clients;
   final List<PaintMaterial> paintProducts;
   final List<WoodProduct> woodProducts;
   final List<SolidProduct> solidProducts;
   final List<Accessories> accessoriesProducts;
+  final int numberOfProduct;
 
   final Map<String, String> productsWithDescription;
   QuotationForm(
       {this.userId,
+      this.customerName,
+      this.paymentTerms,
+      this.quantity,
       this.clients,
       this.paintProducts,
       this.woodProducts,
       this.solidProducts,
       this.accessoriesProducts,
-      this.productsWithDescription});
+      this.productsWithDescription,
+      this.numberOfProduct});
   @override
   _QuotationFormState createState() => _QuotationFormState();
 }
@@ -78,6 +86,29 @@ class _QuotationFormState extends State<QuotationForm> {
     getUserDetails();
     if (selectedProducts.isNotEmpty) {
       selectedProducts = [];
+    }
+
+    //set quotation input value if we are editing a quotation
+    widget.customerName != null
+        ? _clientNameField.text = widget.customerName
+        : _clientNameField.text = null;
+
+    paymentTerms = widget.paymentTerms;
+    quantity = widget.quantity;
+
+    Future.delayed(Duration(milliseconds: 700)).then((value) {
+      widget.numberOfProduct > 0
+          ? _addNeededRows()
+          : index = widget.numberOfProduct;
+    });
+  }
+
+  //Check if we are editing a quotation, then add the need rows
+  void _addNeededRows() {
+    for (int x = 0; x < widget.numberOfProduct; x++) {
+      setState(() {
+        _addTableRow();
+      });
     }
   }
 
@@ -147,7 +178,7 @@ class _QuotationFormState extends State<QuotationForm> {
                 setState(() {
                   for (var i = 0; i < itemCode.length; i++) {
                     totalValue += itemTotal[i];
-                  
+
                     selectedProducts.add({
                       'itemCode': itemCode[i],
                       'itemDescription': productName[i],
@@ -667,7 +698,9 @@ class _QuotationFormState extends State<QuotationForm> {
                   flex: 1,
                   child: Center(
                     child: TextFormField(
-                        initialValue: '',
+                        initialValue: quantity != null
+                            ? quantity[index].toString()
+                            : '',
                         style: textStyle1,
                         keyboardType: TextInputType.number,
                         decoration: InputDecoration(

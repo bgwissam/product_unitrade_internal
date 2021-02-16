@@ -12,8 +12,11 @@ import 'client_list.dart';
 class ClientGrid extends StatefulWidget {
   final String userId;
   final bool quotation;
+  final String customerName;
+  final int numberOfProducts;
 
-  ClientGrid({this.userId, this.quotation});
+  ClientGrid(
+      {this.userId, this.quotation, this.customerName, this.numberOfProducts});
   @override
   _ClientGridState createState() => _ClientGridState();
 }
@@ -57,6 +60,8 @@ class _ClientGridState extends State<ClientGrid> {
       child: widget.quotation
           ? QuotationProviderBuild(
               userId: widget.userId,
+              customerName: widget.customerName,
+              numberOfProducts: widget.numberOfProducts,
             )
           : clientBuild(),
     );
@@ -77,7 +82,9 @@ class _ClientGridState extends State<ClientGrid> {
 //build the provider for the client's quotations
 class QuotationProviderBuild extends StatefulWidget {
   final String userId;
-  QuotationProviderBuild({this.userId});
+  final String customerName;
+  final int numberOfProducts;
+  QuotationProviderBuild({this.userId, this.customerName, this.numberOfProducts});
   @override
   _QuotationProviderBuildState createState() => _QuotationProviderBuildState();
 }
@@ -102,6 +109,8 @@ class _QuotationProviderBuildState extends State<QuotationProviderBuild> {
               if (snapshot.connectionState == ConnectionState.done) {
                 return QuotationForm(
                   userId: widget.userId,
+                  customerName: widget.customerName,
+                  numberOfProduct: widget.numberOfProducts,
                   clients: clientProvider,
                   productsWithDescription: productsWithDescription,
                   paintProducts: paintProducts,
@@ -125,8 +134,7 @@ class _QuotationProviderBuildState extends State<QuotationProviderBuild> {
           },
         ),
       );
-    }
-    else
+    } else
       return NoDataExists(
         contexttext: 'No available clients in your database exist',
         title: 'Quotation Form',
