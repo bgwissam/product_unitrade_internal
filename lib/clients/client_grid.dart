@@ -14,9 +14,14 @@ class ClientGrid extends StatefulWidget {
   final bool quotation;
   final String customerName;
   final int numberOfProducts;
+  final List productsSelected;
 
   ClientGrid(
-      {this.userId, this.quotation, this.customerName, this.numberOfProducts});
+      {this.userId,
+      this.quotation,
+      this.customerName,
+      this.numberOfProducts,
+      this.productsSelected});
   @override
   _ClientGridState createState() => _ClientGridState();
 }
@@ -62,6 +67,7 @@ class _ClientGridState extends State<ClientGrid> {
               userId: widget.userId,
               customerName: widget.customerName,
               numberOfProducts: widget.numberOfProducts,
+              productsSelected: widget.productsSelected,
             )
           : clientBuild(),
     );
@@ -84,7 +90,12 @@ class QuotationProviderBuild extends StatefulWidget {
   final String userId;
   final String customerName;
   final int numberOfProducts;
-  QuotationProviderBuild({this.userId, this.customerName, this.numberOfProducts});
+  final List productsSelected;
+  QuotationProviderBuild(
+      {this.userId,
+      this.customerName,
+      this.numberOfProducts,
+      this.productsSelected});
   @override
   _QuotationProviderBuildState createState() => _QuotationProviderBuildState();
 }
@@ -109,7 +120,6 @@ class _QuotationProviderBuildState extends State<QuotationProviderBuild> {
               if (snapshot.connectionState == ConnectionState.done) {
                 return QuotationForm(
                   userId: widget.userId,
-                  customerName: widget.customerName,
                   numberOfProduct: widget.numberOfProducts,
                   clients: clientProvider,
                   productsWithDescription: productsWithDescription,

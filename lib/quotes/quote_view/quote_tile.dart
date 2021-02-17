@@ -3,6 +3,7 @@ import 'package:Products/models/enquiries.dart';
 import 'package:Products/shared/constants.dart';
 import 'package:intl/intl.dart';
 import 'package:Products/shared/strings.dart';
+import 'quote_details.dart';
 import 'package:Products/services/email_management.dart';
 
 class QuoteTile extends StatefulWidget {
@@ -17,9 +18,10 @@ class _QuoteTileState extends State<QuoteTile> {
   String quoteId;
   String userId;
   String clientName;
+  String paymentTerms;
   List<double> quantity;
   List<dynamic> itemsSelected;
-  bool quotation = true;
+  List selecteProducts = [];
   double _distanceBetweenRows = 2.0;
   var date;
 
@@ -27,25 +29,34 @@ class _QuoteTileState extends State<QuoteTile> {
     quoteId = widget.quotes.quoteId ?? null;
     userId = widget.quotes.userId ?? null;
     clientName = widget.quotes.clientName ?? null;
+    paymentTerms = widget.quotes.paymentTerms ?? null;
     date = widget.quotes.dateTime.toDate() ?? null;
     itemsSelected = widget.quotes.itemQuoted ?? null;
 
     super.initState();
   }
 
-  void getSelectedProducts(String id) async {
-    List<Items> selecteProducts = [];
-    Map<String, dynamic> oneProduct;
+  //Will map the selected products in the data base and set them to an array lay list.
+  Future getSelectedProducts(String id) async {
+    //Clear list first
+    if (selecteProducts.isNotEmpty) selecteProducts.clear();
+
     EmailManagement products = new EmailManagement();
     var document = await products.quotationCollection.document(quoteId).get();
     if (document.exists) {
       var items = document.data['itemsQuoted'];
+      print('$quoteId for length of ${items.length}');
       for (int i = 0; i < items.length; i++) {
-        print(items[i]['itemPack']);
-        oneProduct = {items[i].keys.toString(): items[i].values};
-        selecteProducts = oneProduct.entries.map((e) => Items(e.key, e.value)).toList();
+        Map<String, dynamic> oneProduct = {};
+
+        var key = items[i].keys;
+        for (var val in key) {
+          print('the key: $val and the value: ${items[i][val]}');
+
+          oneProduct[val] = items[i][val];
+        }
+        selecteProducts.add(oneProduct);
       }
-        print(selecteProducts);
     }
   }
 
@@ -53,21 +64,22 @@ class _QuoteTileState extends State<QuoteTile> {
   Widget build(BuildContext context) {
     var formatDate = new DateFormat().add_yMMMd().format(date);
     var totalItem = widget.quotes.itemQuoted.length;
-
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: InkWell(
         onTap: () async {
-          getSelectedProducts(quoteId);
-          // Navigator.push(
-          //     context,
-          //     MaterialPageRoute(
-          //         builder: (context) => ClientGrid(
-          //               userId: userId,
-          //               customerName: clientName,
-          //               quotation: quotation,
-          //               numberOfProducts: totalItem,
-          //             )));
+          await getSelectedProducts(quoteId);
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => QuoteDetails(
+                userId: userId,
+                customerName: clientName,
+                paymentTerms: paymentTerms,
+                selectedProducts: selecteProducts,
+              ),
+            ),
+          );
         },
         child: Container(
           height: 80.0,
@@ -116,7 +128,7 @@ class _QuoteTileState extends State<QuoteTile> {
                   style: labelTextStyle3,
                 )
               ],
-            )
+            ),
           ]),
         ),
       ),
