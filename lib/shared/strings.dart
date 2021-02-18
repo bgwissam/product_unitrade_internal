@@ -267,6 +267,7 @@ const String EMAIL_PENDING = 'Please wait...';
 const String UNKNOWN_ERROR = 'Contact administrator!';
 const String DISCOUNT_RATE = 'Discount';
 const String ITEM_TOTAL = 'Total';
+const String NO_PRODUCTS = 'No selected items to quote, please select at least one items';
 
 //Quote List
 const String QUOTE_LIST = 'Quotation List';

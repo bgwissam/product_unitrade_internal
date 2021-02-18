@@ -144,41 +144,58 @@ class _QuotationFormState extends State<QuotationForm> {
         actions: [
           FlatButton(
             onPressed: () {
-              if (_formKey.currentState.validate()) {
-                _formKey.currentState.save();
-                totalValue = 0;
-                setState(() {
-                  for (var i = 0; i < itemCode.length; i++) {
-                    totalValue += itemTotal[i];
+              if (index > 0) {
+                if (_formKey.currentState.validate()) {
+                  _formKey.currentState.save();
+                  totalValue = 0;
+                  setState(() {
+                    for (var i = 0; i < itemCode.length; i++) {
+                      totalValue += itemTotal[i];
 
-                    selectedProducts.add({
-                      'itemCode': itemCode[i],
-                      'itemDescription': productName[i],
-                      'itemPack': pack[i],
-                      'quantity': quantity[i],
-                      'price': price[i],
-                      'itemTotal': itemTotal[i],
+                      selectedProducts.add({
+                        'itemCode': itemCode[i],
+                        'itemDescription': productName[i],
+                        'itemPack': pack[i],
+                        'quantity': quantity[i],
+                        'price': price[i],
+                        'itemTotal': itemTotal[i],
+                      });
+                    }
+                  });
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => QuotationReview(
+                                salesCordinator: salesCoordinatorEmailAddress,
+                                customerName: clientName,
+                                customerEmail: clientEmail,
+                                customerPhone: clientPhone,
+                                clientId: clientId,
+                                paymentTerms: paymentTerms,
+                                products: selectedProducts,
+                                clearProductList: _clearProductListFunction,
+                                totalValue: totalValue,
+                                name: name,
+                                phone: phoneNumber,
+                                supplierEmail: emailAddress,
+                                userId: widget.userId,
+                              )));
+                }
+              } else {
+                return showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        content: Text(NO_PRODUCTS),
+                        actions: [
+                          FlatButton(
+                            child: Text(OK_BUTTON),
+                            onPressed: () => Navigator.pop(context),
+                          )
+                        ],
+                      );
                     });
-                  }
-                });
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => QuotationReview(
-                              salesCordinator: salesCoordinatorEmailAddress,
-                              customerName: clientName,
-                              customerEmail: clientEmail,
-                              customerPhone: clientPhone,
-                              clientId: clientId,
-                              paymentTerms: paymentTerms,
-                              products: selectedProducts,
-                              clearProductList: _clearProductListFunction,
-                              totalValue: totalValue,
-                              name: name,
-                              phone: phoneNumber,
-                              supplierEmail: emailAddress,
-                              userId: widget.userId,
-                            )));
               }
             },
             disabledColor: Colors.grey,
