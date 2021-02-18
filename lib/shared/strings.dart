@@ -95,7 +95,7 @@ const String EMPTY_CART = 'Cart is empty';
 const String SEARCH = 'Search item';
 //Product Form labels
 const String PRODUCT_NAME = 'Product Name';
-const String PRODUCT_PACKAGE = 'Packing';
+const String PRODUCT_PACKAGE = 'Pack';
 const String PRODUCT_PRICE = 'Price';
 const String PRODUCT_COLOUR = 'Colour';
 const String PRODUCT_BRAND = 'Brand';
@@ -278,3 +278,4 @@ const String TOTAL_ITEMS = 'Number of products';
 
 //Quote Details
 const String QUOTE_DETAILS = 'Quotation Details';
+const String QUOTE_QUANTITY = 'Qyt';
