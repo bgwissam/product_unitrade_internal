@@ -336,7 +336,11 @@ class _ProductTileState extends State<ProductTile> {
                     style: textStyle5,
                     textAlign: TextAlign.center,
                   )
-                : Text(''),
+                : Text(
+                    '${widget.solidProduct.productPack} ml',
+                    style: textStyle5,
+                    textAlign: TextAlign.center,
+                  ),
 
             //Wood solid surface price
             widget.solidProduct.productPrice != null
@@ -419,17 +423,19 @@ class _ProductTileState extends State<ProductTile> {
     List<String> specs = [];
     specs.clear();
     //Fill the available specs for each item as accessories have many specs that needs to be shown
-    if(widget.accessoriesProduct.closingType != null)
-        specs.add('${widget.accessoriesProduct.closingType}');
-    if(widget.accessoriesProduct.length != null || widget.accessoriesProduct.itemSide !=null)
-        specs.add('${widget.accessoriesProduct.length} mm - ${widget.accessoriesProduct.itemSide}');
-    if(widget.accessoriesProduct.angle !=null)
-        specs.add('${widget.accessoriesProduct.angle}');
-    if(widget.accessoriesProduct.extensionType !=null)
-        specs.add('${widget.accessoriesProduct.extensionType}');
-    if(widget.accessoriesProduct.productPrice != null)
+    if (widget.accessoriesProduct.closingType != null)
+      specs.add('${widget.accessoriesProduct.closingType}');
+    if (widget.accessoriesProduct.length != null ||
+        widget.accessoriesProduct.itemSide != null)
+      specs.add(
+          '${widget.accessoriesProduct.length} mm - ${widget.accessoriesProduct.itemSide}');
+    if (widget.accessoriesProduct.angle != null)
+      specs.add('${widget.accessoriesProduct.angle}');
+    if (widget.accessoriesProduct.extensionType != null)
+      specs.add('${widget.accessoriesProduct.extensionType}');
+    if (widget.accessoriesProduct.productPrice != null)
       specs.add('${widget.accessoriesProduct.productPrice} SR');
-      
+
     return InkWell(
       onTap: () {
         Navigator.push(
@@ -479,12 +485,16 @@ class _ProductTileState extends State<ProductTile> {
                 shrinkWrap: true,
                 itemCount: specs.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return Text(specs[index], textAlign: TextAlign.center, style: textStyle5,);
+                  return Text(
+                    specs[index],
+                    textAlign: TextAlign.center,
+                    style: textStyle5,
+                  );
                 },
               ),
-            ),       
-          
-           !isAdmin ? Container() : _buildUpdateDeleteButton(context)
+            ),
+
+            !isAdmin ? Container() : _buildUpdateDeleteButton(context)
           ],
         ),
       ),

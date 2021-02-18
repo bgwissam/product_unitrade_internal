@@ -204,6 +204,7 @@ class _ProductFormState extends State<ProductForm> {
       length = widget.solidProduct.length;
       width = widget.solidProduct.width;
       thickness = widget.solidProduct.thickness;
+      productPack = widget.solidProduct.productPack ?? null;
       productColor = widget.solidProduct.color;
       productPrice = widget.solidProduct.productPrice;
       _pdfUrl = widget.solidProduct.pdfUrl ?? null;
@@ -1110,18 +1111,23 @@ class _ProductFormState extends State<ProductForm> {
                 height: 15.0,
               ),
               //Item Code
-              itemCode != null ? Row(
-                children: [
-                  Expanded(
-                    flex: 2,
-                    child: Text(ITEM_CODE),
-                  ),
-                  Expanded(
-                    flex: 3,
-                    child: Text(itemCode, style: labelTextStyle,),
-                  )
-                ],
-              ) : SizedBox.shrink(),
+              itemCode != null
+                  ? Row(
+                      children: [
+                        Expanded(
+                          flex: 2,
+                          child: Text(ITEM_CODE),
+                        ),
+                        Expanded(
+                          flex: 3,
+                          child: Text(
+                            itemCode,
+                            style: labelTextStyle,
+                          ),
+                        )
+                      ],
+                    )
+                  : SizedBox.shrink(),
               SizedBox(
                 height: 15.0,
               ),
@@ -1198,7 +1204,7 @@ class _ProductFormState extends State<ProductForm> {
                 height: 15.0,
               ),
               //Product Price
-               productPrice != null
+              productPrice != null
                   ? Row(
                       children: [
                         Expanded(
@@ -1445,18 +1451,23 @@ class _ProductFormState extends State<ProductForm> {
                 height: 15.0,
               ),
               //Item Code
-              itemCode != null ? Row(
-                children: [
-                  Expanded(
-                    flex: 2,
-                    child: Text(ITEM_CODE),
-                  ),
-                  Expanded(
-                    flex: 3,
-                    child: Text(itemCode, style: labelTextStyle,),
-                  )
-                ],
-              ) : SizedBox.shrink(),
+              itemCode != null
+                  ? Row(
+                      children: [
+                        Expanded(
+                          flex: 2,
+                          child: Text(ITEM_CODE),
+                        ),
+                        Expanded(
+                          flex: 3,
+                          child: Text(
+                            itemCode,
+                            style: labelTextStyle,
+                          ),
+                        )
+                      ],
+                    )
+                  : SizedBox.shrink(),
               SizedBox(
                 height: 15.0,
               ),
@@ -1538,7 +1549,7 @@ class _ProductFormState extends State<ProductForm> {
                 height: 15.0,
               ),
               //Product Price
-               productPrice != null
+              productPrice != null
                   ? Row(
                       children: [
                         Expanded(
@@ -1625,65 +1636,87 @@ class _ProductFormState extends State<ProductForm> {
               SizedBox(
                 height: 15.0,
               ),
-              Container(
-                width: containerWidth,
-                alignment: Alignment.center,
-                child: Row(
-                  children: <Widget>[
-                    Expanded(
-                      flex: 1,
-                      child: TextFormField(
-                        initialValue: length != 0.0 ? length.toString() : '',
-                        textCapitalization: TextCapitalization.characters,
-                        style: textStyle1,
-                        decoration:
-                            textInputDecoration.copyWith(labelText: 'Length'),
-                        validator: (val) =>
-                            val.isEmpty ? 'Length are required' : null,
-                        onChanged: (val) {
-                          setState(() {
-                            length = double.parse(val);
-                          });
-                        },
+              widget.solidProduct.length != null
+                  ? Container(
+                      width: containerWidth,
+                      alignment: Alignment.center,
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                            flex: 1,
+                            child: TextFormField(
+                              initialValue:
+                                  length != 0.0 ? length.toString() : '',
+                              textCapitalization: TextCapitalization.characters,
+                              style: textStyle1,
+                              decoration: textInputDecoration.copyWith(
+                                  labelText: 'Length'),
+                              validator: (val) =>
+                                  val.isEmpty ? 'Length are required' : null,
+                              onChanged: (val) {
+                                setState(() {
+                                  length = double.parse(val);
+                                });
+                              },
+                            ),
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: TextFormField(
+                              initialValue:
+                                  width != 0.0 ? width.toString() : '',
+                              textCapitalization: TextCapitalization.characters,
+                              style: textStyle1,
+                              decoration: textInputDecoration.copyWith(
+                                  labelText: 'Width'),
+                              validator: (val) =>
+                                  val.isEmpty ? 'Width are required' : null,
+                              onChanged: (val) {
+                                setState(() {
+                                  width = double.parse(val);
+                                });
+                              },
+                            ),
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: TextFormField(
+                              initialValue:
+                                  thickness != 0.0 ? thickness.toString() : '',
+                              textCapitalization: TextCapitalization.characters,
+                              decoration: textInputDecoration.copyWith(
+                                  labelText: 'Thickness'),
+                              validator: (val) =>
+                                  val.isEmpty ? 'Thickness are required' : null,
+                              onChanged: (val) {
+                                setState(() {
+                                  thickness = double.parse(val);
+                                });
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  : Container(
+                      child: Expanded(
+                        flex: 1,
+                        child: TextFormField(
+                          initialValue:
+                              productPack != 0.0 ? productPack.toString() : '',
+                          textCapitalization: TextCapitalization.characters,
+                          decoration: textInputDecoration.copyWith(
+                              labelText: 'Packing'),
+                          validator: (val) =>
+                              val.isEmpty ? 'Packing is required' : null,
+                          onChanged: (val) {
+                            setState(() {
+                              productPack.parse(val);
+                            });
+                          },
+                        ),
                       ),
                     ),
-                    Expanded(
-                      flex: 1,
-                      child: TextFormField(
-                        initialValue: width != 0.0 ? width.toString() : '',
-                        textCapitalization: TextCapitalization.characters,
-                        style: textStyle1,
-                        decoration:
-                            textInputDecoration.copyWith(labelText: 'Width'),
-                        validator: (val) =>
-                            val.isEmpty ? 'Width are required' : null,
-                        onChanged: (val) {
-                          setState(() {
-                            width = double.parse(val);
-                          });
-                        },
-                      ),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: TextFormField(
-                        initialValue:
-                            thickness != 0.0 ? thickness.toString() : '',
-                        textCapitalization: TextCapitalization.characters,
-                        decoration: textInputDecoration.copyWith(
-                            labelText: 'Thickness'),
-                        validator: (val) =>
-                            val.isEmpty ? 'Thickness are required' : null,
-                        onChanged: (val) {
-                          setState(() {
-                            thickness = double.parse(val);
-                          });
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ),
               SizedBox(
                 height: 15.0,
               ),
@@ -1740,7 +1773,7 @@ class _ProductFormState extends State<ProductForm> {
         : Column(
             children: <Widget>[
               widget.solidProduct.imageListUrls != null
-              //Product Images
+                  //Product Images
                   ? Container(
                       height: 270,
                       child: ListView.builder(
@@ -1784,57 +1817,85 @@ class _ProductFormState extends State<ProductForm> {
                 height: 15.0,
               ),
               //Item Code
-              itemCode != null ? Row(
-                children: [
-                  Expanded(
-                    flex: 2,
-                    child: Text(ITEM_CODE),
-                  ),
-                  Expanded(
-                    flex: 3,
-                    child: Text(itemCode, style: labelTextStyle,),
-                  )
-                ],
-              ) : SizedBox.shrink(),
+              itemCode != null
+                  ? Row(
+                      children: [
+                        Expanded(
+                          flex: 2,
+                          child: Text(ITEM_CODE),
+                        ),
+                        Expanded(
+                          flex: 3,
+                          child: Text(
+                            itemCode,
+                            style: labelTextStyle,
+                          ),
+                        )
+                      ],
+                    )
+                  : SizedBox.shrink(),
               SizedBox(
                 height: 15.0,
               ),
               //Product Dimensions
-              Row(
-                children: [
-                  Expanded(flex: 2, child: Text(PRODUCT_PACKAGE)),
-                  Expanded(
-                      flex: 3,
-                      child: Row(
-                        children: <Widget>[
-                          Text(
-                            length != 0.0 ? length.toString() : '',
-                            style: labelTextStyle,
+              widget.solidProduct.length != null
+                  ? Row(
+                      children: [
+                        Expanded(flex: 2, child: Text(PRODUCT_PACKAGE)),
+                        Expanded(
+                            flex: 3,
+                            child: Row(
+                              children: <Widget>[
+                                Text(
+                                  length != 0.0 ? length.toString() : '',
+                                  style: labelTextStyle,
+                                ),
+                                Text(
+                                  ' x ',
+                                  style: labelTextStyle,
+                                ),
+                                Text(
+                                  width != 0.0 ? width.toString() : '',
+                                  style: labelTextStyle,
+                                ),
+                                Text(
+                                  ' x ',
+                                  style: labelTextStyle,
+                                ),
+                                Text(
+                                  thickness != 0.0 ? thickness.toString() : '',
+                                  style: labelTextStyle,
+                                ),
+                                Text(
+                                  'mm',
+                                  style: labelTextStyle,
+                                )
+                              ],
+                            )),
+                      ],
+                    )
+                  : Row(
+                      children: [
+                        Expanded(flex: 2, child: Text(PRODUCT_PACKAGE)),
+                        Expanded(
+                          flex: 3,
+                          child: Row(
+                            children: [
+                              Text(
+                                productPack != 0.0
+                                    ? productPack.toString()
+                                    : '',
+                                style: labelTextStyle,
+                              ),
+                              Text(
+                                ' ml',
+                                style: labelTextStyle,
+                              )
+                            ],
                           ),
-                          Text(
-                            ' x ',
-                            style: labelTextStyle,
-                          ),
-                          Text(
-                            width != 0.0 ? width.toString() : '',
-                            style: labelTextStyle,
-                          ),
-                          Text(
-                            ' x ',
-                            style: labelTextStyle,
-                          ),
-                          Text(
-                            thickness != 0.0 ? thickness.toString() : '',
-                            style: labelTextStyle,
-                          ),
-                          Text(
-                            'mm',
-                            style: labelTextStyle,
-                          )
-                        ],
-                      )),
-                ],
-              ),
+                        ),
+                      ],
+                    ),
               SizedBox(
                 height: 15.0,
               ),
@@ -1877,7 +1938,7 @@ class _ProductFormState extends State<ProductForm> {
                 height: 15.0,
               ),
               //Product Price
-               productPrice != null
+              productPrice != null
                   ? Row(
                       children: [
                         Expanded(
@@ -2628,7 +2689,7 @@ class _ProductFormState extends State<ProductForm> {
               ],
             ),
           )
-          //Non-admin users
+        //Non-admin users
         : Column(
             children: <Widget>[
               widget.accessoriesProduct.imageListUrls != null
@@ -2675,18 +2736,23 @@ class _ProductFormState extends State<ProductForm> {
                 height: 15.0,
               ),
               //Item Code
-              itemCode != null ? Row(
-                children: [
-                  Expanded(
-                    flex: 2,
-                    child: Text(ITEM_CODE),
-                  ),
-                  Expanded(
-                    flex: 3,
-                    child: Text(itemCode, style: labelTextStyle,),
-                  )
-                ],
-              ) : SizedBox.shrink(),
+              itemCode != null
+                  ? Row(
+                      children: [
+                        Expanded(
+                          flex: 2,
+                          child: Text(ITEM_CODE),
+                        ),
+                        Expanded(
+                          flex: 3,
+                          child: Text(
+                            itemCode,
+                            style: labelTextStyle,
+                          ),
+                        )
+                      ],
+                    )
+                  : SizedBox.shrink(),
               SizedBox(
                 height: 15.0,
               ),
@@ -2857,10 +2923,10 @@ class _ProductFormState extends State<ProductForm> {
                       ],
                     )
                   : SizedBox.shrink(),
-                SizedBox(
-                  height: 15.0,
-                ),
-                //Show current PDF File Data sheet
+              SizedBox(
+                height: 15.0,
+              ),
+              //Show current PDF File Data sheet
               _pdfUrl != null
                   ? FlatButton(
                       padding: EdgeInsets.all(15.0),

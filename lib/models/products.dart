@@ -114,7 +114,7 @@ class SolidProduct {
   var length;
   var width;
   var thickness;
-  double productPack;
+  var productPack;
   String color;
   String description;
   var productPrice;

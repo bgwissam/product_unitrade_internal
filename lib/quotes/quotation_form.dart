@@ -550,8 +550,13 @@ class _QuotationFormState extends State<QuotationForm> {
                                 .forEach((data) {
                               data.indexWhere((element) {
                                 if (element.itemCode == selecteItem[1].trim()) {
-                                  var dimensions =
-                                      '${element.length}x${element.width}x${element.thickness}';
+                                  var dimensions;
+                                  if (element.length == null) {
+                                    dimensions = '${element.productPack} ml';
+                                  } else {
+                                    dimensions =
+                                        '${element.length}x${element.width}x${element.thickness}';
+                                  }
 
                                   if (dimensions.isEmpty)
                                     dimensions = 'No Pack';
@@ -838,9 +843,17 @@ class _QuotationFormState extends State<QuotationForm> {
         WOOD +
         ' | ${e.itemCode} | ${e.productName} | ${e.length}x${e.width}x${e.thickness}'));
     //Adding solid surface products to the input list
-    matches.addAll(widget.solidProducts.map((e) =>
-        SOLID_SURFACE +
-        ' | ${e.itemCode} | ${e.productName} | ${e.length}x${e.width}x${e.thickness}'));
+    matches.addAll(widget.solidProducts.map((e) {
+      var solidPacking;
+      if (e.length == null) {
+        solidPacking = '${e.productPack} ml';
+      } else {
+        solidPacking = '${e.length}x${e.width}x${e.thickness}';
+      }
+
+      return SOLID_SURFACE +
+          ' | ${e.itemCode} | ${e.productName} | $solidPacking';
+    }));
     //Adding accessories to the input list
     matches.addAll(widget.accessoriesProducts.map((e) =>
         ACCESSORIES +

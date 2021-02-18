@@ -814,6 +814,7 @@ class DatabaseService {
           length: doc.data['length'],
           width: doc.data['width'],
           thickness: doc.data['thickness'],
+          productPack: doc.data['productPack'],
           productCategory: doc.data['productCategory'],
           color: doc.data['color'],
           description: doc.data['description'],
