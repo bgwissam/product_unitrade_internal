@@ -33,6 +33,7 @@ class EmailManagement {
 
       return mail.add({
         'to': [toRecipient],
+        'from': 'unitrade_salesteam@outlook.com',
         'cc': [adminRecipient],
         'message': {
           'subject': subject,

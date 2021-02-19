@@ -85,6 +85,7 @@ class _PDFDocumentViewerState extends State<PDFDocumentViewer> {
         //delay the creation of the email 2 seconds
         Future.delayed(Duration(seconds: 3), () async {
           var result = await event.data['delivery']['state'] ?? null;
+          print('sending email result: $result');
           if (result != null) {
             switch (result) {
               case 'SUCCESS':

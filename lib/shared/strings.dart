@@ -235,6 +235,7 @@ const String PAYMENT_TERMS = 'Payment Terms';
 const String PAYMENT_TERMS_VALIDATION = 'Payment terms should be mentioned';
 const String ITEM_CODE = 'Code';
 const String ITEM_QUANTITY = 'Quantity';
+const String QUANTITY_S = 'No#';
 const String ITEM_PRICE = 'Price';
 const String ITEM_CODE_VALIDATION = 'Item code is required';
 const String ITEM_QUANTITY_VALIDATION = 'quantity is required';
@@ -265,7 +266,7 @@ const String EMAIL_FAIL = 'Email failed to reach your recipient';
 const String EMAIL_PREP = 'Email is being prepared';
 const String EMAIL_PENDING = 'Please wait...';
 const String UNKNOWN_ERROR = 'Contact administrator!';
-const String DISCOUNT_RATE = 'Discount';
+const String DISCOUNT_RATE = 'Dis';
 const String ITEM_TOTAL = 'Total';
 const String NO_PRODUCTS = 'No selected items to quote, please select at least one items';
 

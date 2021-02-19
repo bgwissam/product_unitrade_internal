@@ -12,6 +12,7 @@ class QuotationReview extends StatefulWidget {
   final String customerName;
   final String customerEmail;
   final String customerPhone;
+  final String customerAddress;
   final String clientId;
   final String paymentTerms;
   final List<Map<String, dynamic>> products;
@@ -29,6 +30,7 @@ class QuotationReview extends StatefulWidget {
       this.customerName,
       this.customerEmail,
       this.customerPhone,
+      this.customerAddress,
       this.clientId,
       this.paymentTerms,
       this.products,
@@ -161,24 +163,29 @@ class _QuotationReviewState extends State<QuotationReview> {
         //check if item is saved
         if (result != null) {
           //close loading navigator
-          await reportView(
-            saleCordinator: widget.salesCordinator,
-            context: context,
-            quoteId: result,
-            products: widget.products,
-            clientName: widget.customerName,
-            clientEmail: widget.customerEmail,
-            clientPhone: widget.customerPhone,
-            salesmanName: widget.name,
-            salesmanEmail: widget.supplierEmail,
-            salesmanPhone: widget.phone,
-            paymentTerms: widget.paymentTerms,
-            total: widget.totalValue,
-            textContent: quotationContent,
-            contactName: contactName,
-            imageLogo: imageLogo,
-          );
-          Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+          try {
+            await reportView(
+              saleCordinator: widget.salesCordinator,
+              context: context,
+              quoteId: result,
+              products: widget.products,
+              clientName: widget.customerName,
+              clientEmail: widget.customerEmail,
+              clientPhone: widget.customerPhone,
+              clientAddress: widget.customerAddress,
+              salesmanName: widget.name,
+              salesmanEmail: widget.supplierEmail,
+              salesmanPhone: widget.phone,
+              paymentTerms: widget.paymentTerms,
+              total: widget.totalValue,
+              textContent: quotationContent,
+              contactName: contactName,
+              imageLogo: imageLogo,
+            );
+            Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+          } catch (e) {
+            print('Error opening pdf: $e');
+          }
         }
         //if an error occured
         else {
@@ -235,14 +242,14 @@ class _QuotationReviewState extends State<QuotationReview> {
           Row(
             children: [
               Expanded(
-                flex: 1,
+                flex: 2,
                 child: Text(
                   ITEM_CODE,
                   style: textStyle4,
                 ),
               ),
               Expanded(
-                flex: 1,
+                flex: 2,
                 child: Text(
                   PRODUCT_PACKAGE,
                   style: textStyle4,
@@ -251,14 +258,21 @@ class _QuotationReviewState extends State<QuotationReview> {
               Expanded(
                 flex: 1,
                 child: Text(
-                  QUANTITY,
+                  QUANTITY_S,
+                  style: textStyle4,
+                ),
+              ),
+              Expanded(
+                flex: 2,
+                child: Text(
+                  ITEM_PRICE,
                   style: textStyle4,
                 ),
               ),
               Expanded(
                 flex: 1,
                 child: Text(
-                  ITEM_PRICE,
+                  DISCOUNT_RATE,
                   style: textStyle4,
                 ),
               ),
@@ -277,11 +291,11 @@ class _QuotationReviewState extends State<QuotationReview> {
                       return Row(
                         children: [
                           Expanded(
-                            flex: 1,
+                            flex: 2,
                             child: Text(widget.products[index]['itemCode']),
                           ),
                           Expanded(
-                            flex: 1,
+                            flex: 2,
                             child: Text(
                                 widget.products[index]['itemPack'].toString()),
                           ),
@@ -291,9 +305,14 @@ class _QuotationReviewState extends State<QuotationReview> {
                                 widget.products[index]['quantity'].toString()),
                           ),
                           Expanded(
-                            flex: 1,
+                            flex: 2,
                             child: Text(
                                 widget.products[index]['price'].toString()),
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child:
+                                Text('${widget.products[index]['discount']}%'),
                           ),
                         ],
                       );

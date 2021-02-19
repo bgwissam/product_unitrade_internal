@@ -36,8 +36,8 @@ Future<void> reportView({
   //get page client size
   final Size pageSize = page.getClientSize();
   //Content pdf font
-  final PdfFont contentFont = new PdfStandardFont(PdfFontFamily.helvetica, 15,
-      style: PdfFontStyle.bold);
+  final PdfFont contentFont = new PdfStandardFont(PdfFontFamily.courier, 15,
+      style: PdfFontStyle.regular);
   //Draw logo
   drawLogo(pdf, page, pageSize, imageLogo);
   //Draw rectangle
@@ -224,7 +224,7 @@ void drawGrid(PdfPage page, PdfGrid grid, PdfLayoutResult result,
   //Draw grand total.
   page.graphics.drawString('Grand Total', contentFont,
       bounds: Rect.fromLTWH(
-          quantityCellBounds.left - 30,
+          quantityCellBounds.left - 50,
           result.bounds.bottom + 40,
           quantityCellBounds.width * 2,
           quantityCellBounds.height));
@@ -264,7 +264,10 @@ void drawFooter(PdfPage page, Size pageSize) {
       Offset(pageSize.width, pageSize.height - 100));
 
   const String footerContent =
-      '''United Company for Industry and Trade, PO Box: XXXXX, Dammam, Riyadh, Jeddah''';
+      '''
+      United Company for Industry and Trade\n
+      PO Box: XXXX, Head Office Al-Khobar
+      ''';
 
   //Added 30 as a margin for the layout
   page.graphics.drawString(
@@ -279,7 +282,7 @@ PdfGrid getGrid(List<Map<String, dynamic>> products) {
   final PdfGrid grid = PdfGrid();
   double totalValue = 0;
   //Secify the columns count to the grid.
-  grid.columns.add(count: 5);
+  grid.columns.add(count: 6);
   //Create the header row of the grid.
   final PdfGridRow headerRow = grid.headers.add(1)[0];
   //Set style
@@ -290,16 +293,18 @@ PdfGrid getGrid(List<Map<String, dynamic>> products) {
   headerRow.cells[1].value = 'Product Name';
   headerRow.cells[2].value = 'Price';
   headerRow.cells[3].value = 'Quantity';
-  headerRow.cells[4].value = 'Total';
+  headerRow.cells[4].value = 'Discount';
+  headerRow.cells[5].value = 'Total';
   //Add rows
   for (int i = 0; i < products.length; i++) {
     var productCode = products[i]['itemCode'] ?? ' ';
     var productName = products[i]['itemDescription'] ?? ' ';
     double productQuantity = products[i]['quantity'] ?? 0;
     double productPrice = products[i]['price'] ?? 0;
+    int discountRate = products[i]['discount'] ?? 0;
     var productTotal = productQuantity * productPrice;
     totalValue += productTotal;
-    addProducts(productCode, productName, productPrice, productQuantity,
+    addProducts(productCode, productName, productPrice, productQuantity, discountRate,
         productTotal, grid);
   }
 
@@ -328,11 +333,12 @@ PdfGrid getGrid(List<Map<String, dynamic>> products) {
 
 //Create and row for the grid.
 void addProducts(String productCode, String productName, double price,
-    double quantity, double total, PdfGrid grid) {
+    double quantity, int discountRate, double total, PdfGrid grid) {
   final PdfGridRow row = grid.rows.add();
   row.cells[0].value = productCode;
   row.cells[1].value = productName;
   row.cells[2].value = price.toString();
   row.cells[3].value = quantity.toString();
-  row.cells[4].value = total.toString();
+  row.cells[4].value = discountRate.toString() + '%';
+  row.cells[5].value = total.toString();
 }
