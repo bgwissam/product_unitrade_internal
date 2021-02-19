@@ -1149,22 +1149,6 @@ class _ProductFormState extends State<ProductForm> {
               SizedBox(
                 height: 15.0,
               ),
-              //product price
-              Row(
-                children: [
-                  Expanded(flex: 2, child: Text(PRODUCT_PRICE)),
-                  Expanded(
-                    flex: 3,
-                    child: Text(
-                      productPack != null ? '$productPrice' : '',
-                      style: labelTextStyle,
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 15.0,
-              ),
               //product colour
               Row(
                 children: [

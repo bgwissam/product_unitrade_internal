@@ -713,11 +713,8 @@ class _QuotationFormState extends State<QuotationForm> {
                             break;
                         }
                       },
-                      // onSaved: (value) {
-                      //   var _itemCode = value.split(' | ');
-                      //   itemCode.add(_itemCode[1]);
-                      //   productName.add(_itemCode[2]);
-                      // },
+                      validator: (val) =>
+                          val.isEmpty ? ITEM_CODE_VALIDATION : null,
                     ),
                   ),
                 ),
@@ -754,9 +751,6 @@ class _QuotationFormState extends State<QuotationForm> {
                       ),
                       validator: (val) =>
                           val.isEmpty ? ITEM_PACK_VALIDATION : null,
-                      // onSaved: (val) {
-                      //   pack.add(val);
-                      // },
                     ),
                   ),
                 ),
@@ -794,9 +788,6 @@ class _QuotationFormState extends State<QuotationForm> {
                       },
                       validator: (val) =>
                           val.isEmpty ? ITEM_QUANTITY_VALIDATION : null,
-                      // onSaved: (val) {
-                      //   quantity.add(double.tryParse(val));
-                      // },
                     ),
                   ),
                 ),
@@ -825,12 +816,8 @@ class _QuotationFormState extends State<QuotationForm> {
                                 BorderRadius.all(Radius.circular(15.0)),
                             borderSide: BorderSide(color: Colors.blue)),
                       ),
-
                       validator: (val) =>
                           val.isEmpty ? ITEM_PRICE_VALIDATION : null,
-                      // onSaved: (val) {
-                      //   price.add(double.tryParse(val));
-                      // },
                     ),
                   ),
                 ),
@@ -850,7 +837,7 @@ class _QuotationFormState extends State<QuotationForm> {
                   child: TextFormField(
                     maxLength: 1,
                     inputFormatters: [
-                      FilteringTextInputFormatter.allow(RegExp(r"[1-5]"))
+                      FilteringTextInputFormatter.allow(RegExp(r"[0-5]"))
                     ],
                     controller: _discountController[listLength - 1],
                     style: textStyle1,
@@ -872,11 +859,6 @@ class _QuotationFormState extends State<QuotationForm> {
                           : _discount = 0;
                       _itemTotalValue();
                     },
-                    // onSaved: (val) {
-                    //   _discount > 0
-                    //       ? discount.add(int.tryParse(val))
-                    //       : discount.add(0);
-                    // },
                   ),
                 ),
               ),
@@ -907,9 +889,6 @@ class _QuotationFormState extends State<QuotationForm> {
                           borderRadius: BorderRadius.all(Radius.circular(15.0)),
                           borderSide: BorderSide(color: Colors.blue)),
                     ),
-                    // onSaved: (val) {
-                    //   itemTotal.add(double.tryParse(val));
-                    // },
                   ),
                 ),
               )

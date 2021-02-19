@@ -45,13 +45,11 @@ class _QuoteTileState extends State<QuoteTile> {
     var document = await products.quotationCollection.document(quoteId).get();
     if (document.exists) {
       var items = document.data['itemsQuoted'];
-      print('$quoteId for length of ${items.length}');
       for (int i = 0; i < items.length; i++) {
         Map<String, dynamic> oneProduct = {};
 
         var key = items[i].keys;
         for (var val in key) {
-          print('the key: $val and the value: ${items[i][val]}');
 
           oneProduct[val] = items[i][val];
         }

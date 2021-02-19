@@ -280,3 +280,7 @@ const String TOTAL_ITEMS = 'Number of products';
 //Quote Details
 const String QUOTE_DETAILS = 'Quotation Details';
 const String QUOTE_QUANTITY = 'Qyt';
+
+//Date Picker
+const String PICK_DATE_RANGE = 'Pick Dates';
+const String SELECT_PERIOD = 'Select Period';

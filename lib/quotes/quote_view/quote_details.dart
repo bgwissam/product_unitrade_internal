@@ -181,7 +181,7 @@ class _QuoteDetailsState extends State<QuoteDetails> {
               scrollDirection: Axis.vertical,
               itemBuilder: (context, index) {
                 return Container(
-                  height: 100.0,
+                  height: 50.0,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -250,7 +250,7 @@ class _QuoteDetailsState extends State<QuoteDetails> {
           ),
           //Quotation details bottom
           SizedBox(
-            height: _distanceBetweenRows * 2,
+            height: _distanceBetweenRows,
           ),
           Divider(
             color: Colors.black,

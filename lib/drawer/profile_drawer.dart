@@ -8,6 +8,7 @@ import 'package:Products/services/auth.dart';
 import 'package:Products/shared/constants.dart';
 import 'package:Products/shared/strings.dart';
 import 'package:Products/quotes/quote_view/quote_grid.dart';
+import 'package:Products/shared/date_time_picker.dart';
 
 class ProfileDrawer extends StatefulWidget {
   final String userId;
@@ -99,10 +100,12 @@ class _ProfileDrawerState extends State<ProfileDrawer> {
                   enabled: true,
                   onTap: () async {
                     Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ClientGrid(
-                                userId: widget.userId, quotation: true)));
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            ClientGrid(userId: widget.userId, quotation: true),
+                      ),
+                    );
                   },
                 ),
 
@@ -113,11 +116,11 @@ class _ProfileDrawerState extends State<ProfileDrawer> {
                   enabled: true,
                   onTap: () async {
                     Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => QuoteGrid(
-                                  userId: widget.userId,
-                                )));
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DateTimePicker(userId: widget.userId,),
+                      ),
+                    );
                   },
                 )
               ],

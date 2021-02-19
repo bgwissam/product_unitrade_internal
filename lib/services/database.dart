@@ -71,7 +71,7 @@ class DatabaseService {
       String cityOfResidence,
       List<dynamic> roles}) async {
     try {
-      return await unitradeCollection.document(uid).setData({
+      return await unitradeCollection.document(uid).updateData({
         'firstName': firstName,
         'lastName': lastName,
         'company': company,
@@ -80,7 +80,6 @@ class DatabaseService {
         'emailAddress': emailAddress,
         'countryOfResidence': countryOfResidence,
         'cityOfResidence': cityOfResidence,
-        'roles': roles,
       }).then((value) {
         return 'your data has been updated successfully';
       });

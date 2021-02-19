@@ -157,9 +157,13 @@ class EmailManagement {
   }
 
   //Stream quote per user
-  Stream<List<QuoteData>> getQuoteDataByUserId({String userId}) {
+  Stream<List<QuoteData>> getQuoteDataByUserId(
+      {String userId, DateTime startingDate, DateTime endingDate}) {
+        print('$startingDate and $endingDate');
     return quotationCollection
         .where('userId', isEqualTo: userId)
+        .where('dateTime', isGreaterThanOrEqualTo: startingDate)
+        .where('dateTime', isLessThanOrEqualTo: endingDate)
         .snapshots()
         .map(_quoteDataBySnapshot);
   }

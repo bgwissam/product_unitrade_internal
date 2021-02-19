@@ -7,12 +7,15 @@ import 'package:Products/services/email_management.dart';
 
 class QuoteGrid extends StatelessWidget {
   final String userId;
-  QuoteGrid({this.userId});
+  final DateTime startingDate;
+  final DateTime endingDate;
+  QuoteGrid({this.userId, this.startingDate, this.endingDate});
 
   @override
   Widget build(BuildContext context) {
     return StreamProvider<List<QuoteData>>.value(
-      value: EmailManagement().getQuoteDataByUserId(userId: userId),
+      value: EmailManagement().getQuoteDataByUserId(
+          userId: userId, startingDate: startingDate, endingDate: endingDate),
       catchError: (context, error) {
         print('the error is: $error');
         return null;
