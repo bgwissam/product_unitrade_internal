@@ -74,8 +74,14 @@ class _QuotationFormState extends State<QuotationForm> {
   List<Widget> dynamicList = [];
   //Payment terms drop down list
   List<String> _paymentTerms = PaymentTerms.terms();
+  //Just testing
 
   TextEditingController _clientNameField = TextEditingController();
+  List<TextEditingController> _quantityController = [];
+  List<TextEditingController> _priceController = [];
+  List<TextEditingController> _packController = [];
+  List<TextEditingController> _typeAheadController = [];
+  List<TextEditingController> _itemTotalController = [];
 
   var paintProducts;
   @override
@@ -87,12 +93,6 @@ class _QuotationFormState extends State<QuotationForm> {
   //clear the product list if editing was needed
   Future _clearProductListFunction() async {
     if (selectedProducts.isNotEmpty) {
-      itemCode.clear();
-      itemDescription.clear();
-      quantity.clear();
-      price.clear();
-      pack.clear();
-      itemTotal.clear();
       selectedProducts.clear();
     }
   }
@@ -147,6 +147,7 @@ class _QuotationFormState extends State<QuotationForm> {
               if (index > 0) {
                 if (_formKey.currentState.validate()) {
                   _formKey.currentState.save();
+                  print('The new pack variable: $pack');
                   totalValue = 0;
                   setState(() {
                     for (var i = 0; i < itemCode.length; i++) {
@@ -404,13 +405,14 @@ class _QuotationFormState extends State<QuotationForm> {
 
   //add a row to the product list
   void _addTableRow() {
-    if (itemCode.length != 0) {
-      itemCode = [];
-      productName = [];
-      itemDescription = [];
-      quantity = [];
-      price = [];
-    }
+    // if (itemCode.length != 0) {
+
+    //   itemCode = [];
+    //   productName = [];
+    //   itemDescription = [];
+    //   quantity = [];
+    //   price = [];
+    // }
     //product list shouldn't be more than 20 items
     if (dynamicList.length < 20) {
       index++;
@@ -420,13 +422,13 @@ class _QuotationFormState extends State<QuotationForm> {
 
   //remove a row from the product list, such that at least 1 row should remain
   void _removeTableRow() {
-    if (itemCode.length != 0) {
-      itemCode = [];
-      productName = [];
-      itemDescription = [];
-      quantity = [];
-      price = [];
-    }
+    // if (itemCode.length != 0) {
+    //   itemCode = [];
+    //   productName = [];
+    //   itemDescription = [];
+    //   quantity = [];
+    //   price = [];
+    // }
 
     if (dynamicList.length > 1) {
       index--;
@@ -438,28 +440,76 @@ class _QuotationFormState extends State<QuotationForm> {
   Widget buildRows(BuildContext context) {
     //Stream the list of products
     //TextEditing controllers for itemCode, pack, and price, to show both pack and price when selection is made
-    TextEditingController _typeAheadController = TextEditingController();
-    TextEditingController _packController = TextEditingController();
-    TextEditingController _priceController = TextEditingController();
-    TextEditingController _itemTotal = TextEditingController();
+    _typeAheadController.add(new TextEditingController());
+    _packController.add(new TextEditingController());
+    _priceController.add(new TextEditingController());
+    _itemTotalController.add(new TextEditingController());
+    _quantityController.add(new TextEditingController());
     double _quantity, _price, _originalPrice, _discount = 0;
+
+    //Get the length of the list
+    int listLength = _quantityController.length;
+    List<String> splittedText;
+
+    //Add listeners to textediting controllers
+    //The following listeners will change the list value of each field depending on whether we
+    //are adding a new value or editing and existing one
+    _typeAheadController[listLength - 1].addListener(() {
+      splittedText =
+          _typeAheadController[listLength - 1].value.text.split(' | ');
+      if (itemCode.length < listLength) {
+        itemCode.add(splittedText[1]);
+        productName.add(splittedText[2]);
+      } else {
+        itemCode[listLength - 1] = splittedText[1];
+        productName[listLength - 1] = splittedText[2];
+      }
+    });
+
+    _quantityController[listLength - 1].addListener(() {
+      quantity.length < listLength
+          ? quantity
+              .add(double.parse(_quantityController[listLength - 1].value.text))
+          : quantity[listLength - 1] =
+              double.parse(_quantityController[listLength - 1].value.text);
+    });
+
+    _priceController[listLength - 1].addListener(() {
+      price.length < listLength
+          ? price.add(double.parse(_priceController[listLength - 1].value.text))
+          : price[listLength - 1] =
+              double.parse(_priceController[listLength - 1].value.text);
+    });
+
+    _packController[listLength - 1].addListener(() {
+      pack.length < listLength
+          ? pack.add(_packController[listLength - 1].value.text)
+          : pack[listLength - 1] = _packController[listLength - 1].value.text;
+    });
+
+    _itemTotalController[listLength - 1].addListener(() {
+      itemTotal.length < listLength
+          ? itemTotal.add(
+              double.parse(_itemTotalController[listLength - 1].value.text))
+          : itemTotal[listLength - 1] =
+              double.parse(_itemTotalController[listLength - 1].value.text);
+    });
+
     //calculate total per each item
     _itemTotalValue() {
       var tValue = 0.0;
       if (_quantity != null && _price != null) {
         tValue = _quantity * (_price - (_price * (_discount / 100)));
       }
-      _itemTotal.text = tValue.toString();
+      _itemTotalController[listLength - 1].text = tValue.toString();
       if (_discount != null && _quantity != null) {
-        _priceController.text =
+        _priceController[listLength - 1].text =
             (_price - (_price * (_discount / 100))).toString();
-        print(
-            'The _price: $_price and _priceController: ${_priceController.text}');
       }
     }
 
     //set listener on the field that will affect the item total
-    _itemTotal.addListener(_itemTotalValue);
+    // _itemTotal.addListener(_itemTotalValue);
 
     return Container(
       child: Padding(
@@ -476,7 +526,7 @@ class _QuotationFormState extends State<QuotationForm> {
                   child: Center(
                     child: TypeAheadFormField(
                       textFieldConfiguration: TextFieldConfiguration(
-                        controller: _typeAheadController,
+                        controller: _typeAheadController[index - 1],
                         autofocus: false,
                         decoration: InputDecoration(
                           labelText: ITEM_CODE,
@@ -506,7 +556,7 @@ class _QuotationFormState extends State<QuotationForm> {
                       },
                       autoFlipDirection: true,
                       onSuggestionSelected: (suggestions) {
-                        _typeAheadController.text = suggestions;
+                        _typeAheadController[index - 1].text = suggestions;
                         //get the pack and price for each item
                         var selecteItem = suggestions.split('|');
                         switch (selecteItem[0].trim()) {
@@ -519,12 +569,12 @@ class _QuotationFormState extends State<QuotationForm> {
                                 if (element.productPack.toString() ==
                                     selecteItem[3].toString().trim()) {
                                   setState(() {
-                                    _priceController.text =
+                                    _priceController[listLength - 1].text =
                                         element.productPrice.toString();
-                                    _packController.text =
+                                    _packController[listLength - 1].text =
                                         element.productPack.toString();
-                                    _originalPrice =
-                                        double.parse(_priceController.text);
+                                    _originalPrice = double.parse(
+                                        _priceController[listLength - 1].text);
                                   });
                                   return true;
                                 } else {
@@ -546,12 +596,12 @@ class _QuotationFormState extends State<QuotationForm> {
                                   if (dimensions.isEmpty)
                                     dimensions = 'No Pack';
                                   setState(() {
-                                    _priceController.text =
+                                    _priceController[listLength - 1].text =
                                         element.productPrice.toString();
-                                    _packController.text =
+                                    _packController[listLength - 1].text =
                                         dimensions.toString();
-                                    _originalPrice =
-                                        double.parse(_priceController.text);
+                                    _originalPrice = double.parse(
+                                        _priceController[listLength - 1].text);
                                   });
                                   return true;
                                 }
@@ -578,12 +628,12 @@ class _QuotationFormState extends State<QuotationForm> {
                                   if (dimensions.isEmpty)
                                     dimensions = 'No Pack';
                                   setState(() {
-                                    _priceController.text =
+                                    _priceController[listLength - 1].text =
                                         element.productPrice.toString();
-                                    _packController.text =
+                                    _packController[listLength - 1].text =
                                         dimensions.toString();
-                                    _originalPrice =
-                                        double.parse(_priceController.text);
+                                    _originalPrice = double.parse(
+                                        _priceController[listLength - 1].text);
                                   });
 
                                   return true;
@@ -622,12 +672,12 @@ class _QuotationFormState extends State<QuotationForm> {
                                   }
 
                                   setState(() {
-                                    _priceController.text =
+                                    _priceController[listLength - 1].text =
                                         element.productPrice.toString();
-                                    _packController.text =
+                                    _packController[listLength - 1].text =
                                         dimensions.toString();
-                                    _originalPrice =
-                                        double.parse(_priceController.text);
+                                    _originalPrice = double.parse(
+                                        _priceController[listLength - 1].text);
                                   });
                                   return true;
                                 }
@@ -637,11 +687,11 @@ class _QuotationFormState extends State<QuotationForm> {
                             break;
                         }
                       },
-                      onSaved: (value) {
-                        var _itemCode = value.split(' | ');
-                        itemCode.add(_itemCode[1]);
-                        productName.add(_itemCode[2]);
-                      },
+                      // onSaved: (value) {
+                      //   var _itemCode = value.split(' | ');
+                      //   itemCode.add(_itemCode[1]);
+                      //   productName.add(_itemCode[2]);
+                      // },
                     ),
                   ),
                 ),
@@ -661,26 +711,27 @@ class _QuotationFormState extends State<QuotationForm> {
                   flex: 1,
                   child: Center(
                     child: TextFormField(
-                        controller: _packController,
-                        enabled: false,
-                        decoration: InputDecoration(
-                          filled: true,
-                          labelText: ITEM_PACK,
-                          fillColor: Colors.grey[100],
-                          enabledBorder: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(15.0)),
-                              borderSide: BorderSide(color: Colors.grey)),
-                          focusedBorder: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(15.0)),
-                              borderSide: BorderSide(color: Colors.blue)),
-                        ),
-                        validator: (val) =>
-                            val.isEmpty ? ITEM_PACK_VALIDATION : null,
-                        onSaved: (val) {
-                          pack.add(val);
-                        }),
+                      controller: _packController[listLength - 1],
+                      enabled: false,
+                      decoration: InputDecoration(
+                        filled: true,
+                        labelText: ITEM_PACK,
+                        fillColor: Colors.grey[100],
+                        enabledBorder: OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(15.0)),
+                            borderSide: BorderSide(color: Colors.grey)),
+                        focusedBorder: OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(15.0)),
+                            borderSide: BorderSide(color: Colors.blue)),
+                      ),
+                      validator: (val) =>
+                          val.isEmpty ? ITEM_PACK_VALIDATION : null,
+                      // onSaved: (val) {
+                      //   pack.add(val);
+                      // },
+                    ),
                   ),
                 ),
                 SizedBox(
@@ -691,35 +742,36 @@ class _QuotationFormState extends State<QuotationForm> {
                   flex: 1,
                   child: Center(
                     child: TextFormField(
-                        initialValue: '',
-                        style: textStyle1,
-                        keyboardType: TextInputType.number,
-                        decoration: InputDecoration(
-                          filled: true,
-                          labelText: ITEM_QUANTITY,
-                          fillColor: Colors.grey[100],
-                          enabledBorder: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(15.0)),
-                              borderSide: BorderSide(color: Colors.grey)),
-                          focusedBorder: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(15.0)),
-                              borderSide: BorderSide(color: Colors.blue)),
-                        ),
-                        onChanged: (val) {
-                          _quantity = double.tryParse(val);
+                      controller: _quantityController[index - 1],
+                      style: textStyle1,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        filled: true,
+                        labelText: ITEM_QUANTITY,
+                        fillColor: Colors.grey[100],
+                        enabledBorder: OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(15.0)),
+                            borderSide: BorderSide(color: Colors.grey)),
+                        focusedBorder: OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(15.0)),
+                            borderSide: BorderSide(color: Colors.blue)),
+                      ),
+                      onChanged: (val) {
+                        _quantity = double.tryParse(val);
 
-                          _priceController.text != ''
-                              ? _price = _originalPrice
-                              : _price = 0;
-                          _itemTotalValue();
-                        },
-                        validator: (val) =>
-                            val.isEmpty ? ITEM_QUANTITY_VALIDATION : null,
-                        onSaved: (val) {
-                          quantity.add(double.tryParse(val));
-                        }),
+                        _priceController[listLength - 1].text != ''
+                            ? _price = _originalPrice
+                            : _price = 0;
+                        _itemTotalValue();
+                      },
+                      validator: (val) =>
+                          val.isEmpty ? ITEM_QUANTITY_VALIDATION : null,
+                      // onSaved: (val) {
+                      //   quantity.add(double.tryParse(val));
+                      // },
+                    ),
                   ),
                 ),
                 SizedBox(
@@ -730,28 +782,30 @@ class _QuotationFormState extends State<QuotationForm> {
                   flex: 1,
                   child: Center(
                     child: TextFormField(
-                        controller: _priceController,
-                        style: textStyle1,
-                        enabled: false,
-                        keyboardType: TextInputType.number,
-                        decoration: InputDecoration(
-                          filled: true,
-                          labelText: ITEM_PRICE,
-                          fillColor: Colors.grey[100],
-                          enabledBorder: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(15.0)),
-                              borderSide: BorderSide(color: Colors.grey)),
-                          focusedBorder: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(15.0)),
-                              borderSide: BorderSide(color: Colors.blue)),
-                        ),
-                        validator: (val) =>
-                            val.isEmpty ? ITEM_PRICE_VALIDATION : null,
-                        onSaved: (val) {
-                          price.add(double.tryParse(val));
-                        }),
+                      controller: _priceController[listLength - 1],
+                      style: textStyle1,
+                      enabled: false,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        filled: true,
+                        labelText: ITEM_PRICE,
+                        fillColor: Colors.grey[100],
+                        enabledBorder: OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(15.0)),
+                            borderSide: BorderSide(color: Colors.grey)),
+                        focusedBorder: OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(15.0)),
+                            borderSide: BorderSide(color: Colors.blue)),
+                      ),
+
+                      validator: (val) =>
+                          val.isEmpty ? ITEM_PRICE_VALIDATION : null,
+                      // onSaved: (val) {
+                      //   price.add(double.tryParse(val));
+                      // },
+                    ),
                   ),
                 ),
               ],
@@ -813,26 +867,25 @@ class _QuotationFormState extends State<QuotationForm> {
                 flex: 2,
                 child: Center(
                   child: TextFormField(
-                      controller: _itemTotal,
-                      style: textStyle1,
-                      enabled: false,
-                      keyboardType: TextInputType.number,
-                      decoration: InputDecoration(
-                        filled: true,
-                        labelText: ITEM_TOTAL,
-                        fillColor: Colors.grey[100],
-                        enabledBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(15.0)),
-                            borderSide: BorderSide(color: Colors.grey)),
-                        focusedBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(15.0)),
-                            borderSide: BorderSide(color: Colors.blue)),
-                      ),
-                      onSaved: (val) {
-                        itemTotal.add(double.tryParse(val));
-                      }),
+                    controller: _itemTotalController[listLength - 1],
+                    style: textStyle1,
+                    enabled: false,
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      filled: true,
+                      labelText: ITEM_TOTAL,
+                      fillColor: Colors.grey[100],
+                      enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                          borderSide: BorderSide(color: Colors.grey)),
+                      focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                          borderSide: BorderSide(color: Colors.blue)),
+                    ),
+                    // onSaved: (val) {
+                    //   itemTotal.add(double.tryParse(val));
+                    // },
+                  ),
                 ),
               )
             ],
@@ -845,6 +898,11 @@ class _QuotationFormState extends State<QuotationForm> {
   @override
   void dispose() {
     //clear controllers
+    _priceController.clear();
+    _packController.clear();
+    _typeAheadController.clear();
+    _quantityController.clear();
+
     super.dispose();
   }
 

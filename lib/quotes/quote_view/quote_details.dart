@@ -235,7 +235,8 @@ class _QuoteDetailsState extends State<QuoteDetails> {
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 3.0),
                           child: Text(
-                            widget.selectedProducts[index]['price'].toString() ??
+                            widget.selectedProducts[index]['price']
+                                    .toString() ??
                                 '',
                             style: labelTextStyle3,
                           ),
@@ -251,7 +252,7 @@ class _QuoteDetailsState extends State<QuoteDetails> {
           SizedBox(
             height: _distanceBetweenRows * 2,
           ),
-           Divider(
+          Divider(
             color: Colors.black,
             thickness: 2.0,
           ),
@@ -283,15 +284,15 @@ class _QuoteDetailsState extends State<QuoteDetails> {
               ),
               Expanded(
                 child: Container(
-                  child: Text('${display(_totalValue)} SR'
-                    ,
+                  child: Text(
+                    '${display(_totalValue)} SR',
                     style: labelTextStyle3,
                   ),
                 ),
               ),
             ],
           ),
-           Divider(
+          Divider(
             color: Colors.black,
             thickness: 2.0,
           ),
