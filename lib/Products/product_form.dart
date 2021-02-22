@@ -2983,7 +2983,8 @@ class _PDFFileViewerState extends State<PDFFileViewer> {
       await pdfFile.writeAsBytes(bytes, flush: true);
       completer.complete(pdfFile);
     } catch (e) {
-      throw Exception('Error parsing asset file!');
+      throw Exception('Error parsing asset file: $e');
+      
     }
     return completer.future;
   }

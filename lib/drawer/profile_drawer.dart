@@ -7,7 +7,6 @@ import 'package:Products/account/account_page.dart';
 import 'package:Products/services/auth.dart';
 import 'package:Products/shared/constants.dart';
 import 'package:Products/shared/strings.dart';
-import 'package:Products/quotes/quote_view/quote_grid.dart';
 import 'package:Products/shared/date_time_picker.dart';
 
 class ProfileDrawer extends StatefulWidget {
