@@ -59,6 +59,7 @@ dependencies:
   number_display:
   async:
   intl: ^0.16.0
+  firebase_crashlytics: 
 
 dev_dependencies:
   flutter_test:

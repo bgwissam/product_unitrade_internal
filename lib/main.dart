@@ -5,12 +5,16 @@ import 'package:provider/provider.dart';
 import 'package:Products/screens/wrapper.dart';
 import 'package:Products/services/auth.dart';
 import 'models/user.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
 void main() {
+  FlutterError.onError = Crashlytics.instance.recordFlutterError;
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
+
+ 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
