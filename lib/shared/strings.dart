@@ -269,6 +269,8 @@ const String UNKNOWN_ERROR = 'Contact administrator!';
 const String DISCOUNT_RATE = 'Dis';
 const String ITEM_TOTAL = 'Total';
 const String NO_PRODUCTS = 'No selected items to quote, please select at least one items';
+const String FILL_FIELDS = 'Fill the empty fields before continuing';
+const String EMPTY_FIELDS = 'Empty Fields';
 
 //Quote List
 const String QUOTE_LIST = 'Quotation List';

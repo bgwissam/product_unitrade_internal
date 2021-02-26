@@ -18,6 +18,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    //Crashlytics.instance.crash();
     return StreamProvider<UserData>.value(
       value: AuthService().user,
       child: MaterialApp(

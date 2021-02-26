@@ -408,35 +408,66 @@ class _QuotationFormState extends State<QuotationForm> {
   }
 
   //add a row to the product list
-  void _addTableRow() {
-    // if (itemCode.length != 0) {
-
-    //   itemCode = [];
-    //   productName = [];
-    //   itemDescription = [];
-    //   quantity = [];
-    //   price = [];
-    // }
+  Future _addTableRow() {
     //product list shouldn't be more than 20 items
+
     if (dynamicList.length < 20) {
-      index++;
-      dynamicList.add(buildRows(context));
+      if (_typeAheadController.length > 0) {
+        if (_typeAheadController[index - 1].value.text.isNotEmpty &&
+            _quantityController[index - 1].value.text.isNotEmpty &&
+            _packController[index - 1].value.text.isNotEmpty &&
+            _priceController[index - 1].value.text.isNotEmpty) {
+          index++;
+          dynamicList.add(buildRows(context));
+        } else {
+          return showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text(EMPTY_FIELDS),
+                  backgroundColor: Colors.grey[200],
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0)
+                  ),
+                  content: Container(
+                      height: 70.0,
+                      width: 90.0,
+                      child: Center(
+                          child: Text(
+                        FILL_FIELDS,
+                        textAlign: TextAlign.center,
+                        style: labelTextStyle4,
+                      ))),
+                  actions: [
+                    FlatButton(
+                      child: Text(OK_BUTTON),
+                      onPressed: () => Navigator.pop(context),
+                    )
+                  ],
+                );
+              });
+        }
+      } else if (_typeAheadController.length == 0 && index == 0) {
+        index++;
+        dynamicList.add(buildRows(context));
+      }
+
+      return null;
     }
   }
 
   //remove a row from the product list, such that at least 1 row should remain
   void _removeTableRow() {
-    // if (itemCode.length != 0) {
-    //   itemCode = [];
-    //   productName = [];
-    //   itemDescription = [];
-    //   quantity = [];
-    //   price = [];
-    // }
-
     if (dynamicList.length > 1) {
       index--;
       dynamicList.removeLast();
+      _typeAheadController.removeLast();
+      _packController.removeLast();
+      _priceController.removeLast();
+      _quantityController.removeLast();
+      _discountController.removeLast();
+      _itemTotalController.removeLast();
     }
   }
 
