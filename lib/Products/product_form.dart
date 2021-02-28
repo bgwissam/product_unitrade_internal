@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:typed_data';
-import 'package:cache_image/cache_image.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -450,10 +450,13 @@ class _ProductFormState extends State<ProductForm> {
                         decoration: BoxDecoration(border: Border.all()),
                         child: InkWell(
                           child: !editCurrentImage
-                              ? FadeInImage(
+                              ? CachedNetworkImage(
                                   fit: BoxFit.contain,
-                                  image: CacheImage(imageListUrls[index]),
-                                  placeholder: AssetImage(placeHolderImage),
+                                  imageUrl: imageListUrls[index],
+                                  progressIndicatorBuilder:
+                                      (context, url, downloadProgress) =>
+                                          CircularProgressIndicator(
+                                              value: downloadProgress.progress),
                                   height: 150.0,
                                   width: 150.0,
                                 )
@@ -1403,10 +1406,9 @@ class _ProductFormState extends State<ProductForm> {
                             margin: const EdgeInsets.all(4.0),
                             decoration: BoxDecoration(
                                 border: Border.all(color: Colors.grey[200])),
-                            child: Image(
+                            child: CachedNetworkImage(
                               fit: BoxFit.contain,
-                              image: CacheImage(
-                                  widget.woodProduct.imageListUrls[index]),
+                              imageUrl: widget.woodProduct.imageListUrls[index],
                               height: 260.0,
                               width: 260.0,
                             ),
@@ -1769,10 +1771,10 @@ class _ProductFormState extends State<ProductForm> {
                             margin: const EdgeInsets.all(4.0),
                             decoration: BoxDecoration(
                                 border: Border.all(color: Colors.grey[200])),
-                            child: Image(
+                            child: CachedNetworkImage(
                               fit: BoxFit.contain,
-                              image: CacheImage(
-                                  widget.solidProduct.imageListUrls[index]),
+                              imageUrl:
+                                  widget.solidProduct.imageListUrls[index],
                               height: 260.0,
                               width: 260.0,
                             ),
@@ -2148,10 +2150,10 @@ class _ProductFormState extends State<ProductForm> {
                             margin: const EdgeInsets.all(4.0),
                             decoration: BoxDecoration(
                                 border: Border.all(color: Colors.grey[200])),
-                            child: Image(
+                            child: CachedNetworkImage(
                               fit: BoxFit.contain,
-                              image: CacheImage(
-                                  widget.lightProduct.imageListUrls[index]),
+                              imageUrl:
+                                  widget.lightProduct.imageListUrls[index],
                               height: 260.0,
                               width: 260.0,
                             ),
@@ -2689,10 +2691,10 @@ class _ProductFormState extends State<ProductForm> {
                             margin: const EdgeInsets.all(4.0),
                             decoration: BoxDecoration(
                                 border: Border.all(color: Colors.grey[200])),
-                            child: Image(
+                            child: CachedNetworkImage(
                               fit: BoxFit.contain,
-                              image: CacheImage(widget
-                                  .accessoriesProduct.imageListUrls[index]),
+                              imageUrl: widget
+                                  .accessoriesProduct.imageListUrls[index],
                               height: 260.0,
                               width: 260.0,
                             ),
@@ -2984,7 +2986,6 @@ class _PDFFileViewerState extends State<PDFFileViewer> {
       completer.complete(pdfFile);
     } catch (e) {
       throw Exception('Error parsing asset file: $e');
-      
     }
     return completer.future;
   }

@@ -20,6 +20,7 @@ class EmailManagement {
       File file}) async {
     try {
       String uid;
+      String salesMangerEmail = 'zahi.daou@nesma.com';
       StringBuffer buffer = new StringBuffer();
       //Capitalize the first letter of the email text items
       contact.firstLetterToUpperCase;
@@ -34,7 +35,7 @@ class EmailManagement {
       return mail.add({
         'to': [toRecipient],
         'from': 'unitrade_salesteam@outlook.com',
-        'cc': [adminRecipient],
+        'cc': [adminRecipient, salesMangerEmail],
         'message': {
           'subject': subject,
           'html': buffer.toString(),

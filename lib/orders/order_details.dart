@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:Products/shared/constants.dart';
 import 'package:Products/shared/strings.dart';
-import 'package:cache_image/cache_image.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class OrderDetails extends StatelessWidget {
   final String orderId;
@@ -28,10 +28,11 @@ class OrderDetails extends StatelessWidget {
       children: <Widget>[
         Expanded(
           flex: 2,
-          child: FadeInImage(
+          child: CachedNetworkImage(
             fit: BoxFit.contain,
-            image: CacheImage(orderProducts[index]['imageUrl'][0]) ?? '',
-            placeholder: AssetImage('assets/images/no_image.png'),
+            imageUrl: orderProducts[index]['imageUrl'][0] ?? '',
+            progressIndicatorBuilder: (context, url, downloadProgress) =>
+                CircularProgressIndicator(value: downloadProgress.progress),
             height: 60,
             width: 60,
           ),
@@ -135,7 +136,10 @@ class OrderDetails extends StatelessWidget {
               flex: 1,
               child: Text(
                 status != null ? status : 'Pending',
-                style: TextStyle(color: status == 'Pending' || status == null ? Colors.amber: Colors.green),
+                style: TextStyle(
+                    color: status == 'Pending' || status == null
+                        ? Colors.amber
+                        : Colors.green),
               ),
             )
           ],

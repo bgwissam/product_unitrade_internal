@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:Products/Products/product_type.dart';
 import 'package:algolia/algolia.dart';
 import 'package:async/async.dart';
-import 'package:cache_image/cache_image.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:Products/Products/product_form.dart';
@@ -95,8 +95,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       _results = queryPaint + queryWood + querySolid + queryAccessories;
     });
 
-    return Future.delayed(const Duration(milliseconds: 600)).then((value) =>
-        _results);
+    return Future.delayed(const Duration(milliseconds: 600))
+        .then((value) => _results);
   }
 
   //get the first name of the user
@@ -333,14 +333,13 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                 .data['imageListUrls']
                                 .isNotEmpty
                             ? new Container(
-                                child: FadeInImage(
-                                  fit: BoxFit.contain,
-                                  placeholder: AssetImage(placeHolderImage),
-                                  width: 80.0,
-                                  height: 80.0,
-                                  image: CacheImage(
-                                      _results[index].data['imageListUrls'][0]),
-                                ),
+                                child: CachedNetworkImage(
+                                    fit: BoxFit.contain,
+                                    progressIndicatorBuilder: (context, url, downloadProgress) => CircularProgressIndicator(value: downloadProgress.progress),
+                                    width: 80.0,
+                                    height: 80.0,
+                                    imageUrl: _results[index].data['imageListUrls']
+                                        [0]),
                               )
                             : _results[index].data['imageLocalUrl'] != null
                                 ? Image.asset(

@@ -1,4 +1,3 @@
-import 'package:cache_image/cache_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:Products/Products/products_grid.dart';
@@ -8,6 +7,7 @@ import 'package:Products/screens/paint/brands_form.dart';
 import 'package:Products/services/database.dart';
 import 'package:Products/shared/loading.dart';
 import 'package:Products/shared/strings.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class BrandTile extends StatefulWidget {
   final String divisionType;
@@ -93,11 +93,14 @@ class _BrandTileState extends State<BrandTile> {
                                 return Container(
                                   child: new Column(
                                     children: [
-                                      FadeInImage(
+                                      CachedNetworkImage(
                                         fit: BoxFit.contain,
-                                        image: CacheImage(widget.brand.image),
-                                        placeholder:
-                                            AssetImage(placeHolderImage),
+                                        imageUrl: widget.brand.image,
+                                        progressIndicatorBuilder: (context, url,
+                                                downloadProgress) =>
+                                            CircularProgressIndicator(
+                                                value:
+                                                    downloadProgress.progress),
                                         height: 150.0,
                                         width: 300.0,
                                       ),
@@ -143,13 +146,15 @@ class _BrandTileState extends State<BrandTile> {
                               if (snapshot.connectionState ==
                                   ConnectionState.done) {
                                 return Container(
-                                  child:  FadeInImage(
-                                        fit: BoxFit.contain,
-                                        image: CacheImage(widget.brand.image),
-                                        placeholder:
-                                            AssetImage(placeHolderImage),
-                                        height: 150.0,
-                                      ),
+                                  child: CachedNetworkImage(
+                                    fit: BoxFit.contain,
+                                    imageUrl: widget.brand.image,
+                                    progressIndicatorBuilder: (context, url,
+                                            downloadProgress) =>
+                                        CircularProgressIndicator(
+                                            value: downloadProgress.progress),
+                                    height: 150.0,
+                                  ),
                                 );
                               }
                               if (snapshot.connectionState ==

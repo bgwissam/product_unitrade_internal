@@ -8,7 +8,7 @@ import 'models/user.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
 void main() {
-  FlutterError.onError = Crashlytics.instance.recordFlutterError;
+ // FlutterError.onError = Crashlytics.instance.recordFlutterError;
   runApp(MyApp());
 }
 

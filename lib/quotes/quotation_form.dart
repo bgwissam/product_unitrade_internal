@@ -37,12 +37,13 @@ class QuotationForm extends StatefulWidget {
   _QuotationFormState createState() => _QuotationFormState();
 }
 
-class _QuotationFormState extends State<QuotationForm> {
+class _QuotationFormState extends State<QuotationForm>
+    with AutomaticKeepAliveClientMixin {
   var _formKey = GlobalKey<FormState>();
 
   int currentRowNumber = 1;
   //An email for the sales coordinator
-  String salesCoordinatorEmailAddress = 'joel.linatoc@nesma.com';
+  String salesCoordinatorEmailAddress = 'sales@nesma.com';
   String clientName = '';
   String clientEmail;
   String clientPhone;
@@ -140,6 +141,7 @@ class _QuotationFormState extends State<QuotationForm> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(QUOTATION_FORM),
@@ -149,7 +151,6 @@ class _QuotationFormState extends State<QuotationForm> {
             onPressed: () {
               if (index > 0) {
                 if (_formKey.currentState.validate()) {
-                  _formKey.currentState.save();
                   totalValue = 0;
                   setState(() {
                     for (var i = 0; i < itemCode.length; i++) {
@@ -221,6 +222,10 @@ class _QuotationFormState extends State<QuotationForm> {
       ),
     );
   }
+
+//Keeps state alive when you scoll the list out of state
+  @override
+  bool get wantKeepAlive => true;
 
   Widget _quotationDetails(BuildContext context) {
     //dynamic list to add more rows
@@ -428,8 +433,7 @@ class _QuotationFormState extends State<QuotationForm> {
                   title: Text(EMPTY_FIELDS),
                   backgroundColor: Colors.grey[200],
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20.0)
-                  ),
+                      borderRadius: BorderRadius.circular(20.0)),
                   content: Container(
                       height: 70.0,
                       width: 90.0,
@@ -452,9 +456,8 @@ class _QuotationFormState extends State<QuotationForm> {
         index++;
         dynamicList.add(buildRows(context));
       }
-
-      return null;
     }
+    return null;
   }
 
   //remove a row from the product list, such that at least 1 row should remain
@@ -462,7 +465,13 @@ class _QuotationFormState extends State<QuotationForm> {
     if (dynamicList.length > 1) {
       index--;
       dynamicList.removeLast();
-      _typeAheadController.removeLast();
+      if (itemCode.length == _typeAheadController.length) {
+        _typeAheadController.removeLast();
+        itemCode.removeLast();
+      } else {
+        _typeAheadController.removeLast();
+      }
+
       _packController.removeLast();
       _priceController.removeLast();
       _quantityController.removeLast();
@@ -536,6 +545,7 @@ class _QuotationFormState extends State<QuotationForm> {
     });
 
     _discountController[listLength - 1].addListener(() {
+     
       if (_discountController[listLength - 1].value.text != '')
         discount.length < listLength
             ? discount

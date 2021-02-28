@@ -7,7 +7,7 @@ import 'package:Products/services/database.dart';
 import 'package:Products/shared/constants.dart';
 import 'package:Products/shared/loading.dart';
 import 'package:Products/shared/strings.dart';
-import 'package:cache_image/cache_image.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class ProductTile extends StatefulWidget {
   final PaintMaterial product;
@@ -229,13 +229,17 @@ class _ProductTileState extends State<ProductTile> {
               flex: 4,
               child: widget.woodProduct.imageListUrls != null
                   ? Container(
-                      child: FadeInImage(
+                      child: CachedNetworkImage(
                         fit: BoxFit.contain,
-                        image: CacheImage(
-                            widget.woodProduct.imageListUrls.isEmpty
-                                ? 'assets/images/no_image.png'
-                                : widget.woodProduct.imageListUrls[0]),
-                        placeholder: AssetImage(placeHolderImage),
+                        imageUrl: widget.woodProduct.imageListUrls.isEmpty
+                            ? 'assets/images/no_image.png'
+                            : widget.woodProduct.imageListUrls[0],
+                        progressIndicatorBuilder:
+                            (context, url, downloadProgress) =>
+                                CircularProgressIndicator(
+                                    value: downloadProgress.progress),
+                        errorWidget: (context, url, error) =>
+                            Image.asset(placeHolderImage),
                         height: 150,
                         width: 150,
                       ),
@@ -303,13 +307,17 @@ class _ProductTileState extends State<ProductTile> {
               flex: 3,
               child: widget.solidProduct.imageListUrls != null
                   ? Container(
-                      child: FadeInImage(
+                      child: CachedNetworkImage(
                         fit: BoxFit.contain,
-                        image: CacheImage(
-                            widget.solidProduct.imageListUrls.isNotEmpty
-                                ? widget.solidProduct.imageListUrls[0]
-                                : 'assets/image/no_logo.png'),
-                        placeholder: AssetImage(placeHolderImage),
+                        imageUrl: widget.solidProduct.imageListUrls.isNotEmpty
+                            ? widget.solidProduct.imageListUrls[0]
+                            : 'assets/image/no_logo.png',
+                        progressIndicatorBuilder:
+                            (context, url, downloadProgress) =>
+                                CircularProgressIndicator(
+                                    value: downloadProgress.progress),
+                        errorWidget: (context, url, error) =>
+                            Image.asset(placeHolderImage),
                         height: 150,
                         width: 150,
                       ),
@@ -375,11 +383,13 @@ class _ProductTileState extends State<ProductTile> {
               flex: 3,
               child: widget.lightProduct.imageListUrls != null
                   ? Container(
-                      child: FadeInImage(
+                      child: CachedNetworkImage(
                         fit: BoxFit.contain,
-                        image: CacheImage(
-                            widget.lightProduct.imageListUrls[0] ?? ''),
-                        placeholder: AssetImage(placeHolderImage),
+                        imageUrl: widget.lightProduct.imageListUrls[0] ?? '',
+                        progressIndicatorBuilder:
+                            (context, url, downloadProgress) =>
+                                CircularProgressIndicator(
+                                    value: downloadProgress.progress),
                         height: 150,
                         width: 150,
                       ),
@@ -452,13 +462,18 @@ class _ProductTileState extends State<ProductTile> {
               flex: 3,
               child: widget.accessoriesProduct.imageListUrls != null
                   ? Container(
-                      child: FadeInImage(
+                      child: CachedNetworkImage(
                         fit: BoxFit.contain,
-                        image: CacheImage(
+                        imageUrl:
                             widget.accessoriesProduct.imageListUrls.isNotEmpty
                                 ? widget.accessoriesProduct.imageListUrls[0]
-                                : 'assets/images/no_image.png'),
-                        placeholder: AssetImage(placeHolderImage),
+                                : 'assets/images/no_image.png',
+                        progressIndicatorBuilder:
+                            (context, url, downloadProgress) =>
+                                CircularProgressIndicator(
+                                    value: downloadProgress.progress),
+                        errorWidget: (context, url, error) =>
+                            Image.asset(placeHolderImage),
                         height: 150,
                         width: 150,
                       ),
