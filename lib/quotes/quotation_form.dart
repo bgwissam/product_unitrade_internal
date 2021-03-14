@@ -142,82 +142,90 @@ class _QuotationFormState extends State<QuotationForm>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(QUOTATION_FORM),
-        backgroundColor: Colors.blueGrey[500],
-        actions: [
-          FlatButton(
-            onPressed: () {
-              if (index > 0) {
-                if (_formKey.currentState.validate()) {
-                  totalValue = 0;
-                  setState(() {
-                    for (var i = 0; i < itemCode.length; i++) {
-                      totalValue += itemTotal[i];
+    return GestureDetector(
+          onTap: () {
+            FocusScopeNode currentFocus = FocusScope.of(context);
+            if(!currentFocus.hasPrimaryFocus) {
+              currentFocus.unfocus();
+            }
+          },
+          child: Scaffold(
+        appBar: AppBar(
+          title: Text(QUOTATION_FORM),
+          backgroundColor: Colors.blueGrey[500],
+          actions: [
+            FlatButton(
+              onPressed: () {
+                if (index > 0) {
+                  if (_formKey.currentState.validate()) {
+                    totalValue = 0;
+                    setState(() {
+                      for (var i = 0; i < itemCode.length; i++) {
+                        totalValue += itemTotal[i];
 
-                      selectedProducts.add({
-                        'itemCode': itemCode[i],
-                        'itemDescription': productName[i],
-                        'itemPack': pack[i],
-                        'quantity': quantity[i],
-                        'price': price[i],
-                        'discount': discount[i] ?? 0,
-                        'itemTotal': itemTotal[i],
-                      });
-                    }
-                  });
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => QuotationReview(
-                                salesCordinator: salesCoordinatorEmailAddress,
-                                customerName: clientName,
-                                customerEmail: clientEmail,
-                                customerPhone: clientPhone,
-                                customerAddress: clientAddress,
-                                clientId: clientId,
-                                paymentTerms: paymentTerms,
-                                products: selectedProducts,
-                                clearProductList: _clearProductListFunction,
-                                totalValue: totalValue,
-                                name: name,
-                                phone: phoneNumber,
-                                supplierEmail: emailAddress,
-                                userId: widget.userId,
-                              )));
-                }
-              } else {
-                return showDialog(
-                    context: context,
-                    barrierDismissible: false,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        content: Text(NO_PRODUCTS),
-                        actions: [
-                          FlatButton(
-                            child: Text(OK_BUTTON),
-                            onPressed: () => Navigator.pop(context),
-                          )
-                        ],
-                      );
+                        selectedProducts.add({
+                          'itemCode': itemCode[i],
+                          'itemDescription': productName[i],
+                          'itemPack': pack[i],
+                          'quantity': quantity[i],
+                          'price': price[i],
+                          'discount': discount[i] ?? 0,
+                          'itemTotal': itemTotal[i],
+                        });
+                      }
                     });
-              }
-            },
-            disabledColor: Colors.grey,
-            splashColor: Colors.lightBlue,
-            child: Text(
-              NEXT_PAGE,
-              style: textStyle9,
-            ),
-          )
-        ],
-      ),
-      body: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        child: new Form(
-          key: _formKey,
-          child: _quotationDetails(context),
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => QuotationReview(
+                                  salesCordinator: salesCoordinatorEmailAddress,
+                                  customerName: clientName,
+                                  customerEmail: clientEmail,
+                                  customerPhone: clientPhone,
+                                  customerAddress: clientAddress,
+                                  clientId: clientId,
+                                  paymentTerms: paymentTerms,
+                                  products: selectedProducts,
+                                  clearProductList: _clearProductListFunction,
+                                  totalValue: totalValue,
+                                  name: name,
+                                  phone: phoneNumber,
+                                  supplierEmail: emailAddress,
+                                  userId: widget.userId,
+                                )));
+                  }
+                } else {
+                  return showDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          content: Text(NO_PRODUCTS),
+                          actions: [
+                            FlatButton(
+                              child: Text(OK_BUTTON),
+                              onPressed: () => Navigator.pop(context),
+                            )
+                          ],
+                        );
+                      });
+                }
+              },
+              disabledColor: Colors.grey,
+              splashColor: Colors.lightBlue,
+              child: Text(
+                NEXT_PAGE,
+                style: textStyle9,
+              ),
+            )
+          ],
+        ),
+        body: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: new Form(
+            key: _formKey,
+            child: _quotationDetails(context),
+          ),
         ),
       ),
     );
@@ -228,9 +236,11 @@ class _QuotationFormState extends State<QuotationForm>
   bool get wantKeepAlive => true;
 
   Widget _quotationDetails(BuildContext context) {
+    super.build(context);
     //dynamic list to add more rows
     Widget dynamicRow = new Container(
       child: new ListView.builder(
+        addAutomaticKeepAlives: true,
         itemCount: dynamicList.length,
         itemBuilder: (_, index) => dynamicList[index],
       ),

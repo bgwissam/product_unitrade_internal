@@ -148,6 +148,17 @@ class EmailManagement {
           status: doc.data['status'] ?? '');
     }).toList();
   }
+  //delete quote by Id
+  Future deleteQuoteById(String quoteId) {
+    try {
+      var del = quotationCollection.document(quoteId).delete();
+      print(del);
+      return del;
+    } catch (e) {
+      print('couldn\'t delete current quote: $e');
+      return null;
+    }
+  }
 
   //Stream data for the saved quotes
   Stream<List<QuoteData>> getQuoteDataById(String quoteId) {

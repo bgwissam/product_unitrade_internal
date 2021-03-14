@@ -311,7 +311,7 @@ class _ProductTileState extends State<ProductTile> {
                         fit: BoxFit.contain,
                         imageUrl: widget.solidProduct.imageListUrls.isNotEmpty
                             ? widget.solidProduct.imageListUrls[0]
-                            : 'assets/image/no_logo.png',
+                            : 'assets/images/no_image.png',
                         progressIndicatorBuilder:
                             (context, url, downloadProgress) =>
                                 CircularProgressIndicator(

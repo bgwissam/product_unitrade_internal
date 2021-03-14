@@ -185,6 +185,7 @@ class _QuotationReviewState extends State<QuotationReview> {
             Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
           } catch (e) {
             print('Error opening pdf: $e');
+            Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
           }
         }
         //if an error occured

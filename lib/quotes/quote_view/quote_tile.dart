@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:Products/shared/strings.dart';
 import 'quote_details.dart';
 import 'package:Products/services/email_management.dart';
+import '../../shared/loading.dart';
 
 class QuoteTile extends StatefulWidget {
   final QuoteData quotes;
@@ -15,6 +16,8 @@ class QuoteTile extends StatefulWidget {
 }
 
 class _QuoteTileState extends State<QuoteTile> {
+
+  EmailManagement products = new EmailManagement();
   String quoteId;
   String userId;
   String clientName;
@@ -24,6 +27,7 @@ class _QuoteTileState extends State<QuoteTile> {
   List selecteProducts = [];
   double _distanceBetweenRows = 2.0;
   var date;
+  bool _isDeleting = false;
 
   void initState() {
     quoteId = widget.quotes.quoteId ?? null;
@@ -41,7 +45,6 @@ class _QuoteTileState extends State<QuoteTile> {
     //Clear list first
     if (selecteProducts.isNotEmpty) selecteProducts.clear();
 
-    EmailManagement products = new EmailManagement();
     var document = await products.quotationCollection.document(quoteId).get();
     if (document.exists) {
       var items = document.data['itemsQuoted'];
@@ -50,7 +53,6 @@ class _QuoteTileState extends State<QuoteTile> {
 
         var key = items[i].keys;
         for (var val in key) {
-
           oneProduct[val] = items[i][val];
         }
         selecteProducts.add(oneProduct);
@@ -62,7 +64,7 @@ class _QuoteTileState extends State<QuoteTile> {
   Widget build(BuildContext context) {
     var formatDate = new DateFormat().add_yMMMd().format(date);
     var totalItem = widget.quotes.itemQuoted.length;
-    return Padding(
+    return _isDeleting ? Loading() : Padding(
       padding: const EdgeInsets.all(20.0),
       child: InkWell(
         onTap: () async {
@@ -80,7 +82,7 @@ class _QuoteTileState extends State<QuoteTile> {
           );
         },
         child: Container(
-          height: 80.0,
+          height: 120.0,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(15.0),
               border: Border.all(width: 2)),
@@ -127,9 +129,47 @@ class _QuoteTileState extends State<QuoteTile> {
                 )
               ],
             ),
-          ]),
+             ElevatedButton(
+                          onPressed: () async {
+                            showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text(DELETE_QUOTE),
+                                    content: Text(DELETE_QUOTE_CONTENT),
+                                    actions: [
+                                      TextButton(
+                                          onPressed: () async {
+                                            setState(() {
+                                              _isDeleting = true;
+                                            });
+                                            var result = await products
+                                                .deleteQuoteById(quoteId);
+                                            if (result != null) {
+                                              _isDeleting = false;
+                                            }
+                                            Navigator.pop(context);
+                                          },
+                                          child: Text(ALERT_YES)),
+                                      TextButton(
+                                        onPressed: () async {
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text(ALERT_NO),
+                                      )
+                                    ],
+                                  );
+                                });
+                          },
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors.deepPurpleAccent,
+                          ),
+                          child: Text(DELETE_QUOTE))
+                    ])
+          ),
         ),
-      ),
-    );
+      );
+    
   }
 }

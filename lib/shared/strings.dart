@@ -278,6 +278,8 @@ const String QUOTE_LIST = 'Quotation List';
 //Quote Tile
 const String QUOTE_DATE = 'Date';
 const String TOTAL_ITEMS = 'Number of products';
+const String DELETE_QUOTE = 'Delete';
+const String DELETE_QUOTE_CONTENT = 'Are you sure you want to delete this quote?';
 
 //Quote Details
 const String QUOTE_DETAILS = 'Quotation Details';
