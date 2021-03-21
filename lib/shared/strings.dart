@@ -280,6 +280,11 @@ const String QUOTE_DATE = 'Date';
 const String TOTAL_ITEMS = 'Number of products';
 const String DELETE_QUOTE = 'Delete';
 const String DELETE_QUOTE_CONTENT = 'Are you sure you want to delete this quote?';
+const String UPDATE_STATUS = 'Update Status';
+const String UPDATE_STATUS_CONTENT = 'You can\'t change the result once status is updated';
+const String WON = 'WON';
+const String LOST = 'LOST';
+const String PENDING = 'PENDING';
 
 //Quote Details
 const String QUOTE_DETAILS = 'Quotation Details';

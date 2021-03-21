@@ -134,6 +134,20 @@ class EmailManagement {
     }
   }
 
+  //Update Quotation with the status if won or lost
+  Future updateQuoteStatus({String uid, String status}) async {
+    try {
+      return quotationCollection.document(uid).updateData({'status': status}).then((value) {
+        print('Status has been updated successfully');
+        return value;
+      });
+
+    } catch (e) {
+      print('Failed to update status');
+      return e;
+    }
+  }
+
   //quotation data
   List<QuoteData> _quoteDataBySnapshot(QuerySnapshot snapshot) {
     return snapshot.documents.map((doc) {
@@ -171,13 +185,16 @@ class EmailManagement {
   //Stream quote per user
   Stream<List<QuoteData>> getQuoteDataByUserId(
       {String userId, DateTime startingDate, DateTime endingDate}) {
-        print('$startingDate and $endingDate');
     return quotationCollection
         .where('userId', isEqualTo: userId)
         .where('dateTime', isGreaterThanOrEqualTo: startingDate)
         .where('dateTime', isLessThanOrEqualTo: endingDate)
         .snapshots()
         .map(_quoteDataBySnapshot);
+  }
+
+  Future<double> getQuoteByStatus() {
+
   }
 
   //Stream all quotes in our database

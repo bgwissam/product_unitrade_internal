@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:Products/shared/strings.dart';
+import 'package:Products/shared/constants.dart';
 import 'package:provider/provider.dart';
 import 'package:Products/quotes/quote_view/quote_list.dart';
 import 'package:Products/models/enquiries.dart';
@@ -32,6 +33,42 @@ class QuoteGrid extends StatelessWidget {
         elevation: 0.0,
       ),
       body: QuoteList(),
+      bottomNavigationBar: _bottomNavigationBar(),
     );
+  }
+
+  Widget _bottomNavigationBar() {
+    return Container(
+        decoration: BoxDecoration(border: Border.all(color: Colors.black)),
+        height: 50.0,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  '$WON: ',
+                  style: labelTextStyle5,
+                ),
+              ),
+              Expanded(
+                child: Text(
+                  '$LOST: ',
+                  style: labelTextStyle5,
+                ),
+              ),
+              Expanded(
+                child: Text(
+                  '$PENDING: ',
+                  style: labelTextStyle5,
+                ),
+              )
+            ],
+          ),
+        ));
+  }
+
+  Future _getQuoteValueStatus() async {
+    EmailManagement emailManagement = new EmailManagement();
   }
 }

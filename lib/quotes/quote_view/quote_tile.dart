@@ -16,7 +16,6 @@ class QuoteTile extends StatefulWidget {
 }
 
 class _QuoteTileState extends State<QuoteTile> {
-
   EmailManagement products = new EmailManagement();
   String quoteId;
   String userId;
@@ -28,6 +27,7 @@ class _QuoteTileState extends State<QuoteTile> {
   double _distanceBetweenRows = 2.0;
   var date;
   bool _isDeleting = false;
+  bool _isUpdating = false;
 
   void initState() {
     quoteId = widget.quotes.quoteId ?? null;
@@ -53,6 +53,7 @@ class _QuoteTileState extends State<QuoteTile> {
 
         var key = items[i].keys;
         for (var val in key) {
+          print(items[i][val]);
           oneProduct[val] = items[i][val];
         }
         selecteProducts.add(oneProduct);
@@ -60,116 +61,254 @@ class _QuoteTileState extends State<QuoteTile> {
     }
   }
 
+  _getQuoteTotal() {
+    double total = 0;
+    for (var index in itemsSelected) {
+      total += index['itemTotal'];
+    }
+
+    return total;
+  }
+
   @override
   Widget build(BuildContext context) {
     var formatDate = new DateFormat().add_yMMMd().format(date);
     var totalItem = widget.quotes.itemQuoted.length;
-    return _isDeleting ? Loading() : Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: InkWell(
-        onTap: () async {
-          await getSelectedProducts(quoteId);
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => QuoteDetails(
-                userId: userId,
-                customerName: clientName,
-                paymentTerms: paymentTerms,
-                selectedProducts: selecteProducts,
-              ),
+    var totalValue = _getQuoteTotal();
+    var status = widget.quotes.status;
+
+    return _isDeleting
+        ? Loading()
+        : Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: InkWell(
+              onTap: () async {
+                await getSelectedProducts(quoteId);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => QuoteDetails(
+                      userId: userId,
+                      customerName: clientName,
+                      paymentTerms: paymentTerms,
+                      selectedProducts: selecteProducts,
+                    ),
+                  ),
+                );
+              },
+              child: Container(
+                  height: MediaQuery.of(context).size.height / 4,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15.0),
+                      border: Border.all(width: 2)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text(
+                                '$CLIENT_NAME: ',
+                                style: labelTextStyle5,
+                              ),
+                              Text(
+                                clientName,
+                                style: labelTextStyle3,
+                              )
+                            ],
+                          ),
+                          SizedBox(
+                            height: _distanceBetweenRows,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text(
+                                '$QUOTE_DATE: ',
+                                style: labelTextStyle5,
+                              ),
+                              Text(
+                                formatDate,
+                                style: labelTextStyle3,
+                              )
+                            ],
+                          ),
+                          SizedBox(
+                            height: _distanceBetweenRows,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text('$TOTAL_ITEMS: ', style: labelTextStyle5),
+                              Text(
+                                totalItem.toString(),
+                                style: labelTextStyle3,
+                              )
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text(
+                                '$TOTAL_VALUE: ',
+                                style: labelTextStyle5,
+                              ),
+                              Text(
+                                totalValue.toString(),
+                                style: labelTextStyle3,
+                              )
+                            ],
+                          ),
+                          _isUpdating
+                              ? Expanded(child: Loading())
+                              : Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    status == 'Pending'
+                                        ? Row(
+                                            children: [
+                                              TextButton(
+                                                style: ButtonStyle(
+                                                    foregroundColor:
+                                                        MaterialStateProperty
+                                                            .all<Color>(
+                                                                Colors.green),
+                                                    shape: MaterialStateProperty.all<
+                                                            RoundedRectangleBorder>(
+                                                        RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius.circular(
+                                                                    25.0),
+                                                            side: BorderSide(
+                                                                color: Colors.green)))),
+                                                child: Text('WON'),
+                                                onPressed: () async {
+                                                  await _updateStatus('WON');
+                                                },
+                                              ),
+                                              TextButton(
+                                                style: ButtonStyle(
+                                                    foregroundColor:
+                                                        MaterialStateProperty.all<
+                                                            Color>(Colors.red),
+                                                    shape: MaterialStateProperty.all<
+                                                            RoundedRectangleBorder>(
+                                                        RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius.circular(
+                                                                    25.0),
+                                                            side: BorderSide(
+                                                                color: Colors
+                                                                    .red)))),
+                                                child: Text('LOST'),
+                                                onPressed: () async {
+                                                  await _updateStatus('LOST');
+                                                },
+                                              )
+                                            ],
+                                          )
+                                        : Container(
+                                            width: 100.0,
+                                            child: Center(child: Text(status)),
+                                            padding: const EdgeInsets.all(10.0),
+                                            decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(15.0)),
+                                                color: status == WON
+                                                    ? Colors.green[400]
+                                                    : Colors.red[400]),
+                                          ),
+                                    SizedBox(
+                                      width: 60.0,
+                                    ),
+                                    ElevatedButton(
+                                        onPressed: () async {
+                                          showDialog(
+                                              context: context,
+                                              barrierDismissible: false,
+                                              builder: (BuildContext context) {
+                                                return AlertDialog(
+                                                  title: Text(DELETE_QUOTE),
+                                                  content: Text(
+                                                      DELETE_QUOTE_CONTENT),
+                                                  actions: [
+                                                    TextButton(
+                                                        onPressed: () async {
+                                                          setState(() {
+                                                            _isDeleting = true;
+                                                          });
+                                                          var result =
+                                                              await products
+                                                                  .deleteQuoteById(
+                                                                      quoteId);
+                                                          if (result != null) {
+                                                            setState(() {
+                                                              _isDeleting =
+                                                                  false;
+                                                            });
+                                                          }
+                                                          Navigator.pop(
+                                                              context);
+                                                        },
+                                                        child: Text(ALERT_YES)),
+                                                    TextButton(
+                                                      onPressed: () async {
+                                                        Navigator.pop(context);
+                                                      },
+                                                      child: Text(ALERT_NO),
+                                                    )
+                                                  ],
+                                                );
+                                              });
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          primary: Colors.deepPurpleAccent,
+                                        ),
+                                        child: Text(DELETE_QUOTE))
+                                  ],
+                                ),
+                        ]),
+                  )),
             ),
           );
-        },
-        child: Container(
-          height: 120.0,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15.0),
-              border: Border.all(width: 2)),
-          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  '$CLIENT_NAME: ',
-                  style: labelTextStyle5,
-                ),
-                Text(
-                  clientName,
-                  style: labelTextStyle3,
-                )
-              ],
-            ),
-            SizedBox(
-              height: _distanceBetweenRows,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  '$QUOTE_DATE: ',
-                  style: labelTextStyle5,
-                ),
-                Text(
-                  formatDate,
-                  style: labelTextStyle3,
-                )
-              ],
-            ),
-            SizedBox(
-              height: _distanceBetweenRows,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text('$TOTAL_ITEMS: ', style: labelTextStyle5),
-                Text(
-                  totalItem.toString(),
-                  style: labelTextStyle3,
-                )
-              ],
-            ),
-             ElevatedButton(
-                          onPressed: () async {
-                            showDialog(
-                                context: context,
-                                barrierDismissible: false,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: Text(DELETE_QUOTE),
-                                    content: Text(DELETE_QUOTE_CONTENT),
-                                    actions: [
-                                      TextButton(
-                                          onPressed: () async {
-                                            setState(() {
-                                              _isDeleting = true;
-                                            });
-                                            var result = await products
-                                                .deleteQuoteById(quoteId);
-                                            if (result != null) {
-                                              _isDeleting = false;
-                                            }
-                                            Navigator.pop(context);
-                                          },
-                                          child: Text(ALERT_YES)),
-                                      TextButton(
-                                        onPressed: () async {
-                                          Navigator.pop(context);
-                                        },
-                                        child: Text(ALERT_NO),
-                                      )
-                                    ],
-                                  );
-                                });
-                          },
-                          style: ElevatedButton.styleFrom(
-                            primary: Colors.deepPurpleAccent,
-                          ),
-                          child: Text(DELETE_QUOTE))
-                    ])
-          ),
-        ),
-      );
-    
+  }
+
+  Future _updateStatus(String status) async {
+    return showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(UPDATE_STATUS),
+            content: Text(UPDATE_STATUS_CONTENT),
+            actions: [
+              TextButton(
+                  onPressed: () async {
+                    setState(() {
+                      _isUpdating = true;
+                    });
+
+                    var result = await products.updateQuoteStatus(
+                        uid: quoteId, status: status);
+                    if (result != null) {
+                      setState(() {
+                        _isUpdating = false;
+                      });
+                    }
+
+                    Navigator.pop(context);
+                  },
+                  child: Text(ALERT_YES)),
+              TextButton(
+                onPressed: () async {
+                  Navigator.pop(context);
+                },
+                child: Text(ALERT_NO),
+              )
+            ],
+          );
+        });
   }
 }
