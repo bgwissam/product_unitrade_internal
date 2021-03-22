@@ -169,118 +169,147 @@ class _QuoteTileState extends State<QuoteTile> {
                               )
                             ],
                           ),
-                          _isUpdating
-                              ? Expanded(child: Loading())
-                              : Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    status == 'Pending'
-                                        ? Row(
-                                            children: [
-                                              TextButton(
-                                                style: ButtonStyle(
-                                                    foregroundColor:
-                                                        MaterialStateProperty
-                                                            .all<Color>(
-                                                                Colors.green),
-                                                    shape: MaterialStateProperty.all<
-                                                            RoundedRectangleBorder>(
-                                                        RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius.circular(
-                                                                    25.0),
-                                                            side: BorderSide(
-                                                                color: Colors.green)))),
-                                                child: Text(WON),
-                                                onPressed: () async {
-                                                  await _updateStatus(
+                          SizedBox(
+                            height: 5.0,
+                          ),
+                          Container(
+                            height: 50.0,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                status == 'Pending'
+                                    ? Row(
+                                        children: [
+                                          TextButton(
+                                              style: ButtonStyle(
+                                                  foregroundColor:
+                                                      MaterialStateProperty.all<
+                                                          Color>(Colors.green),
+                                                  shape: MaterialStateProperty.all<
+                                                          RoundedRectangleBorder>(
+                                                      RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius.circular(
+                                                                  25.0),
+                                                          side: BorderSide(
+                                                              color: Colors
+                                                                  .green)))),
+                                              child: Text(WON),
+                                              onPressed: () async {
+                                                return FutureBuilder(
+                                                  future: _updateStatus(
                                                       status: WON,
-                                                      total: totalValue);
-                                                },
-                                              ),
-                                              TextButton(
-                                                style: ButtonStyle(
-                                                    foregroundColor:
-                                                        MaterialStateProperty.all<
-                                                            Color>(Colors.red),
-                                                    shape: MaterialStateProperty.all<
-                                                            RoundedRectangleBorder>(
-                                                        RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius.circular(
-                                                                    25.0),
-                                                            side: BorderSide(
-                                                                color: Colors
-                                                                    .red)))),
-                                                child: Text(LOST),
-                                                onPressed: () async {
-                                                  await _updateStatus(
-                                                      status: LOST);
-                                                },
-                                              )
-                                            ],
-                                          )
-                                        : Container(
-                                            width: 100.0,
-                                            child: Center(child: Text(status)),
-                                            padding: const EdgeInsets.all(10.0),
-                                            decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.all(
-                                                    Radius.circular(15.0)),
-                                                color: status == WON
-                                                    ? Colors.green[400]
-                                                    : Colors.red[400]),
-                                          ),
-                                    SizedBox(
-                                      width: 60.0,
-                                    ),
-                                    ElevatedButton(
-                                        onPressed: () async {
-                                          showDialog(
-                                              context: context,
-                                              barrierDismissible: false,
-                                              builder: (BuildContext context) {
-                                                return AlertDialog(
-                                                  title: Text(DELETE_QUOTE),
-                                                  content: Text(
-                                                      DELETE_QUOTE_CONTENT),
-                                                  actions: [
-                                                    TextButton(
-                                                        onPressed: () async {
-                                                          setState(() {
-                                                            _isDeleting = true;
-                                                          });
-                                                          var result =
-                                                              await products
-                                                                  .deleteQuoteById(
-                                                                      quoteId);
-                                                          print(result);
-                                                          if (result != null) {
-                                                            setState(() {
-                                                              _isDeleting =
-                                                                  false;
-                                                            });
-                                                          }
-                                                          Navigator.pop(
-                                                              context);
-                                                        },
-                                                        child: Text(ALERT_YES)),
-                                                    TextButton(
-                                                      onPressed: () async {
-                                                        Navigator.pop(context);
-                                                      },
-                                                      child: Text(ALERT_NO),
-                                                    )
-                                                  ],
+                                                      total: totalValue),
+                                                  builder: (context, snapshot) {
+                                                    if (snapshot.hasData) {
+                                                      if (snapshot
+                                                              .connectionState ==
+                                                          ConnectionState
+                                                              .waiting)
+                                                        return Loading();
+                                                      else if (snapshot
+                                                              .connectionState ==
+                                                          ConnectionState.done)
+                                                        return Container(
+                                                          child: Text(WON),
+                                                        );
+                                                      else
+                                                        return Container(
+                                                          child: Text(WON),
+                                                        );
+                                                    } else if (snapshot
+                                                        .hasError) {
+                                                      return Container(
+                                                        child: Text(
+                                                            snapshot.error),
+                                                      );
+                                                    } else {
+                                                      return Container();
+                                                    }
+                                                  },
                                                 );
-                                              });
-                                        },
-                                        style: ElevatedButton.styleFrom(
-                                          primary: Colors.deepPurpleAccent,
-                                        ),
-                                        child: Text(DELETE_QUOTE))
-                                  ],
+                                              }),
+                                          TextButton(
+                                            style: ButtonStyle(
+                                                foregroundColor:
+                                                    MaterialStateProperty.all<
+                                                        Color>(Colors.red),
+                                                shape: MaterialStateProperty.all<
+                                                        RoundedRectangleBorder>(
+                                                    RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(25.0),
+                                                        side: BorderSide(
+                                                            color:
+                                                                Colors.red)))),
+                                            child: Text(LOST),
+                                            onPressed: () async {
+                                              await _updateStatus(status: LOST);
+                                            },
+                                          )
+                                        ],
+                                      )
+                                    : Container(
+                                        width: 100.0,
+                                        child: Center(child: Text(status)),
+                                        padding: const EdgeInsets.all(10.0),
+                                        decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(15.0)),
+                                            color: status == WON
+                                                ? Colors.green[400]
+                                                : Colors.red[400]),
+                                      ),
+                                SizedBox(
+                                  width: 60.0,
                                 ),
+                                ElevatedButton(
+                                    onPressed: () async {
+                                      showDialog(
+                                          context: context,
+                                          barrierDismissible: false,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              title: Text(DELETE_QUOTE),
+                                              content:
+                                                  Text(DELETE_QUOTE_CONTENT),
+                                              actions: [
+                                                TextButton(
+                                                    onPressed: () async {
+                                                      setState(() {
+                                                        _isDeleting = true;
+                                                      });
+                                                      var result =
+                                                          await products
+                                                              .deleteQuoteById(
+                                                                  quoteId);
+                                                      print(result);
+                                                      if (result != null) {
+                                                        setState(() {
+                                                          _isDeleting = false;
+                                                        });
+                                                      }
+                                                      Navigator.pop(context);
+                                                    },
+                                                    child: Text(ALERT_YES)),
+                                                TextButton(
+                                                  onPressed: () async {
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: Text(ALERT_NO),
+                                                )
+                                              ],
+                                            );
+                                          });
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      primary: Colors.deepPurpleAccent,
+                                    ),
+                                    child: Text(DELETE_QUOTE))
+                              ],
+                            ),
+                          ),
                         ]),
                   )),
             ),
