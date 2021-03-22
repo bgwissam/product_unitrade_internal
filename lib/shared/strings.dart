@@ -284,7 +284,9 @@ const String UPDATE_STATUS = 'Update Status';
 const String UPDATE_STATUS_CONTENT = 'You can\'t change the result once status is updated';
 const String WON = 'WON';
 const String LOST = 'LOST';
-const String PENDING = 'PENDING';
+const String PENDING = 'Pending';
+const String QUOTE_VALUE = 'Total';
+const String LOST_REASON = 'Why you lost the quote?';
 
 //Quote Details
 const String QUOTE_DETAILS = 'Quotation Details';

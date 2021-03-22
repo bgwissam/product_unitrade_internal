@@ -2,18 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:Products/shared/strings.dart';
 import 'package:Products/shared/constants.dart';
 import 'package:number_display/number_display.dart';
+import 'package:Products/services/email_management.dart';
+import 'package:Products/shared/loading.dart';
 
 class QuoteDetails extends StatefulWidget {
   final String userId;
+  final String quoteId;
   final String customerName;
   final String paymentTerms;
+  final String status;
   final List selectedProducts;
 
   const QuoteDetails(
       {Key key,
       this.userId,
+      this.quoteId,
       this.customerName,
       this.selectedProducts,
+      this.status,
       this.paymentTerms})
       : super(key: key);
   @override
@@ -23,6 +29,8 @@ class QuoteDetails extends StatefulWidget {
 class _QuoteDetailsState extends State<QuoteDetails> {
   double _distanceBetweenRows = 15.0;
   double _totalValue;
+  String _statusDetails;
+  EmailManagement emailManagement = new EmailManagement();
 
   var display = createDisplay(
     length: 9,
@@ -296,8 +304,91 @@ class _QuoteDetailsState extends State<QuoteDetails> {
             color: Colors.black,
             thickness: 2.0,
           ),
+          Expanded(
+              child: FutureBuilder(
+            future: _checkColor(widget.status),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                if (snapshot.connectionState == ConnectionState.done)
+                  return Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        flex: 1,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15.0),
+                            color: snapshot.data,
+                          ),
+                          padding: EdgeInsets.all(10.0),
+                          child: widget.status != null
+                              ? Center(child: Text(widget.status, style: textStyle1))
+                              : '',
+                        ),
+                      ),
+                      SizedBox(
+                        width: 10.0,
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: _statusDetails == null
+                            ? Loading()
+                            : Container(
+                              padding: EdgeInsets.all(10.0),
+                              child: Text(_statusDetails, style: textStyle1,)),
+                      ),
+                    ],
+                  );
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Loading();
+                }
+              } else if (snapshot.hasError) {
+                return snapshot.error;
+              }
+              return Container();
+            },
+          ))
         ],
       ),
     );
+  }
+
+  //change color depending on status, also return status details
+  Future<Color> _checkColor(String status) async {
+    //get the status details and update it
+    _statusDetails = await _getStatusDetails(status);
+    Color currentColor;
+    if (status == PENDING) {
+      currentColor = Colors.yellow[300];
+    } else if (status == WON) {
+      currentColor = Colors.green[300];
+    } else {
+      currentColor = Colors.red[200];
+    }
+
+    return currentColor;
+  }
+
+  Future<String> _getStatusDetails(String status) async {
+    if (status == PENDING) {
+      return _statusDetails = 'Status is still pending';
+    } else if (status == WON) {
+      var result = await emailManagement.quotationCollection
+          .document(widget.quoteId)
+          .get();
+
+      return _statusDetails = result.data['paidValue'] == null ? 'Value not set' : result.data['paidValue'].toString();
+    } else {
+      var result = await emailManagement.quotationCollection
+          .document(widget.quoteId)
+          .get();
+
+      return _statusDetails = result.data['lossReason'] == null ? 'Value not set': result.data['lossReason'];
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 }

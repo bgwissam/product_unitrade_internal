@@ -28,6 +28,13 @@ class _QuoteTileState extends State<QuoteTile> {
   var date;
   bool _isDeleting = false;
   bool _isUpdating = false;
+  List<String> _reasonList = [
+    'Prices are high',
+    'Payment terms',
+    'lead time',
+    'Quality issue',
+    'Others...'
+  ];
 
   void initState() {
     quoteId = widget.quotes.quoteId ?? null;
@@ -53,7 +60,6 @@ class _QuoteTileState extends State<QuoteTile> {
 
         var key = items[i].keys;
         for (var val in key) {
-          print(items[i][val]);
           oneProduct[val] = items[i][val];
         }
         selecteProducts.add(oneProduct);
@@ -89,8 +95,10 @@ class _QuoteTileState extends State<QuoteTile> {
                   MaterialPageRoute(
                     builder: (context) => QuoteDetails(
                       userId: userId,
+                      quoteId: quoteId,
                       customerName: clientName,
                       paymentTerms: paymentTerms,
+                      status: status,
                       selectedProducts: selecteProducts,
                     ),
                   ),
@@ -183,9 +191,11 @@ class _QuoteTileState extends State<QuoteTile> {
                                                                     25.0),
                                                             side: BorderSide(
                                                                 color: Colors.green)))),
-                                                child: Text('WON'),
+                                                child: Text(WON),
                                                 onPressed: () async {
-                                                  await _updateStatus('WON');
+                                                  await _updateStatus(
+                                                      status: WON,
+                                                      total: totalValue);
                                                 },
                                               ),
                                               TextButton(
@@ -202,9 +212,10 @@ class _QuoteTileState extends State<QuoteTile> {
                                                             side: BorderSide(
                                                                 color: Colors
                                                                     .red)))),
-                                                child: Text('LOST'),
+                                                child: Text(LOST),
                                                 onPressed: () async {
-                                                  await _updateStatus('LOST');
+                                                  await _updateStatus(
+                                                      status: LOST);
                                                 },
                                               )
                                             ],
@@ -243,6 +254,7 @@ class _QuoteTileState extends State<QuoteTile> {
                                                               await products
                                                                   .deleteQuoteById(
                                                                       quoteId);
+                                                          print(result);
                                                           if (result != null) {
                                                             setState(() {
                                                               _isDeleting =
@@ -275,40 +287,138 @@ class _QuoteTileState extends State<QuoteTile> {
           );
   }
 
-  Future _updateStatus(String status) async {
-    return showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text(UPDATE_STATUS),
-            content: Text(UPDATE_STATUS_CONTENT),
-            actions: [
-              TextButton(
-                  onPressed: () async {
-                    setState(() {
-                      _isUpdating = true;
-                    });
-
-                    var result = await products.updateQuoteStatus(
-                        uid: quoteId, status: status);
-                    if (result != null) {
+  //updates the status of the quotation whether won or lost
+  Future _updateStatus({String status, double total}) async {
+    double actualValue;
+    String reason;
+    if (status == WON) {
+      return showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text(UPDATE_STATUS),
+              content: Container(
+                height: MediaQuery.of(context).size.height / 6,
+                child: Column(children: [
+                  Container(
+                    child: Text(UPDATE_STATUS_CONTENT),
+                  ),
+                  SizedBox(
+                    height: 15.0,
+                  ),
+                  TextFormField(
+                    initialValue: '',
+                    keyboardType:
+                        TextInputType.numberWithOptions(decimal: true),
+                    decoration:
+                        textInputDecoration.copyWith(labelText: QUOTE_VALUE),
+                    onChanged: (val) {
+                      actualValue = double.parse(val);
+                    },
+                  ),
+                ]),
+              ),
+              actions: [
+                TextButton(
+                    onPressed: () async {
                       setState(() {
-                        _isUpdating = false;
+                        _isUpdating = true;
                       });
-                    }
-
+                      if (actualValue == null) {
+                        actualValue = total;
+                      }
+                      var result = await products.updateQuoteStatus(
+                          uid: quoteId, status: status, paidValue: actualValue);
+                      print(result);
+                      if (result != null) {
+                        setState(() {
+                          _isUpdating = false;
+                        });
+                      }
+                      Navigator.pop(context);
+                      _isUpdating = false;
+                    },
+                    child: Text(ALERT_YES)),
+                TextButton(
+                  onPressed: () async {
                     Navigator.pop(context);
                   },
-                  child: Text(ALERT_YES)),
-              TextButton(
-                onPressed: () async {
-                  Navigator.pop(context);
-                },
-                child: Text(ALERT_NO),
-              )
-            ],
-          );
-        });
+                  child: Text(ALERT_NO),
+                )
+              ],
+            );
+          });
+    } else {
+      return showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return StatefulBuilder(builder: (context, setState) {
+              return AlertDialog(
+                title: Text(UPDATE_STATUS),
+                content: Container(
+                  height: MediaQuery.of(context).size.height / 6,
+                  child: Column(children: [
+                    Container(
+                      child: Text(UPDATE_STATUS_CONTENT),
+                    ),
+                    SizedBox(
+                      height: 15.0,
+                    ),
+                    Container(
+                      child: new DropdownButton<String>(
+                        isExpanded: true,
+                        isDense: true,
+                        value: reason,
+                        hint: Text(LOST_REASON),
+                        onChanged: (String val) {
+                          setState(() {
+                            reason = val;
+                          });
+                        },
+                        selectedItemBuilder: (BuildContext context) {
+                          return _reasonList.map<Widget>((String item) {
+                            return Text(
+                              item,
+                              style: textStyle1,
+                            );
+                          }).toList();
+                        },
+                        items: _reasonList.map((String item) {
+                          return DropdownMenuItem<String>(
+                              child: Text(item), value: item);
+                        }).toList(),
+                      ),
+                    )
+                  ]),
+                ),
+                actions: [
+                  TextButton(
+                      onPressed: () async {
+                        setState(() {
+                          _isUpdating = true;
+                        });
+                        var result = await products.updateQuoteStatus(
+                            uid: quoteId, status: status, reason: reason);
+                        if (result != null) {
+                          setState(() {
+                            _isUpdating = false;
+                          });
+                        }
+                        Navigator.pop(context);
+                      },
+                      child: Text(ALERT_YES)),
+                  TextButton(
+                    onPressed: () async {
+                      Navigator.pop(context);
+                    },
+                    child: Text(ALERT_NO),
+                  )
+                ],
+              );
+            });
+          });
+    }
   }
 }

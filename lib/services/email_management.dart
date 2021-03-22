@@ -135,13 +135,17 @@ class EmailManagement {
   }
 
   //Update Quotation with the status if won or lost
-  Future updateQuoteStatus({String uid, String status}) async {
+  Future updateQuoteStatus(
+      {String uid, String status, double paidValue, String reason}) async {
     try {
-      return quotationCollection.document(uid).updateData({'status': status}).then((value) {
+      return quotationCollection.document(uid).updateData({
+        'status': status,
+        'paidValue': paidValue,
+        'lossReason': reason
+      }).then((value) {
         print('Status has been updated successfully');
         return value;
       });
-
     } catch (e) {
       print('Failed to update status');
       return e;
@@ -162,6 +166,7 @@ class EmailManagement {
           status: doc.data['status'] ?? '');
     }).toList();
   }
+
   //delete quote by Id
   Future deleteQuoteById(String quoteId) {
     try {
@@ -193,9 +198,6 @@ class EmailManagement {
         .map(_quoteDataBySnapshot);
   }
 
-  Future<double> getQuoteByStatus() {
-
-  }
 
   //Stream all quotes in our database
   Stream<List<QuoteData>> get allQuotes {
