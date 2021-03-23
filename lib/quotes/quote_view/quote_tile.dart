@@ -245,7 +245,37 @@ class _QuoteTileState extends State<QuoteTile> {
                                                                 Colors.red)))),
                                             child: Text(LOST),
                                             onPressed: () async {
-                                              await _updateStatus(status: LOST);
+                                              return FutureBuilder(
+                                                future: _updateStatus(
+                                                    status: LOST,
+                                                    total: totalValue),
+                                                builder: (context, snapshot) {
+                                                  if (snapshot.hasData) {
+                                                    if (snapshot
+                                                            .connectionState ==
+                                                        ConnectionState.waiting)
+                                                      return Loading();
+                                                    else if (snapshot
+                                                            .connectionState ==
+                                                        ConnectionState.done)
+                                                      return Container(
+                                                        child: Text(LOST),
+                                                      );
+                                                    else
+                                                      return Container(
+                                                        child: Text(WON),
+                                                      );
+                                                  } else if (snapshot
+                                                      .hasError) {
+                                                    return Container(
+                                                      child:
+                                                          Text(snapshot.error),
+                                                    );
+                                                  } else {
+                                                    return Container();
+                                                  }
+                                                },
+                                              );
                                             },
                                           )
                                         ],
@@ -277,20 +307,40 @@ class _QuoteTileState extends State<QuoteTile> {
                                               actions: [
                                                 TextButton(
                                                     onPressed: () async {
-                                                      setState(() {
-                                                        _isDeleting = true;
-                                                      });
-                                                      var result =
-                                                          await products
-                                                              .deleteQuoteById(
-                                                                  quoteId);
-                                                      print(result);
-                                                      if (result != null) {
-                                                        setState(() {
-                                                          _isDeleting = false;
-                                                        });
-                                                      }
-                                                      Navigator.pop(context);
+                                                      return FutureBuilder(
+                                                        future:
+                                                            _deleteQuoteById(
+                                                                quoteId),
+                                                        builder: (context,
+                                                            snapshot) {
+                                                          if (snapshot
+                                                              .hasData) {
+                                                            if (snapshot
+                                                                    .connectionState ==
+                                                                ConnectionState
+                                                                    .waiting) {
+                                                              return Loading();
+                                                            } else if (snapshot
+                                                                    .connectionState ==
+                                                                ConnectionState
+                                                                    .done) {
+                                                            
+                                                              return Container();
+                                                            } else {
+                                                              return Container();
+                                                            }
+                                                          } else if (snapshot
+                                                              .hasError) {
+                                                            return Container(
+                                                              child: Text(
+                                                                  snapshot
+                                                                      .error),
+                                                            );
+                                                          } else {
+                                                            return Container();
+                                                          }
+                                                        },
+                                                      );
                                                     },
                                                     child: Text(ALERT_YES)),
                                                 TextButton(
@@ -314,6 +364,11 @@ class _QuoteTileState extends State<QuoteTile> {
                   )),
             ),
           );
+  }
+  //Delete quote by Id
+  Future _deleteQuoteById(String quoteId) async {
+    Navigator.pop(context);
+    return await products.deleteQuoteById(quoteId);
   }
 
   //updates the status of the quotation whether won or lost
