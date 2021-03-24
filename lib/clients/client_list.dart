@@ -1,7 +1,6 @@
 import 'package:Products/clients/client_form.dart';
 import 'package:Products/models/clients.dart';
 import 'package:Products/shared/constants.dart';
-import 'package:Products/shared/strings.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -22,27 +21,11 @@ class _ClientListState extends State<ClientList> {
         child: Column(
           children: [
             Container(
-              child: Table(
-                children: [
-                  TableRow(children: [
-                    TableCell(
-                      child: Center(
-                          child: Text(
-                        CLIENT_NAME,
-                        style: textStyle3,
-                      )),
-                    ),
-                    TableCell(
-                      child: Center(
-                          child: Text(
-                        CLIENT_PHONE,
-                        style: textStyle3,
-                      )),
-                    )
-                  ])
-                ],
-              ),
-            ),
+                padding: EdgeInsets.all(10.0),
+                child: Text(
+                  'This page will show the Sale\'s executive personal clients, tapping on the client will allow you to edit them.',
+                  style: textStyle6,
+                )),
             SizedBox(
               height: 15,
             ),
@@ -57,44 +40,76 @@ class _ClientListState extends State<ClientList> {
         child: Center(child: Text('No clients were found')),
       );
   }
+
   //build the client list
   Widget _buildClientList() {
-    return SingleChildScrollView(
-      child: ListView.builder(
-          scrollDirection: Axis.vertical,
-          shrinkWrap: true,
-          itemCount: clients.length ?? 0,
-          physics: const AlwaysScrollableScrollPhysics(),
-          itemBuilder: (context, index) {
-            return InkWell(
-              onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => ClientForm(
-                            client: clients[index],
-                          ))),
-              child: Container(
-                padding: const EdgeInsets.all(15.0),
-                child: Table(
-                  children: [
-                    TableRow(
+    return ListView.builder(
+        scrollDirection: Axis.vertical,
+        shrinkWrap: true,
+        itemCount: clients.length ?? 0,
+        physics: const AlwaysScrollableScrollPhysics(),
+        itemBuilder: (context, index) {
+          return Column(
+            children: [
+              Container(
+                height: 80.0,
+                decoration: BoxDecoration(
+                    border: Border.all(),
+                    borderRadius: BorderRadius.circular(12.0)),
+                child: InkWell(
+                  onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ClientForm(
+                                client: clients[index],
+                              ))),
+                  child: Container(
+                    padding: EdgeInsets.symmetric(vertical: 7.0),
+                    child: Column(
                       children: [
-                        TableCell(
-                            child: Center(
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Center(
                                 child: Text(
-                                    clients[index].clientName.toString()))),
-                        TableCell(
+                                  clients[index].clientName.toString(),
+                                  style: textStyle4,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 10.0,
+                        ),
+                        Row(children: [
+                          Expanded(
                             child: Center(
-                          child:
-                              Text(clients[index].clientPhoneNumber.toString()),
-                        )),
+                              child: Text(
+                                clients[index].contactPerson.toString(),
+                                style: textStyle5,
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: Center(
+                              child: Text(
+                                clients[index].clientPhoneNumber.toString(),
+                                style: textStyle5,
+                              ),
+                            ),
+                          ),
+                        ]),
                       ],
                     ),
-                  ],
+                  ),
                 ),
               ),
-            );
-          }),
-    );
+              SizedBox(
+                height: 8.0,
+              ),
+            ],
+          );
+        });
   }
 }

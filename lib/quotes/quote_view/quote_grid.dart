@@ -41,7 +41,7 @@ class QuoteGrid extends StatelessWidget {
   Widget _bottomNavigationBar(BuildContext context) {
     return Container(
         decoration: BoxDecoration(border: Border.all(color: Colors.black)),
-        height: 50.0,
+        height: 55.0,
         child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10.0),
             child: FutureBuilder(
@@ -56,19 +56,19 @@ class QuoteGrid extends StatelessWidget {
                         Expanded(
                           child: Text(
                             '$WON: ${snapshot.data[0]}',
-                            style: labelTextStyle5,
+                            style: textStyle11,
                           ),
                         ),
                         Expanded(
                           child: Text(
                             '$LOST: ${snapshot.data[1]}',
-                            style: labelTextStyle5,
+                            style: textStyle12,
                           ),
                         ),
                         Expanded(
                           child: Text(
                             '$PENDING: ${snapshot.data[2]}',
-                            style: labelTextStyle5,
+                            style: textStyle13,
                           ),
                         )
                       ],
@@ -86,7 +86,7 @@ class QuoteGrid extends StatelessWidget {
               },
             )));
   }
-
+  //will get the button navigator quote value as per its status, using a Future
   Future _getQuoteValueStatus() async {
     double wonTotal = 0.0;
     double lostTotal = 0.0;
@@ -121,18 +121,16 @@ class QuoteGrid extends StatelessWidget {
           }
         }
       }
-
+      //returns a list to snapshot
       List<double> totalStatusValue = [];
       totalStatusValue = [wonTotal, lostTotal, pendingTotal];
 
       return totalStatusValue;
      
     } else {
-      print('no fucking data was found');
+      print('No Data was found');
     }
   }
 
-  void dispose() {
-    _getQuoteValueStatus().whenComplete(() => dispose());
-  }
+ 
 }

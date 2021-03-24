@@ -48,7 +48,7 @@ Future<void> reportView({
   final PdfGrid grid = getGrid(products);
   //draw the header section by creating text elements
   final PdfLayoutResult result = drawHeader(page, pageSize, grid, clientName,
-      clientPhone, clientAddress, total, quoteId);
+      clientPhone, clientAddress, clientEmail, total, quoteId);
   //Draw grid
   drawGrid(page, grid, result, contentFont, total, paymentTerms);
   //add footer
@@ -100,7 +100,7 @@ Future<void> reportView({
         builder: (_) => PDFDocumentViewer(
               salesCordinator: saleCordinator,
               quoteId: quoteId,
-              clientEmail: 'bgwissam@gmail.com',
+              clientEmail: clientEmail,
               clientName: clientName,
               supplierEmail: salesmanEmail,
               subject: 'Paint Quote',
@@ -134,6 +134,7 @@ PdfLayoutResult drawHeader(
     String clientName,
     String clientPhone,
     String clientAddress,
+    String clientEmail,
     double totalValue,
     String quoteId) {
   final PdfFont contentFont = PdfStandardFont(PdfFontFamily.helvetica, 15);
@@ -160,12 +161,14 @@ PdfLayoutResult drawHeader(
 
   //Create data foramt and convert it to text.
   final DateFormat format = DateFormat.yMMMMd('en_US');
+  String email = 'Email: $clientEmail';
   final String quoteNumber =
-      'Quote#: $quoteId\r\n\r\nDate: ' + format.format(DateTime.now());
+      'Quote#: $quoteId\r\n\r\nDate:  ${format.format(DateTime.now())}\r\n\r$email';
   final Size contentSize = contentFont.measureString(quoteNumber);
   String name = 'Name: $clientName';
   String phone = 'Contact: $clientPhone';
   String address = 'Address: $clientAddress';
+ 
 
   PdfTextElement(text: quoteNumber, font: contentFont).draw(
       page: page,
